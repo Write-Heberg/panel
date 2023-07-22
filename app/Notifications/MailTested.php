@@ -1,8 +1,8 @@
 <?php
 
-namespace Pterodactyl\Notifications;
+namespace Jexactyl\Notifications;
 
-use Pterodactyl\Models\User;
+use Jexactyl\Models\User;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 
@@ -20,9 +20,8 @@ class MailTested extends Notification
     public function toMail(): MailMessage
     {
         return (new MailMessage())
-            ->subject('Message de test Pterodactyl')
-            ->greeting('Bonjour ' . $this->user->name . ' !')
-            ->line('Ceci est un test du système de messagerie de Pterodactyl. Tout fonctionne correctement !');
+            ->subject('Jexactyl Test Message')
+            ->greeting('Hello ' . $this->user->name . '!')
+            ->line('This is a test of the Jexactyl mail system. You\'re good to go!');
     }
 }
-

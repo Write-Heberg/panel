@@ -1,15 +1,15 @@
 <?php
 
-namespace Pterodactyl\Providers;
+namespace Jexactyl\Providers;
 
 use Illuminate\Http\Request;
-use Pterodactyl\Models\Database;
+use Jexactyl\Models\Database;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Cache\RateLimiting\Limit;
+use Jexactyl\Http\Middleware\TrimStrings;
 use Illuminate\Support\Facades\RateLimiter;
-use Pterodactyl\Http\Middleware\TrimStrings;
-use Pterodactyl\Http\Middleware\AdminAuthenticate;
-use Pterodactyl\Http\Middleware\RequireTwoFactorAuthentication;
+use Jexactyl\Http\Middleware\AdminAuthenticate;
+use Jexactyl\Http\Middleware\RequireTwoFactorAuthentication;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
@@ -80,6 +80,22 @@ class RouteServiceProvider extends ServiceProvider
             }
 
             return Limit::perMinute(10);
+        });
+
+        // Store & Server Creation rate limiting. Stops users from abusing the endpoint(s)
+        // associated with creating/deleting servers as well as resources via Storefront.
+        RateLimiter::for('storefront', function (Request $request) {
+            return Limit::perMinute(1)->by($request->user()->id);
+        });
+
+        // Credit earning ratelimiting.
+        RateLimiter::for('earn', function (Request $request) {
+            return Limit::perMinute(1)->by($request->user()->id);
+        });
+
+        // Stops users from renewing or editing servers many times in quick succession.
+        RateLimiter::for('server-edit', function (Request $request) {
+            return Limit::perMinute(5)->by($request->user()->id);
         });
 
         // Configure the throttles for both the application and client APIs below.

@@ -1,9 +1,9 @@
 <?php
 
-namespace Pterodactyl\Console\Commands\Environment;
+namespace Jexactyl\Console\Commands\Environment;
 
 use Illuminate\Console\Command;
-use Pterodactyl\Traits\Commands\EnvironmentWriterTrait;
+use Jexactyl\Traits\Commands\EnvironmentWriterTrait;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 
 class EmailSettingsCommand extends Command
@@ -36,7 +36,7 @@ class EmailSettingsCommand extends Command
     /**
      * Handle command execution.
      *
-     * @throws \Pterodactyl\Exceptions\PterodactylException
+     * @throws \Jexactyl\Exceptions\JexactylException
      */
     public function handle()
     {
@@ -57,7 +57,7 @@ class EmailSettingsCommand extends Command
             $this->{$method}();
         }
 
-        $this->variables['MAIL_FROM'] = $this->option('email') ?? $this->ask(
+        $this->variables['MAIL_FROM_ADDRESS'] = $this->option('email') ?? $this->ask(
             trans('command/messages.environment.mail.ask_mail_from'),
             $this->config->get('mail.from.address')
         );

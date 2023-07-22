@@ -21,7 +21,7 @@ const schema = Yup.object().shape({
     password: Yup.string().min(8).required(),
     confirmPassword: Yup.string().test(
         'password',
-        'La confirmation du mot de passe ne correspond pas au mot de passe que vous avez saisi.',
+        'Password confirmation does not match the password you entered.',
         function (value) {
             return value === this.parent.password;
         }
@@ -78,7 +78,7 @@ export default () => {
                                     name={'password'}
                                     label={'New Password'}
                                     description={
-                                        'Votre nouveau mot de passe doit comporter au moins 8 caractères et être unique pour ce site web.'
+                                        'Your new password should be at least 8 characters in length and unique to this website.'
                                     }
                                 />
                             </div>

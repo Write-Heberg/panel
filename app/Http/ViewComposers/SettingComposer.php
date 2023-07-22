@@ -1,9 +1,9 @@
 <?php
 
-namespace Pterodactyl\Http\ViewComposers;
+namespace Jexactyl\Http\ViewComposers;
 
 use Illuminate\View\View;
-use Pterodactyl\Services\Helpers\AssetHashService;
+use Jexactyl\Services\Helpers\AssetHashService;
 
 class SettingComposer extends Composer
 {
@@ -45,6 +45,7 @@ class SettingComposer extends Composer
 
             'approvals' => $this->setting('approvals:enabled', Composer::TYPE_BOOL),
             'tickets' => $this->setting('tickets:enabled', Composer::TYPE_BOOL),
+            'coupons' => $this->setting('coupons:enabled', Composer::TYPE_BOOL),
             'databases' => $this->getDatabaseAvailability(),
         ]);
     }

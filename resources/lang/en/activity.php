@@ -8,12 +8,12 @@
  */
 return [
     'auth' => [
-        'fail' => 'Échec de la connexion',
-        'success' => 'Connexion réussi',
-        'password-reset' => 'Réinitialisation du mot de passe',
-        'reset-password' => 'Demande de réinitialisation du mot de passe',
-        'checkpoint' => 'Authentification à deux facteurs demandée',
-        'recovery-token' => "Utilisation d'un jeton de récupération à deux facteurs",
+        'fail' => 'Failed log in',
+        'success' => 'Logged in',
+        'password-reset' => 'Password reset',
+        'reset-password' => 'Requested password reset',
+        'checkpoint' => 'Two-factor authentication requested',
+        'recovery-token' => 'Used two-factor recovery token',
         'token' => 'Solved two-factor challenge',
         'ip-blocked' => 'Blocked request from unlisted IP address for :identifier',
         'sftp' => [

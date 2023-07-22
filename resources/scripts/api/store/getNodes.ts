@@ -3,7 +3,8 @@ import http from '@/api/http';
 export interface Node {
     id: number;
     name: string;
-    fqdn: string;
+    deployFee: number;
+    location: string;
     total: number;
     used: number;
 }
@@ -11,7 +12,8 @@ export interface Node {
 export const rawDataToNode = (data: any): Node => ({
     id: data.id,
     name: data.name,
-    fqdn: data.fqdn,
+    deployFee: data.deploy_fee,
+    location: data.location,
     total: data.total,
     used: data.used,
 });

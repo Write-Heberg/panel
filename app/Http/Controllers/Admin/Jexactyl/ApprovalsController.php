@@ -1,15 +1,15 @@
 <?php
 
-namespace Pterodactyl\Http\Controllers\Admin\Jexactyl;
+namespace Jexactyl\Http\Controllers\Admin\Jexactyl;
 
 use Illuminate\View\View;
+use Jexactyl\Models\User;
 use Illuminate\Http\Request;
-use Pterodactyl\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Prologue\Alerts\AlertsMessageBag;
-use Pterodactyl\Http\Controllers\Controller;
-use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
-use Pterodactyl\Http\Requests\Admin\Jexactyl\ApprovalFormRequest;
+use Jexactyl\Http\Controllers\Controller;
+use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
+use Jexactyl\Http\Requests\Admin\Jexactyl\ApprovalFormRequest;
 
 class ApprovalsController extends Controller
 {
@@ -39,8 +39,8 @@ class ApprovalsController extends Controller
     /**
      * Updates the settings for approvals.
      *
-     * @throws \Pterodactyl\Exceptions\Model\DataValidationException
-     * @throws \Pterodactyl\Exceptions\Repository\RecordNotFoundException
+     * @throws \Jexactyl\Exceptions\Model\DataValidationException
+     * @throws \Jexactyl\Exceptions\Repository\RecordNotFoundException
      */
     public function update(ApprovalFormRequest $request): RedirectResponse
     {
@@ -54,13 +54,21 @@ class ApprovalsController extends Controller
     }
 
     /**
-     * Approve all users currently waiting to be approved.
+     * Perform a bulk action for approval status.
      */
-    public function approveAll(Request $request): RedirectResponse
+    public function bulkAction(Request $request, string $action): RedirectResponse
     {
-        User::query()->where('approved', false)->update(['approved' => true]);
+        if ($action === 'approve') {
+            User::query()->where('approved', false)->update(['approved' => true]);
+        } else {
+            try {
+                User::query()->where('approved', false)->delete();
+            } catch (DisplayException $ex) {
+                throw new DisplayException('Unable to complete action: ' . $ex->getMessage());
+            }
+        }
 
-        $this->alert->success('All users have been approved successfully.')->flash();
+        $this->alert->success('All users have been ' . $action === 'approve' ? 'approved ' : 'denied successfully.')->flash();
 
         return redirect()->route('admin.jexactyl.approvals');
     }

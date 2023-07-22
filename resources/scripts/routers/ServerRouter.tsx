@@ -34,6 +34,7 @@ import SettingsContainer from '@/components/server/settings/SettingsContainer';
 import ScheduleContainer from '@/components/server/schedules/ScheduleContainer';
 import DatabasesContainer from '@/components/server/databases/DatabasesContainer';
 import FileManagerContainer from '@/components/server/files/FileManagerContainer';
+import AnalyticsContainer from '@/components/server/analytics/AnalyticsContainer';
 import ScreenBlock, { NotFound, ServerError } from '@/components/elements/ScreenBlock';
 import ServerConsoleContainer from '@/components/server/console/ServerConsoleContainer';
 import ScheduleEditContainer from '@/components/server/schedules/ScheduleEditContainer';
@@ -76,10 +77,10 @@ export default () => {
 
     const id = ServerContext.useStoreState((state) => state.server.data?.id);
     const uuid = ServerContext.useStoreState((state) => state.server.data?.uuid);
-    const eggFeatures = ServerContext.useStoreState((state) => state.server.data?.eggFeatures);
-    const inConflictState = ServerContext.useStoreState((state) => state.server.inConflictState);
     const serverId = ServerContext.useStoreState((state) => state.server.data?.internalId);
     const getServer = ServerContext.useStoreActions((actions) => actions.server.getServer);
+    const eggFeatures = ServerContext.useStoreState((state) => state.server.data?.eggFeatures);
+    const inConflictState = ServerContext.useStoreState((state) => state.server.inConflictState);
     const clearServerState = ServerContext.useStoreActions((actions) => actions.clearServerState);
 
     useEffect(() => {
@@ -113,9 +114,14 @@ export default () => {
                     <CSSTransition timeout={150} classNames={'fade'} appear in>
                         <SubNavigation className={'j-down'}>
                             <div>
-                                <NavLink to={`${match.url}`} exact>
+                                <NavLink to={match.url} exact>
                                     <div css={tw`flex items-center justify-between`}>
                                         Console <Icon.Terminal css={tw`ml-1`} size={18} />
+                                    </div>
+                                </NavLink>
+                                <NavLink to={`${match.url}/analytics`} exact>
+                                    <div css={tw`flex items-center justify-between`}>
+                                        Analytics <Icon.BarChart css={tw`ml-1`} size={18} />
                                     </div>
                                 </NavLink>
                                 <Can action={'activity.*'}>
@@ -222,11 +228,7 @@ export default () => {
                                 <Switch location={location}>
                                     <Route path={`${match.path}`} component={ServerConsoleContainer} exact />
                                     <Route path={`${match.path}/console`} component={ExternalConsole} exact />
-                                    <Route path={`${match.path}/files`} exact>
-                                        <RequireServerPermission permissions={'file.*'}>
-                                            <FileManagerContainer />
-                                        </RequireServerPermission>
-                                    </Route>
+                                    <Route path={`${match.path}/analytics`} component={AnalyticsContainer} exact />
                                     <Route path={`${match.path}/activity`} exact>
                                         <RequireServerPermission permissions={'activity.*'}>
                                             <ServerActivityLogContainer />
@@ -239,6 +241,11 @@ export default () => {
                                             </RequireServerPermission>
                                         </Route>
                                     )}
+                                    <Route path={`${match.path}/files`} exact>
+                                        <RequireServerPermission permissions={'file.*'}>
+                                            <FileManagerContainer />
+                                        </RequireServerPermission>
+                                    </Route>
                                     <Route path={`${match.path}/files/:action(edit|new)`} exact>
                                         <Spinner.Suspense>
                                             <FileEditContainer />
