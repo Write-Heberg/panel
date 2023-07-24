@@ -1,6 +1,6 @@
 <?php
 
-namespace Jexactyl\Notifications;
+namespace Pterodactyl\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -12,14 +12,14 @@ class SendPasswordReset extends Notification implements ShouldQueue
     use Queueable;
 
     /**
-     * Create a new notification instance.
+     * Crée une nouvelle instance de notification.
      */
     public function __construct(public string $token)
     {
     }
 
     /**
-     * Get the notification's delivery channels.
+     * Récupère les canaux de diffusion de la notification.
      */
     public function via(): array
     {
@@ -27,14 +27,17 @@ class SendPasswordReset extends Notification implements ShouldQueue
     }
 
     /**
-     * Get the mail representation of the notification.
+     * Récupère la représentation de l'e-mail de la notification.
      */
     public function toMail(mixed $notifiable): MailMessage
     {
         return (new MailMessage())
-            ->subject('Reset Password')
-            ->line('You are receiving this email because we received a password reset request for your account.')
-            ->action('Reset Password', url('/auth/password/reset/' . $this->token . '?email=' . urlencode($notifiable->email)))
-            ->line('If you did not request a password reset, no further action is required.');
+            ->subject('Réinitialisation du mot de passe')
+            ->greeting('Bonjour !')
+            ->line('Vous recevez cet e-mail car nous avons reçu une demande de réinitialisation de mot de passe pour votre compte.')
+            ->line("Vous trouverez donc ci-dessous un bouton vous permettant de réaliser l'opération demandée.")
+            ->action('Réinitialiser le mot de passe', url('/auth/password/reset/' . $this->token . '?email=' . urlencode($notifiable->email)))
+            ->line("Si vous n'avez pas demandé de réinitialisation de mot de passe, aucune action supplémentaire n'est nécessaire.")
+            ->line('Merci de nous faire confiance pour héberger votre projet !');
     }
 }
