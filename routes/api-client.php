@@ -27,30 +27,10 @@ Route::prefix('/account')->middleware(AccountSubject::class)->group(function () 
         Route::delete('/two-factor', [Client\TwoFactorController::class, 'delete']);
     });
 
-    Route::get('/logs', [Client\AccountLogController::class, 'index'])->withoutMiddleware(RequireTwoFactorAuthentication::class);
-    Route::delete('/logs', [Client\AccountLogController::class, 'delete'])->withoutMiddleware(RequireTwoFactorAuthentication::class);
-
-    Route::post('/verify', [Client\AccountController::class, 'verify'])->name('api:client.account.verify');
-
     Route::put('/email', [Client\AccountController::class, 'updateEmail'])->name('api:client.account.update-email');
     Route::put('/password', [Client\AccountController::class, 'updatePassword'])->name('api:client.account.update-password');
-    Route::put('/username', [Client\AccountController::class, 'updateUsername'])->name('api:client.account.update-username');
 
     Route::get('/activity', Client\ActivityLogController::class)->name('api:client.account.activity');
-    Route::get('/activity/latest', [Client\ActivityLogController::class, 'latest'])->name('api:client.account.activity');
-
-    Route::prefix('/referrals')->group(function () {
-        Route::get('/', [Client\ReferralsController::class, 'index']);
-        Route::get('/activity', [Client\ReferralsController::class, 'activity']);
-
-        Route::post('/', [Client\ReferralsController::class, 'store']);
-        Route::put('/use-code', [Client\ReferralsController::class, 'use']);
-
-        Route::delete('/{code}', [Client\ReferralsController::class, 'delete']);
-    });
-
-    Route::get('/discord', [Client\AccountController::class, 'discord'])->name('api:client.account.discord');
-    Route::get('/discord/callback', [Client\AccountController::class, 'discordCallback'])->name('api:client.account.discord.callback');
 
     Route::get('/api-keys', [Client\ApiKeyController::class, 'index']);
     Route::post('/api-keys', [Client\ApiKeyController::class, 'store']);
@@ -60,63 +40,6 @@ Route::prefix('/account')->middleware(AccountSubject::class)->group(function () 
         Route::get('/', [Client\SSHKeyController::class, 'index']);
         Route::post('/', [Client\SSHKeyController::class, 'store']);
         Route::post('/remove', [Client\SSHKeyController::class, 'delete']);
-    });
-
-    Route::prefix('/tickets')->group(function () {
-        Route::get('/', [Client\TicketController::class, 'index']);
-        Route::get('/{id}', [Client\TicketController::class, 'view']);
-        Route::get('/{id}/messages', [Client\TicketController::class, 'viewMessages']);
-
-        Route::post('/', [Client\TicketController::class, 'new']);
-        Route::post('/{id}/messages', [Client\TicketController::class, 'newMessage']);
-
-        Route::delete('/{id}', [Client\TicketController::class, 'close']);
-    });
-});
-
-/*
-|--------------------------------------------------------------------------
-| Client Control API
-|--------------------------------------------------------------------------
-|
-| Endpoint: /api/client/store
-|
-*/
-Route::group([
-    'prefix' => '/store',
-], function () {
-    Route::get('/', [Client\Store\ResourceController::class, 'user'])->name('api:client:store.user');
-    Route::get('/costs', [Client\Store\ResourceController::class, 'costs'])->name('api:client:store.costs');
-    Route::get('/nodes', [Client\Store\ServerController::class, 'nodes'])->name('api:client:store.nests');
-    Route::get('/nests', [Client\Store\ServerController::class, 'nests'])->name('api:client:store.nests');
-
-    Route::post('/eggs', [Client\Store\ServerController::class, 'eggs'])->name('api:client:store.eggs');
-    Route::post('/create', [Client\Store\ServerController::class, 'store'])->name('api:client:store.create');
-    Route::post('/stripe', [Client\Store\StripeController::class, 'purchase'])->name('api:client:store.stripe');
-    Route::post('/paypal', [Client\Store\PayPalController::class, 'purchase'])->name('api:client:store.paypal');
-    Route::post('/resources', [Client\Store\ResourceController::class, 'purchase'])->name('api:client:store.resources');
-
-    Route::group(['prefix' => '/earn', 'middleware' => 'throttle:1'], function () {
-        Route::post('/', [Client\Store\ResourceController::class, 'earn'])->name('api:client:store.earn');
-    });
-});
-
-/*
-|--------------------------------------------------------------------------
-| Client Control API
-|--------------------------------------------------------------------------
-|
-| Endpoint: /api/client/callback
-|
-*/
-Route::group(['prefix' => '/callback'], function () {
-    Route::group(['prefix' => '/paypal'], function () {
-        Route::get('/success', [Client\Store\PayPalController::class, 'success'])->name('api.client.store.paypal.success');
-        Route::get('/cancel', [Client\Store\PayPalController::class, 'cancel'])->name('api.client.store.paypal.cancel');
-    });
-
-    Route::group(['prefix' => '/stripe'], function () {
-        Route::get('/cancel', [Client\Store\StripeController::class, 'cancel'])->name('api.client.store.stripe.cancel');
     });
 });
 
@@ -141,17 +64,8 @@ Route::group([
     Route::get('/resources', Client\Servers\ResourceUtilizationController::class)->name('api:client:server.resources');
     Route::get('/activity', Client\Servers\ActivityLogController::class)->name('api:client:server.activity');
 
-    Route::post('/background', [Client\Servers\ServerController::class, 'updateBackground']);
     Route::post('/command', [Client\Servers\CommandController::class, 'index']);
     Route::post('/power', [Client\Servers\PowerController::class, 'index']);
-
-    // Routes for editing, deleting and renewing a server.
-    Route::post('/renew', [Client\Servers\RenewalController::class, 'index'])->name('api:client:server.renew');
-    Route::post('/delete', [Client\Servers\ServerController::class, 'delete'])->name('api:client:server.delete');
-    Route::post('/edit', [Client\Servers\EditController::class, 'index'])->name('api:client:server.edit');
-
-    Route::post('/plugins', [Client\Servers\PluginController::class, 'index'])->name('api:client:server.plugins');
-    Route::post('/plugins/install/{id}', [Client\Servers\PluginController::class, 'install'])->name('api:client:server.plugins');
 
     Route::group(['prefix' => '/databases'], function () {
         Route::get('/', [Client\Servers\DatabaseController::class, 'index']);
@@ -173,7 +87,7 @@ Route::group([
         Route::post('/create-folder', [Client\Servers\FileController::class, 'create']);
         Route::post('/chmod', [Client\Servers\FileController::class, 'chmod']);
         Route::post('/pull', [Client\Servers\FileController::class, 'pull'])->middleware(['throttle:10,5']);
-        Route::get('/upload', [Client\Servers\FileUploadController::class, '__invoke']);
+        Route::get('/upload', Client\Servers\FileUploadController::class);
     });
 
     Route::group(['prefix' => '/schedules'], function () {

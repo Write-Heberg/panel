@@ -1,16 +1,17 @@
 import React from 'react';
-import tw from 'twin.macro';
-import * as Icon from 'react-feather';
-import Can from '@/components/elements/Can';
-import { bytesToString } from '@/lib/formatters';
-import { ServerBackup } from '@/api/server/types';
-import Spinner from '@/components/elements/Spinner';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArchive, faEllipsisH, faLock } from '@fortawesome/free-solid-svg-icons';
 import { format, formatDistanceToNow } from 'date-fns';
-import { SocketEvent } from '@/components/server/events';
-import GreyRowBox from '@/components/elements/GreyRowBox';
-import getServerBackups from '@/api/swr/getServerBackups';
+import Spinner from '@/components/elements/Spinner';
+import { bytesToString } from '@/lib/formatters';
+import Can from '@/components/elements/Can';
 import useWebsocketEvent from '@/plugins/useWebsocketEvent';
 import BackupContextMenu from '@/components/server/backups/BackupContextMenu';
+import tw from 'twin.macro';
+import GreyRowBox from '@/components/elements/GreyRowBox';
+import getServerBackups from '@/api/swr/getServerBackups';
+import { ServerBackup } from '@/api/server/types';
+import { SocketEvent } from '@/components/server/events';
 
 interface Props {
     backup: ServerBackup;
@@ -52,9 +53,9 @@ export default ({ backup, className }: Props) => {
                 <div css={tw`mr-4`}>
                     {backup.completedAt !== null ? (
                         backup.isLocked ? (
-                            <Icon.Lock css={tw`text-yellow-500`} />
+                            <FontAwesomeIcon icon={faLock} css={tw`text-yellow-500`} />
                         ) : (
-                            <Icon.Unlock css={tw`text-neutral-300`} />
+                            <FontAwesomeIcon icon={faArchive} css={tw`text-neutral-300`} />
                         )
                     ) : (
                         <Spinner size={'small'} />
@@ -89,7 +90,7 @@ export default ({ backup, className }: Props) => {
                 <div css={tw`mt-4 md:mt-0 ml-6`} style={{ marginRight: '-0.5rem' }}>
                     {!backup.completedAt ? (
                         <div css={tw`p-2 invisible`}>
-                            <Icon.MoreHorizontal />
+                            <FontAwesomeIcon icon={faEllipsisH} />
                         </div>
                     ) : (
                         <BackupContextMenu backup={backup} />

@@ -2,7 +2,6 @@
 
 namespace Pterodactyl\Services\Servers;
 
-use Pterodactyl\Models\User;
 use Illuminate\Http\Response;
 use Pterodactyl\Models\Server;
 use Illuminate\Support\Facades\Log;
@@ -14,7 +13,6 @@ use Pterodactyl\Exceptions\Http\Connection\DaemonConnectionException;
 class ServerDeletionService
 {
     protected bool $force = false;
-    protected bool $return_resources = false;
 
     /**
      * ServerDeletionService constructor.
@@ -32,18 +30,6 @@ class ServerDeletionService
     public function withForce(bool $bool = true): self
     {
         $this->force = $bool;
-
-        return $this;
-    }
-
-    /**
-     * Set if the server's owner should recieve the resources upon server deletion.
-     *
-     * @return $this
-     */
-    public function returnResources(bool $bool = true): self
-    {
-        $this->return_resources = $bool;
 
         return $this;
     }
@@ -93,25 +79,5 @@ class ServerDeletionService
 
             $server->delete();
         });
-
-        if (!$this->return_resources) {
-            return;
-        }
-
-        try {
-            $user = User::findOrFail($server->owner_id);
-        } catch (\Exception $exception) {
-            throw $exception;
-        }
-
-        $user->update([
-            'store_cpu' => $user->store_cpu + $server->cpu,
-            'store_memory' => $user->store_memory + $server->memory,
-            'store_disk' => $user->store_disk + $server->disk,
-            'store_slots' => $user->store_slots + 1, // Always one slot.
-            'store_ports' => $user->store_ports + $server->allocation_limit,
-            'store_backups' => $user->store_backups + $server->backup_limit,
-            'store_databases' => $user->store_databases + $server->database_limit,
-        ]);
     }
 }

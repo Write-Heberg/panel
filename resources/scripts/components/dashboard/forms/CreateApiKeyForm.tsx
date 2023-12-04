@@ -1,18 +1,18 @@
-import tw from 'twin.macro';
-import { object, string } from 'yup';
 import React, { useState } from 'react';
-import { ApplicationStore } from '@/state';
-import styled from 'styled-components/macro';
-import { httpErrorToHuman } from '@/api/http';
-import { ApiKey } from '@/api/account/getApiKeys';
+import { Field, Form, Formik, FormikHelpers } from 'formik';
+import { object, string } from 'yup';
+import FormikFieldWrapper from '@/components/elements/FormikFieldWrapper';
 import createApiKey from '@/api/account/createApiKey';
 import { Actions, useStoreActions } from 'easy-peasy';
-import { Button } from '@/components/elements/button/index';
-import { Field, Form, Formik, FormikHelpers } from 'formik';
-import ApiKeyModal from '@/components/dashboard/ApiKeyModal';
-import Input, { Textarea } from '@/components/elements/Input';
+import { ApplicationStore } from '@/state';
+import { httpErrorToHuman } from '@/api/http';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
-import FormikFieldWrapper from '@/components/elements/FormikFieldWrapper';
+import { ApiKey } from '@/api/account/getApiKeys';
+import tw from 'twin.macro';
+import Button from '@/components/elements/Button';
+import Input, { Textarea } from '@/components/elements/Input';
+import styled from 'styled-components/macro';
+import ApiKeyModal from '@/components/dashboard/ApiKeyModal';
 
 interface Values {
     description: string;

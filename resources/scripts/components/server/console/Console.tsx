@@ -1,23 +1,23 @@
-import 'xterm/css/xterm.css';
-import classNames from 'classnames';
-import * as Icon from 'react-feather';
-import styles from './style.module.css';
-import { FitAddon } from 'xterm-addon-fit';
-import { theme as th } from 'twin.macro';
-import { SearchAddon } from 'xterm-addon-search';
-import { Terminal, ITerminalOptions } from 'xterm';
-import { WebLinksAddon } from 'xterm-addon-web-links';
-import { SearchBarAddon } from 'xterm-addon-search-bar';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { ITerminalOptions, Terminal } from 'xterm';
+import { FitAddon } from 'xterm-addon-fit';
+import { SearchAddon } from 'xterm-addon-search';
+import { SearchBarAddon } from 'xterm-addon-search-bar';
+import { WebLinksAddon } from 'xterm-addon-web-links';
+import { ScrollDownHelperAddon } from '@/plugins/XtermScrollDownHelperAddon';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import { ServerContext } from '@/state/server';
 import { usePermissions } from '@/plugins/usePermissions';
+import { theme as th } from 'twin.macro';
 import useEventListener from '@/plugins/useEventListener';
 import { debounce } from 'debounce';
 import { usePersistedState } from '@/plugins/usePersistedState';
 import { SocketEvent, SocketRequest } from '@/components/server/events';
+import classNames from 'classnames';
+import { ChevronDoubleRightIcon } from '@heroicons/react/solid';
+
 import 'xterm/css/xterm.css';
-import Tooltip from '@/components/elements/tooltip/Tooltip';
+import styles from './style.module.css';
 
 const theme = {
     background: th`colors.black`.toString(),
@@ -47,26 +47,26 @@ const terminalProps: ITerminalOptions = {
     allowTransparency: true,
     fontSize: 12,
     fontFamily: th('fontFamily.mono'),
-    rows: 50,
+    rows: 30,
     theme: theme,
 };
 
 export default () => {
-    const TERMINAL_PRELUDE = '\u001b[1m\u001b[33mJexactyl: \u001b[0m';
+    const TERMINAL_PRELUDE = '\u001b[1m\u001b[33mcontainer@pterodactyl~ \u001b[0m';
     const ref = useRef<HTMLDivElement>(null);
     const terminal = useMemo(() => new Terminal({ ...terminalProps }), []);
     const fitAddon = new FitAddon();
     const searchAddon = new SearchAddon();
-    const webLinksAddon = new WebLinksAddon();
     const searchBar = new SearchBarAddon({ searchAddon });
-    const [historyIndex, setHistoryIndex] = useState(-1);
-    const isConsoleDetached = location.pathname.endsWith('/console');
+    const webLinksAddon = new WebLinksAddon();
+    const scrollDownHelperAddon = new ScrollDownHelperAddon();
+    const { connected, instance } = ServerContext.useStoreState((state) => state.socket);
     const [canSendCommands] = usePermissions(['control.console']);
     const serverId = ServerContext.useStoreState((state) => state.server.data!.id);
-    const { connected, instance } = ServerContext.useStoreState((state) => state.socket);
     const isTransferring = ServerContext.useStoreState((state) => state.server.data!.isTransferring);
     const [history, setHistory] = usePersistedState<string[]>(`${serverId}:command_history`, []);
-
+    const [historyIndex, setHistoryIndex] = useState(-1);
+    // SearchBarAddon has hardcoded z-index: 999 :(
     const zIndex = `
     .xterm-search-bar__addon {
         z-index: 10;
@@ -82,10 +82,6 @@ export default () => {
                 terminal.writeln(TERMINAL_PRELUDE + 'Transfer has failed.\u001b[0m');
                 return;
         }
-    };
-
-    const popout = () => {
-        window.open(window.location.href + '/console', 'Server Console', 'height=400,width=800');
     };
 
     const handleDaemonErrorOutput = (line: string) =>
@@ -131,6 +127,7 @@ export default () => {
             terminal.loadAddon(searchAddon);
             terminal.loadAddon(searchBar);
             terminal.loadAddon(webLinksAddon);
+            terminal.loadAddon(scrollDownHelperAddon);
 
             terminal.open(ref.current);
             fitAddon.fit();
@@ -200,35 +197,29 @@ export default () => {
             <div
                 className={classNames(styles.container, styles.overflows_container, { 'rounded-b': !canSendCommands })}
             >
-                <div id={styles.terminal} ref={ref} />
+                <div className={'h-full'}>
+                    <div id={styles.terminal} ref={ref} />
+                </div>
             </div>
             {canSendCommands && (
                 <div className={classNames('relative', styles.overflows_container)}>
                     <input
                         className={classNames('peer', styles.command_input)}
                         type={'text'}
-                        id={'console_input'}
+                        placeholder={'Type a command...'}
                         aria-label={'Console command input.'}
                         disabled={!instance || !connected}
                         onKeyDown={handleCommandKeyDown}
                         autoCorrect={'off'}
                         autoCapitalize={'none'}
                     />
-                    <div className={classNames('text-gray-100', styles.command_icon)}>
-                        {!isConsoleDetached && (
-                            <Tooltip content={'Launch console in external window'}>
-                                <Icon.ExternalLink className={'w-4 h-4'} onClick={() => popout()} />
-                            </Tooltip>
+                    <div
+                        className={classNames(
+                            'text-gray-100 peer-focus:text-gray-50 peer-focus:animate-pulse',
+                            styles.command_icon
                         )}
-                        <Tooltip content={'Type a command...'}>
-                            <Icon.ChevronsRight
-                                className={'w-4 h-4 ml-2 hover:animate-pulse'}
-                                onClick={() => {
-                                    // @ts-expect-error this is valid
-                                    document.getElementById('console_input').focus();
-                                }}
-                            />
-                        </Tooltip>
+                    >
+                        <ChevronDoubleRightIcon className={'w-4 h-4'} />
                     </div>
                 </div>
             )}

@@ -1,16 +1,17 @@
-import tw from 'twin.macro';
-import useFlash from '@/plugins/useFlash';
-import Can from '@/components/elements/Can';
-import { httpErrorToHuman } from '@/api/http';
-import Fade from '@/components/elements/Fade';
-import { ServerContext } from '@/state/server';
 import React, { useEffect, useState } from 'react';
-import Spinner from '@/components/elements/Spinner';
-import { useDeepMemoize } from '@/plugins/useDeepMemoize';
-import DatabaseRow from '@/components/server/databases/DatabaseRow';
-import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import getServerDatabases from '@/api/server/databases/getServerDatabases';
+import { ServerContext } from '@/state/server';
+import { httpErrorToHuman } from '@/api/http';
+import FlashMessageRender from '@/components/FlashMessageRender';
+import DatabaseRow from '@/components/server/databases/DatabaseRow';
+import Spinner from '@/components/elements/Spinner';
 import CreateDatabaseButton from '@/components/server/databases/CreateDatabaseButton';
+import Can from '@/components/elements/Can';
+import useFlash from '@/plugins/useFlash';
+import tw from 'twin.macro';
+import Fade from '@/components/elements/Fade';
+import ServerContentBlock from '@/components/elements/ServerContentBlock';
+import { useDeepMemoize } from '@/plugins/useDeepMemoize';
 
 export default () => {
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
@@ -36,11 +37,8 @@ export default () => {
     }, []);
 
     return (
-        <ServerContentBlock
-            title={'Databases'}
-            description={'Create databases for your application.'}
-            showFlashKey={'databases'}
-        >
+        <ServerContentBlock title={'Databases'}>
+            <FlashMessageRender byKey={'databases'} css={tw`mb-4`} />
             {!databases.length && loading ? (
                 <Spinner size={'large'} centered />
             ) : (

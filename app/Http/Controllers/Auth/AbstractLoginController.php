@@ -37,11 +37,6 @@ abstract class AbstractLoginController extends Controller
     protected string $redirectTo = '/';
 
     /**
-     * @var \Pterodactyl\Models\AccountLog
-     */
-    protected $log;
-
-    /**
      * LoginController constructor.
      */
     public function __construct()
@@ -72,8 +67,6 @@ abstract class AbstractLoginController extends Controller
 
     /**
      * Send the response after the user was authenticated.
-     *
-     * @throws DisplayException
      */
     protected function sendLoginResponse(User $user, Request $request): JsonResponse
     {

@@ -1,10 +1,10 @@
-import tw from 'twin.macro';
-import { breakpoint } from '@/theme';
-import { createPortal } from 'react-dom';
-import Fade from '@/components/elements/Fade';
-import Spinner from '@/components/elements/Spinner';
-import styled, { css } from 'styled-components/macro';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import Spinner from '@/components/elements/Spinner';
+import tw from 'twin.macro';
+import styled, { css } from 'styled-components/macro';
+import { breakpoint } from '@/theme';
+import Fade from '@/components/elements/Fade';
+import { createPortal } from 'react-dom';
 
 export interface RequiredModalProps {
     visible: boolean;
@@ -130,7 +130,7 @@ const Modal: React.FC<ModalProps> = ({
                         </Fade>
                     )}
                     <div
-                        css={tw`bg-neutral-900 p-3 sm:p-4 md:p-6 rounded shadow-md overflow-y-scroll transition-all duration-150`}
+                        css={tw`bg-neutral-800 p-3 sm:p-4 md:p-6 rounded shadow-md overflow-y-scroll transition-all duration-150`}
                     >
                         {children}
                     </div>

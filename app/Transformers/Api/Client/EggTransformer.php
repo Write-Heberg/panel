@@ -17,6 +17,7 @@ class EggTransformer extends BaseClientTransformer
     public function transform(Egg $egg): array
     {
         return [
+            'uuid' => $egg->uuid,
             'name' => $egg->name,
         ];
     }

@@ -1,8 +1,8 @@
-import copy from 'copy-to-clipboard';
-import classNames from 'classnames';
+import React, { useEffect, useState } from 'react';
 import Fade from '@/components/elements/Fade';
 import Portal from '@/components/elements/Portal';
-import React, { useEffect, useState } from 'react';
+import copy from 'copy-to-clipboard';
+import classNames from 'classnames';
 
 interface CopyOnClickProps {
     text: string | number | null | undefined;

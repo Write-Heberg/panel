@@ -1,23 +1,23 @@
 import React from 'react';
-import classNames from 'classnames';
-import * as Icon from 'react-feather';
-import style from './style.module.css';
 import { Link } from 'react-router-dom';
-import Avatar from '@/components/Avatar';
-import { ActivityLog } from '@definitions/user';
-import useLocationHash from '@/plugins/useLocationHash';
-import Translate from '@/components/elements/Translate';
-import { getObjectKeys, isObject } from '@/lib/objects';
 import Tooltip from '@/components/elements/tooltip/Tooltip';
+import Translate from '@/components/elements/Translate';
 import { format, formatDistanceToNowStrict } from 'date-fns';
+import { ActivityLog } from '@definitions/user';
 import ActivityLogMetaButton from '@/components/elements/activity/ActivityLogMetaButton';
+import { FolderOpenIcon, TerminalIcon } from '@heroicons/react/solid';
+import classNames from 'classnames';
+import style from './style.module.css';
+import Avatar from '@/components/Avatar';
+import useLocationHash from '@/plugins/useLocationHash';
+import { getObjectKeys, isObject } from '@/lib/objects';
 
 interface Props {
     activity: ActivityLog;
     children?: React.ReactNode;
 }
 
-export function wrapProperties(value: unknown): any {
+function wrapProperties(value: unknown): any {
     if (value === null || typeof value === 'string' || typeof value === 'number') {
         return `<strong>${String(value)}</strong>`;
     }
@@ -61,17 +61,17 @@ export default ({ activity, children }: Props) => {
                             to={`#${pathTo({ event: activity.event })}`}
                             className={'transition-colors duration-75 active:text-cyan-400 hover:text-cyan-400'}
                         >
-                            <Translate ns={'activity'} values={properties} i18nKey={activity.event.replace(':', '.')} />
+                            {activity.event}
                         </Link>
                         <div className={classNames(style.icons, 'group-hover:text-gray-300')}>
                             {activity.isApi && (
                                 <Tooltip placement={'top'} content={'Using API Key'}>
-                                    <Icon.Key />
+                                    <TerminalIcon />
                                 </Tooltip>
                             )}
                             {activity.event.startsWith('server:sftp.') && (
                                 <Tooltip placement={'top'} content={'Using SFTP'}>
-                                    <Icon.Folder />
+                                    <FolderOpenIcon />
                                 </Tooltip>
                             )}
                             {children}

@@ -1,17 +1,17 @@
-import tw from 'twin.macro';
 import * as React from 'react';
-import Reaptcha from 'reaptcha';
-import { object, string } from 'yup';
-import { Link } from 'react-router-dom';
-import useFlash from '@/plugins/useFlash';
-import { useStoreState } from 'easy-peasy';
-import { httpErrorToHuman } from '@/api/http';
-import { Formik, FormikHelpers } from 'formik';
-import Field from '@/components/elements/Field';
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/elements/button/index';
-import LoginFormContainer from '@/components/auth/LoginFormContainer';
+import { Link } from 'react-router-dom';
 import requestPasswordResetEmail from '@/api/auth/requestPasswordResetEmail';
+import { httpErrorToHuman } from '@/api/http';
+import LoginFormContainer from '@/components/auth/LoginFormContainer';
+import { useStoreState } from 'easy-peasy';
+import Field from '@/components/elements/Field';
+import { Formik, FormikHelpers } from 'formik';
+import { object, string } from 'yup';
+import tw from 'twin.macro';
+import Button from '@/components/elements/Button';
+import Reaptcha from 'reaptcha';
+import useFlash from '@/plugins/useFlash';
 
 interface Values {
     email: string;
@@ -38,7 +38,7 @@ export default () => {
                 console.error(error);
 
                 setSubmitting(false);
-                addFlash({ type: 'danger', title: 'Error', message: httpErrorToHuman(error) });
+                addFlash({ type: 'error', title: 'Error', message: httpErrorToHuman(error) });
             });
 
             return;
@@ -51,7 +51,7 @@ export default () => {
             })
             .catch((error) => {
                 console.error(error);
-                addFlash({ type: 'danger', title: 'Error', message: httpErrorToHuman(error) });
+                addFlash({ type: 'error', title: 'Error', message: httpErrorToHuman(error) });
             })
             .then(() => {
                 setToken('');
@@ -83,7 +83,7 @@ export default () => {
                         type={'email'}
                     />
                     <div css={tw`mt-6`}>
-                        <Button size={Button.Sizes.Large} css={tw`w-full`} type={'submit'} disabled={isSubmitting}>
+                        <Button type={'submit'} size={'xlarge'} disabled={isSubmitting} isLoading={isSubmitting}>
                             Send Email
                         </Button>
                     </div>

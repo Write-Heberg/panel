@@ -1,15 +1,16 @@
-import tw from 'twin.macro';
-import { ApplicationStore } from '@/state';
-import Can from '@/components/elements/Can';
-import { httpErrorToHuman } from '@/api/http';
-import { ServerContext } from '@/state/server';
 import React, { useEffect, useState } from 'react';
-import Spinner from '@/components/elements/Spinner';
-import UserRow from '@/components/server/users/UserRow';
+import { ServerContext } from '@/state/server';
 import { Actions, useStoreActions, useStoreState } from 'easy-peasy';
-import getServerSubusers from '@/api/server/users/getServerSubusers';
+import { ApplicationStore } from '@/state';
+import Spinner from '@/components/elements/Spinner';
 import AddSubuserButton from '@/components/server/users/AddSubuserButton';
+import UserRow from '@/components/server/users/UserRow';
+import FlashMessageRender from '@/components/FlashMessageRender';
+import getServerSubusers from '@/api/server/users/getServerSubusers';
+import { httpErrorToHuman } from '@/api/http';
+import Can from '@/components/elements/Can';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
+import tw from 'twin.macro';
 
 export default () => {
     const [loading, setLoading] = useState(true);
@@ -47,11 +48,8 @@ export default () => {
     }
 
     return (
-        <ServerContentBlock
-            title={'Users'}
-            description={'Add and remove users from your server.'}
-            showFlashKey={'users'}
-        >
+        <ServerContentBlock title={'Users'}>
+            <FlashMessageRender byKey={'users'} css={tw`mb-4`} />
             {!subusers.length ? (
                 <p css={tw`text-center text-sm text-neutral-300`}>It looks like you don&apos;t have any subusers.</p>
             ) : (

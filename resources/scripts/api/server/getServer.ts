@@ -1,6 +1,6 @@
-import { ServerEggVariable, ServerStatus } from '@/api/server/types';
 import http, { FractalResponseData, FractalResponseList } from '@/api/http';
 import { rawDataToServerAllocation, rawDataToServerEggVariable } from '@/api/transformers';
+import { ServerEggVariable, ServerStatus } from '@/api/server/types';
 
 export interface Allocation {
     id: number;
@@ -43,9 +43,6 @@ export interface Server {
     isTransferring: boolean;
     variables: ServerEggVariable[];
     allocations: Allocation[];
-    renewal: number;
-    renewable: boolean;
-    bg: string;
 }
 
 export const rawDataToServerObject = ({ attributes: data }: FractalResponseData): Server => ({
@@ -73,9 +70,6 @@ export const rawDataToServerObject = ({ attributes: data }: FractalResponseData)
     allocations: ((data.relationships?.allocations as FractalResponseList | undefined)?.data || []).map(
         rawDataToServerAllocation
     ),
-    renewal: data.renewal,
-    renewable: data.renewable,
-    bg: data.bg,
 });
 
 export default (uuid: string): Promise<[Server, string[]]> => {

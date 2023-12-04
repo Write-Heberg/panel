@@ -1,14 +1,14 @@
 import React from 'react';
-import * as Yup from 'yup';
-import tw from 'twin.macro';
-import { ApplicationStore } from '@/state';
-import { httpErrorToHuman } from '@/api/http';
-import Field from '@/components/elements/Field';
+import { Actions, State, useStoreActions, useStoreState } from 'easy-peasy';
 import { Form, Formik, FormikHelpers } from 'formik';
-import { Button } from '@/components/elements/button/index';
+import Field from '@/components/elements/Field';
+import * as Yup from 'yup';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import updateAccountPassword from '@/api/account/updateAccountPassword';
-import { Actions, State, useStoreActions, useStoreState } from 'easy-peasy';
+import { httpErrorToHuman } from '@/api/http';
+import { ApplicationStore } from '@/state';
+import tw from 'twin.macro';
+import { Button } from '@/components/elements/button/index';
 
 interface Values {
     current: string;
@@ -21,7 +21,7 @@ const schema = Yup.object().shape({
     password: Yup.string().min(8).required(),
     confirmPassword: Yup.string().test(
         'password',
-        'La confirmation du mot de passe ne correspond pas au mot de passe que vous avez saisi.',
+        'Password confirmation does not match the password you entered.',
         function (value) {
             return value === this.parent.password;
         }
@@ -46,7 +46,7 @@ export default () => {
             .catch((error) =>
                 addFlash({
                     key: 'account:password',
-                    type: 'danger',
+                    type: 'error',
                     title: 'Error',
                     message: httpErrorToHuman(error),
                 })
@@ -78,7 +78,7 @@ export default () => {
                                     name={'password'}
                                     label={'New Password'}
                                     description={
-                                        'Votre nouveau mot de passe doit comporter au moins 8 caractères et être unique pour ce site web.'
+                                        'Your new password should be at least 8 characters in length and unique to this website.'
                                     }
                                 />
                             </div>

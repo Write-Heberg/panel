@@ -1,13 +1,13 @@
 import React from 'react';
-import * as Yup from 'yup';
-import tw from 'twin.macro';
-import { ApplicationStore } from '@/state';
-import { httpErrorToHuman } from '@/api/http';
-import Field from '@/components/elements/Field';
-import { Form, Formik, FormikHelpers } from 'formik';
-import { Button } from '@/components/elements/button/index';
-import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import { Actions, State, useStoreActions, useStoreState } from 'easy-peasy';
+import { Form, Formik, FormikHelpers } from 'formik';
+import * as Yup from 'yup';
+import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
+import Field from '@/components/elements/Field';
+import { httpErrorToHuman } from '@/api/http';
+import { ApplicationStore } from '@/state';
+import tw from 'twin.macro';
+import { Button } from '@/components/elements/button/index';
 
 interface Values {
     email: string;
@@ -38,7 +38,7 @@ export default () => {
             )
             .catch((error) =>
                 addFlash({
-                    type: 'danger',
+                    type: 'error',
                     key: 'account:email',
                     title: 'Error',
                     message: httpErrorToHuman(error),

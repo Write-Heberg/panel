@@ -1,6 +1,7 @@
 import React from 'react';
 import tw from 'twin.macro';
-import * as Icon from 'react-feather';
+import Icon from '@/components/elements/Icon';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 interface State {
     hasError: boolean;
@@ -24,8 +25,10 @@ class ErrorBoundary extends React.Component<{}, State> {
         return this.state.hasError ? (
             <div css={tw`flex items-center justify-center w-full my-4`}>
                 <div css={tw`flex items-center bg-neutral-900 rounded p-3 text-red-500`}>
-                    <Icon.AlertTriangle css={tw`h-4 w-auto mr-2`} />
-                    <p css={tw`text-sm text-neutral-100`}>An error was encountered while rendering this page.</p>
+                    <Icon icon={faExclamationTriangle} css={tw`h-4 w-auto mr-2`} />
+                    <p css={tw`text-sm text-neutral-100`}>
+                        An error was encountered by the application while rendering this view. Try refreshing the page.
+                    </p>
                 </div>
             </div>
         ) : (

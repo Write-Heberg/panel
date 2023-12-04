@@ -1,7 +1,7 @@
-import classNames from 'classnames';
-import styles from './style.module.css';
 import React, { forwardRef } from 'react';
+import classNames from 'classnames';
 import { ButtonProps, Options } from '@/components/elements/button/types';
+import styles from './style.module.css';
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ({ children, shape, size, variant, className, ...rest }, ref) => {
@@ -32,16 +32,6 @@ const TextButton = forwardRef<HTMLButtonElement, ButtonProps>(({ className, ...p
     <Button ref={ref} className={classNames(styles.text, className)} {...props} />
 ));
 
-const SuccessButton = forwardRef<HTMLButtonElement, ButtonProps>(({ className, ...props }, ref) => (
-    // @ts-expect-error not sure how to get this correct
-    <Button ref={ref} className={classNames(styles.success, className)} {...props} />
-));
-
-const WarnButton = forwardRef<HTMLButtonElement, ButtonProps>(({ className, ...props }, ref) => (
-    // @ts-expect-error not sure how to get this correct
-    <Button ref={ref} className={classNames(styles.warn, className)} {...props} />
-));
-
 const DangerButton = forwardRef<HTMLButtonElement, ButtonProps>(({ className, ...props }, ref) => (
     // @ts-expect-error not sure how to get this correct
     <Button ref={ref} className={classNames(styles.danger, className)} {...props} />
@@ -53,8 +43,6 @@ const _Button = Object.assign(Button, {
     Variants: Options.Variant,
     Text: TextButton,
     Danger: DangerButton,
-    Success: SuccessButton,
-    Warn: WarnButton,
 });
 
 export default _Button;

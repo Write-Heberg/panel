@@ -1,15 +1,15 @@
-import tw from 'twin.macro';
-import Reaptcha from 'reaptcha';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import login from '@/api/auth/login';
-import { object, string } from 'yup';
-import useFlash from '@/plugins/useFlash';
+import LoginFormContainer from '@/components/auth/LoginFormContainer';
 import { useStoreState } from 'easy-peasy';
 import { Formik, FormikHelpers } from 'formik';
+import { object, string } from 'yup';
 import Field from '@/components/elements/Field';
-import React, { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/elements/button/index';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import LoginFormContainer from '@/components/auth/LoginFormContainer';
+import tw from 'twin.macro';
+import Button from '@/components/elements/Button';
+import Reaptcha from 'reaptcha';
+import useFlash from '@/plugins/useFlash';
 
 interface Values {
     username: string;
@@ -19,9 +19,6 @@ interface Values {
 const LoginContainer = ({ history }: RouteComponentProps) => {
     const ref = useRef<Reaptcha>(null);
     const [token, setToken] = useState('');
-    const name = useStoreState((state) => state.settings.data?.name);
-    const email = useStoreState((state) => state.settings.data?.registration.email);
-    const discord = useStoreState((state) => state.settings.data?.registration.discord);
 
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const { enabled: recaptchaEnabled, siteKey } = useStoreState((state) => state.settings.data!.recaptcha);
@@ -77,13 +74,13 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
             })}
         >
             {({ isSubmitting, setSubmitting, submitForm }) => (
-                <LoginFormContainer title={'Login to ' + name} css={tw`w-full flex`}>
+                <LoginFormContainer title={'Login to Continue'} css={tw`w-full flex`}>
                     <Field light type={'text'} label={'Username or Email'} name={'username'} disabled={isSubmitting} />
                     <div css={tw`mt-6`}>
                         <Field light type={'password'} label={'Password'} name={'password'} disabled={isSubmitting} />
                     </div>
                     <div css={tw`mt-6`}>
-                        <Button type={'submit'} size={Button.Sizes.Large} css={tw`w-full`} disabled={isSubmitting}>
+                        <Button type={'submit'} size={'xlarge'} isLoading={isSubmitting} disabled={isSubmitting}>
                             Login
                         </Button>
                     </div>
@@ -109,24 +106,6 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
                         >
                             Forgot password?
                         </Link>
-                    </div>
-                    <div css={tw`mt-6 text-center`}>
-                        {email && (
-                            <Link
-                                to={'/auth/register'}
-                                css={tw`text-xs text-neutral-500 tracking-wide no-underline uppercase hover:text-neutral-600`}
-                            >
-                                Signup with Email
-                            </Link>
-                        )}
-                        {discord && (
-                            <Link
-                                to={'/auth/discord'}
-                                css={tw`text-xs ml-6 text-neutral-500 tracking-wide no-underline uppercase hover:text-neutral-600`}
-                            >
-                                Authenticate with Discord
-                            </Link>
-                        )}
                     </div>
                 </LoginFormContainer>
             )}

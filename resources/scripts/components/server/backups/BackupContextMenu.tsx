@@ -1,19 +1,27 @@
-import tw from 'twin.macro';
-import * as Icon from 'react-feather';
 import React, { useState } from 'react';
+import {
+    faBoxOpen,
+    faCloudDownloadAlt,
+    faEllipsisH,
+    faLock,
+    faTrashAlt,
+    faUnlock,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import DropdownMenu, { DropdownButtonRow } from '@/components/elements/DropdownMenu';
+import getBackupDownloadUrl from '@/api/server/backups/getBackupDownloadUrl';
 import useFlash from '@/plugins/useFlash';
+import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
+import deleteBackup from '@/api/server/backups/deleteBackup';
 import Can from '@/components/elements/Can';
+import tw from 'twin.macro';
+import getServerBackups from '@/api/swr/getServerBackups';
+import { ServerBackup } from '@/api/server/types';
 import { ServerContext } from '@/state/server';
 import Input from '@/components/elements/Input';
-import { ServerBackup } from '@/api/server/types';
+import { restoreServerBackup } from '@/api/server/backups';
 import http, { httpErrorToHuman } from '@/api/http';
 import { Dialog } from '@/components/elements/dialog';
-import getServerBackups from '@/api/swr/getServerBackups';
-import { restoreServerBackup } from '@/api/server/backups';
-import deleteBackup from '@/api/server/backups/deleteBackup';
-import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
-import getBackupDownloadUrl from '@/api/server/backups/getBackupDownloadUrl';
-import DropdownMenu, { DropdownButtonRow } from '@/components/elements/DropdownMenu';
 
 interface Props {
     backup: ServerBackup;
@@ -161,41 +169,36 @@ export default ({ backup }: Props) => {
                             onClick={onClick}
                             css={tw`text-gray-200 transition-colors duration-150 hover:text-gray-100 p-2`}
                         >
-                            <Icon.MoreHorizontal />
+                            <FontAwesomeIcon icon={faEllipsisH} />
                         </button>
                     )}
                 >
                     <div css={tw`text-sm`}>
                         <Can action={'backup.download'}>
                             <DropdownButtonRow onClick={doDownload}>
-                                <Icon.DownloadCloud css={tw`text-xs`} />
+                                <FontAwesomeIcon fixedWidth icon={faCloudDownloadAlt} css={tw`text-xs`} />
                                 <span css={tw`ml-2`}>Download</span>
                             </DropdownButtonRow>
                         </Can>
                         <Can action={'backup.restore'}>
                             <DropdownButtonRow onClick={() => setModal('restore')}>
-                                <Icon.Upload css={tw`text-xs`} />
+                                <FontAwesomeIcon fixedWidth icon={faBoxOpen} css={tw`text-xs`} />
                                 <span css={tw`ml-2`}>Restore</span>
                             </DropdownButtonRow>
                         </Can>
                         <Can action={'backup.delete'}>
                             <>
                                 <DropdownButtonRow onClick={onLockToggle}>
-                                    {backup.isLocked ? (
-                                        <>
-                                            <Icon.Unlock css={tw`text-xs mr-2`} />
-                                            Unlock
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Icon.Lock css={tw`text-xs mr-2`} />
-                                            Lock
-                                        </>
-                                    )}
+                                    <FontAwesomeIcon
+                                        fixedWidth
+                                        icon={backup.isLocked ? faUnlock : faLock}
+                                        css={tw`text-xs mr-2`}
+                                    />
+                                    {backup.isLocked ? 'Unlock' : 'Lock'}
                                 </DropdownButtonRow>
                                 {!backup.isLocked && (
                                     <DropdownButtonRow danger onClick={() => setModal('delete')}>
-                                        <Icon.Trash css={tw`text-xs`} />
+                                        <FontAwesomeIcon fixedWidth icon={faTrashAlt} css={tw`text-xs`} />
                                         <span css={tw`ml-2`}>Delete</span>
                                     </DropdownButtonRow>
                                 )}
@@ -208,7 +211,7 @@ export default ({ backup }: Props) => {
                     onClick={() => setModal('delete')}
                     css={tw`text-gray-200 transition-colors duration-150 hover:text-gray-100 p-2`}
                 >
-                    <Icon.Trash />
+                    <FontAwesomeIcon icon={faTrashAlt} />
                 </button>
             )}
         </>

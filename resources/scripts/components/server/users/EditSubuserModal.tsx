@@ -1,23 +1,22 @@
-import tw from 'twin.macro';
-import asModal from '@/hoc/asModal';
-import { Form, Formik } from 'formik';
-import { ApplicationStore } from '@/state';
-import { array, object, string } from 'yup';
-import Can from '@/components/elements/Can';
-import { ServerContext } from '@/state/server';
-import Field from '@/components/elements/Field';
-import { Subuser } from '@/state/server/subusers';
-import ModalContext from '@/context/ModalContext';
-import { usePermissions } from '@/plugins/usePermissions';
-import { Button } from '@/components/elements/button/index';
 import React, { useContext, useEffect, useRef } from 'react';
-import FlashMessageRender from '@/components/FlashMessageRender';
-import { useDeepCompareMemo } from '@/plugins/useDeepCompareMemo';
-import PermissionRow from '@/components/server/users/PermissionRow';
+import { Subuser } from '@/state/server/subusers';
+import { Form, Formik } from 'formik';
+import { array, object, string } from 'yup';
+import Field from '@/components/elements/Field';
 import { Actions, useStoreActions, useStoreState } from 'easy-peasy';
+import { ApplicationStore } from '@/state';
 import createOrUpdateSubuser from '@/api/server/users/createOrUpdateSubuser';
+import { ServerContext } from '@/state/server';
+import FlashMessageRender from '@/components/FlashMessageRender';
+import Can from '@/components/elements/Can';
+import { usePermissions } from '@/plugins/usePermissions';
+import { useDeepCompareMemo } from '@/plugins/useDeepCompareMemo';
+import tw from 'twin.macro';
+import Button from '@/components/elements/Button';
 import PermissionTitleBox from '@/components/server/users/PermissionTitleBox';
-import SelectAllPermissions from '@/components/server/users/SelectAllPermissions';
+import asModal from '@/hoc/asModal';
+import PermissionRow from '@/components/server/users/PermissionRow';
+import ModalContext from '@/context/ModalContext';
 
 type Props = {
     subuser?: Subuser;
@@ -137,12 +136,6 @@ const EditSubuserModal = ({ subuser }: Props) => {
                     </div>
                 )}
                 <div css={tw`my-6`}>
-                    <div css={tw`flex items-center mb-4 p-2 bg-gray-800 rounded shadow-sm`}>
-                        <p css={tw`flex-1 ml-1`}>Select all permissions?</p>
-                        {canEditUser && (
-                            <SelectAllPermissions isEditable={canEditUser} permissions={editablePermissions} />
-                        )}
-                    </div>
                     {Object.keys(permissions)
                         .filter((key) => key !== 'websocket')
                         .map((key, index) => (

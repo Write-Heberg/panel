@@ -1,25 +1,37 @@
-import { join } from 'path';
-import tw from 'twin.macro';
-import * as Icon from 'react-feather';
-import isEqual from 'react-fast-compare';
-import useFlash from '@/plugins/useFlash';
-import Can from '@/components/elements/Can';
-import styled from 'styled-components/macro';
-import { ServerContext } from '@/state/server';
-import copyFile from '@/api/server/files/copyFile';
-import { Dialog } from '@/components/elements/dialog';
 import React, { memo, useRef, useState } from 'react';
-import deleteFiles from '@/api/server/files/deleteFiles';
-import useEventListener from '@/plugins/useEventListener';
-import useFileManagerSwr from '@/plugins/useFileManagerSwr';
-import compressFiles from '@/api/server/files/compressFiles';
-import { FileObject } from '@/api/server/files/loadDirectory';
-import DropdownMenu from '@/components/elements/DropdownMenu';
-import decompressFiles from '@/api/server/files/decompressFiles';
-import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
-import ChmodFileModal from '@/components/server/files/ChmodFileModal';
-import getFileDownloadUrl from '@/api/server/files/getFileDownloadUrl';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    faBoxOpen,
+    faCopy,
+    faEllipsisH,
+    faFileArchive,
+    faFileCode,
+    faFileDownload,
+    faLevelUpAlt,
+    faPencilAlt,
+    faTrashAlt,
+    IconDefinition,
+} from '@fortawesome/free-solid-svg-icons';
 import RenameFileModal from '@/components/server/files/RenameFileModal';
+import { ServerContext } from '@/state/server';
+import { join } from 'path';
+import deleteFiles from '@/api/server/files/deleteFiles';
+import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
+import copyFile from '@/api/server/files/copyFile';
+import Can from '@/components/elements/Can';
+import getFileDownloadUrl from '@/api/server/files/getFileDownloadUrl';
+import useFlash from '@/plugins/useFlash';
+import tw from 'twin.macro';
+import { FileObject } from '@/api/server/files/loadDirectory';
+import useFileManagerSwr from '@/plugins/useFileManagerSwr';
+import DropdownMenu from '@/components/elements/DropdownMenu';
+import styled from 'styled-components/macro';
+import useEventListener from '@/plugins/useEventListener';
+import compressFiles from '@/api/server/files/compressFiles';
+import decompressFiles from '@/api/server/files/decompressFiles';
+import isEqual from 'react-fast-compare';
+import ChmodFileModal from '@/components/server/files/ChmodFileModal';
+import { Dialog } from '@/components/elements/dialog';
 
 type ModalType = 'rename' | 'move' | 'chmod';
 
@@ -30,12 +42,14 @@ const StyledRow = styled.div<{ $danger?: boolean }>`
 `;
 
 interface RowProps extends React.HTMLAttributes<HTMLDivElement> {
+    icon: IconDefinition;
     title: string;
     $danger?: boolean;
 }
 
-const Row = ({ title, ...props }: RowProps) => (
+const Row = ({ icon, title, ...props }: RowProps) => (
     <StyledRow {...props}>
+        <FontAwesomeIcon icon={icon} css={tw`text-xs`} fixedWidth />
         <span css={tw`ml-2`}>{title}</span>
     </StyledRow>
 );
@@ -129,7 +143,7 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
                 ref={onClickRef}
                 renderToggle={(onClick) => (
                     <div css={tw`px-4 py-2 hover:text-white`} onClick={onClick}>
-                        <Icon.MoreHorizontal />
+                        <FontAwesomeIcon icon={faEllipsisH} />
                         {modal ? (
                             modal === 'chmod' ? (
                                 <ChmodFileModal
@@ -153,27 +167,27 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
                 )}
             >
                 <Can action={'file.update'}>
-                    <Row onClick={() => setModal('rename')} title={'Rename'} />
-                    <Row onClick={() => setModal('move')} title={'Move'} />
-                    <Row onClick={() => setModal('chmod')} title={'Permissions'} />
+                    <Row onClick={() => setModal('rename')} icon={faPencilAlt} title={'Rename'} />
+                    <Row onClick={() => setModal('move')} icon={faLevelUpAlt} title={'Move'} />
+                    <Row onClick={() => setModal('chmod')} icon={faFileCode} title={'Permissions'} />
                 </Can>
                 {file.isFile && (
                     <Can action={'file.create'}>
-                        <Row onClick={doCopy} title={'Copy'} />
+                        <Row onClick={doCopy} icon={faCopy} title={'Copy'} />
                     </Can>
                 )}
                 {file.isArchiveType() ? (
                     <Can action={'file.create'}>
-                        <Row onClick={doUnarchive} title={'Unarchive'} />
+                        <Row onClick={doUnarchive} icon={faBoxOpen} title={'Unarchive'} />
                     </Can>
                 ) : (
                     <Can action={'file.archive'}>
-                        <Row onClick={doArchive} title={'Archive'} />
+                        <Row onClick={doArchive} icon={faFileArchive} title={'Archive'} />
                     </Can>
                 )}
-                {file.isFile && <Row onClick={doDownload} title={'Download'} />}
+                {file.isFile && <Row onClick={doDownload} icon={faFileDownload} title={'Download'} />}
                 <Can action={'file.delete'}>
-                    <Row onClick={() => setShowConfirmation(true)} title={'Delete'} $danger />
+                    <Row onClick={() => setShowConfirmation(true)} icon={faTrashAlt} title={'Delete'} $danger />
                 </Can>
             </DropdownMenu>
         </>

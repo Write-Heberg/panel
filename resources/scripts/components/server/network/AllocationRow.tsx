@@ -1,24 +1,25 @@
-import tw from 'twin.macro';
-import { debounce } from 'debounce';
-import { ip } from '@/lib/formatters';
-import * as Icon from 'react-feather';
-import isEqual from 'react-fast-compare';
-import Can from '@/components/elements/Can';
-import styled from 'styled-components/macro';
-import Code from '@/components/elements/Code';
-import { ServerContext } from '@/state/server';
-import { useFlashKey } from '@/plugins/useFlash';
-import { Allocation } from '@/api/server/getServer';
-import { Textarea } from '@/components/elements/Input';
-import GreyRowBox from '@/components/elements/GreyRowBox';
 import React, { memo, useCallback, useState } from 'react';
-import { Button } from '@/components/elements/button/index';
-import CopyOnClick from '@/components/elements/CopyOnClick';
+import isEqual from 'react-fast-compare';
+import tw from 'twin.macro';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faNetworkWired } from '@fortawesome/free-solid-svg-icons';
 import InputSpinner from '@/components/elements/InputSpinner';
-import getServerAllocations from '@/api/swr/getServerAllocations';
+import { Textarea } from '@/components/elements/Input';
+import Can from '@/components/elements/Can';
+import { Button } from '@/components/elements/button/index';
+import GreyRowBox from '@/components/elements/GreyRowBox';
+import { Allocation } from '@/api/server/getServer';
+import styled from 'styled-components/macro';
+import { debounce } from 'debounce';
 import setServerAllocationNotes from '@/api/server/network/setServerAllocationNotes';
+import { useFlashKey } from '@/plugins/useFlash';
+import { ServerContext } from '@/state/server';
+import CopyOnClick from '@/components/elements/CopyOnClick';
 import DeleteAllocationButton from '@/components/server/network/DeleteAllocationButton';
 import setPrimaryServerAllocation from '@/api/server/network/setPrimaryServerAllocation';
+import getServerAllocations from '@/api/swr/getServerAllocations';
+import { ip } from '@/lib/formatters';
+import Code from '@/components/elements/Code';
 
 const Label = styled.label`
     ${tw`uppercase text-xs mt-1 text-neutral-400 block px-1 select-none transition-colors duration-150`}
@@ -59,10 +60,10 @@ const AllocationRow = ({ allocation }: Props) => {
     };
 
     return (
-        <GreyRowBox $hoverable={false} className={'j-up flex-wrap md:flex-nowrap mt-2'}>
+        <GreyRowBox $hoverable={false} className={'flex-wrap md:flex-nowrap mt-2'}>
             <div className={'flex items-center w-full md:w-auto'}>
                 <div className={'pl-4 pr-6 text-neutral-400'}>
-                    <Icon.Share2 />
+                    <FontAwesomeIcon icon={faNetworkWired} />
                 </div>
                 <div className={'mr-4 flex-1 md:w-40'}>
                     {allocation.alias ? (

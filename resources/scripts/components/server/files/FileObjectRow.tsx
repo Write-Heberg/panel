@@ -1,12 +1,13 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFileAlt, faFileArchive, faFileImport, faFolder } from '@fortawesome/free-solid-svg-icons';
 import { encodePathSegments } from '@/helpers';
 import { differenceInHours, format, formatDistanceToNow } from 'date-fns';
+import React, { memo } from 'react';
 import { FileObject } from '@/api/server/files/loadDirectory';
 import FileDropdownMenu from '@/components/server/files/FileDropdownMenu';
 import { ServerContext } from '@/state/server';
 import { NavLink, useRouteMatch } from 'react-router-dom';
 import tw from 'twin.macro';
-import * as Icon from 'react-feather';
-import React, { memo } from 'react';
 import isEqual from 'react-fast-compare';
 import SelectFileCheckbox from '@/components/server/files/SelectFileCheckbox';
 import { usePermissions } from '@/plugins/usePermissions';
@@ -15,12 +16,13 @@ import { bytesToString } from '@/lib/formatters';
 import styles from './style.module.css';
 
 const Clickable: React.FC<{ file: FileObject }> = memo(({ file, children }) => {
+    const [canRead] = usePermissions(['file.read']);
     const [canReadContents] = usePermissions(['file.read-content']);
     const directory = ServerContext.useStoreState((state) => state.files.directory);
 
     const match = useRouteMatch();
 
-    return !canReadContents || (file.isFile && !file.isEditable()) ? (
+    return (file.isFile && (!file.isEditable() || !canReadContents)) || (!file.isFile && !canRead) ? (
         <div className={styles.details}>{children}</div>
     ) : (
         <NavLink
@@ -45,9 +47,11 @@ const FileObjectRow = ({ file }: { file: FileObject }) => (
         <Clickable file={file}>
             <div css={tw`flex-none text-neutral-400 ml-6 mr-4 text-lg pl-3`}>
                 {file.isFile ? (
-                    <>{file.isSymlink ? <Icon.Download /> : file.isArchiveType() ? <Icon.Archive /> : <Icon.File />}</>
+                    <FontAwesomeIcon
+                        icon={file.isSymlink ? faFileImport : file.isArchiveType() ? faFileArchive : faFileAlt}
+                    />
                 ) : (
-                    <Icon.Folder />
+                    <FontAwesomeIcon icon={faFolder} />
                 )}
             </div>
             <div css={tw`flex-1 truncate`}>{file.name}</div>

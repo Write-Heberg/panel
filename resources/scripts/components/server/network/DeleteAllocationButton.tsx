@@ -1,12 +1,13 @@
-import tw from 'twin.macro';
-import * as Icon from 'react-feather';
 import React, { useState } from 'react';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import tw from 'twin.macro';
+import Icon from '@/components/elements/Icon';
 import { ServerContext } from '@/state/server';
+import deleteServerAllocation from '@/api/server/network/deleteServerAllocation';
+import getServerAllocations from '@/api/swr/getServerAllocations';
 import { useFlashKey } from '@/plugins/useFlash';
 import { Dialog } from '@/components/elements/dialog';
 import { Button } from '@/components/elements/button/index';
-import getServerAllocations from '@/api/swr/getServerAllocations';
-import deleteServerAllocation from '@/api/server/network/deleteServerAllocation';
 
 interface Props {
     allocation: number;
@@ -51,7 +52,7 @@ const DeleteAllocationButton = ({ allocation }: Props) => {
                 type={'button'}
                 onClick={() => setConfirm(true)}
             >
-                <Icon.Trash css={tw`w-3 h-auto`} />
+                <Icon icon={faTrashAlt} css={tw`w-3 h-auto`} />
             </Button.Danger>
         </>
     );

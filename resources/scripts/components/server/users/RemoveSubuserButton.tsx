@@ -1,15 +1,17 @@
-import tw from 'twin.macro';
-import * as Icon from 'react-feather';
 import React, { useState } from 'react';
+import ConfirmationModal from '@/components/elements/ConfirmationModal';
+import { ServerContext } from '@/state/server';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { Subuser } from '@/state/server/subusers';
+import deleteSubuser from '@/api/server/users/deleteSubuser';
+import { Actions, useStoreActions } from 'easy-peasy';
 import { ApplicationStore } from '@/state';
 import { httpErrorToHuman } from '@/api/http';
-import { ServerContext } from '@/state/server';
-import { Subuser } from '@/state/server/subusers';
-import { Actions, useStoreActions } from 'easy-peasy';
-import { Dialog } from '@/components/elements/dialog';
-import deleteSubuser from '@/api/server/users/deleteSubuser';
+import tw from 'twin.macro';
 
 export default ({ subuser }: { subuser: Subuser }) => {
+    const [loading, setLoading] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
 
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
@@ -17,9 +19,11 @@ export default ({ subuser }: { subuser: Subuser }) => {
     const { addError, clearFlashes } = useStoreActions((actions: Actions<ApplicationStore>) => actions.flashes);
 
     const doDeletion = () => {
+        setLoading(true);
         clearFlashes('users');
         deleteSubuser(uuid, subuser.uuid)
             .then(() => {
+                setLoading(false);
                 removeSubuser(subuser.uuid);
             })
             .catch((error) => {
@@ -31,23 +35,24 @@ export default ({ subuser }: { subuser: Subuser }) => {
 
     return (
         <>
-            <Dialog.Confirm
-                open={showConfirmation}
-                onClose={() => setShowConfirmation(false)}
-                title={'Confirm task deletion'}
-                confirm={'Yes, delete subuser'}
-                onConfirmed={doDeletion}
+            <ConfirmationModal
+                title={'Delete this subuser?'}
+                buttonText={'Yes, remove subuser'}
+                visible={showConfirmation}
+                showSpinnerOverlay={loading}
+                onConfirmed={() => doDeletion()}
+                onModalDismissed={() => setShowConfirmation(false)}
             >
                 Are you sure you wish to remove this subuser? They will have all access to this server revoked
                 immediately.
-            </Dialog.Confirm>
+            </ConfirmationModal>
             <button
                 type={'button'}
                 aria-label={'Delete subuser'}
                 css={tw`block text-sm p-2 text-neutral-500 hover:text-red-600 transition-colors duration-150`}
                 onClick={() => setShowConfirmation(true)}
             >
-                <Icon.Trash />
+                <FontAwesomeIcon icon={faTrashAlt} />
             </button>
         </>
     );

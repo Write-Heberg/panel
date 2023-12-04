@@ -1,4 +1,17 @@
-const { blue, zinc, cyan } = require('tailwindcss/colors');
+const colors = require('tailwindcss/colors');
+
+const gray = {
+    50: 'hsl(216, 33%, 97%)',
+    100: 'hsl(214, 15%, 91%)',
+    200: 'hsl(210, 16%, 82%)',
+    300: 'hsl(211, 13%, 65%)',
+    400: 'hsl(211, 10%, 53%)',
+    500: 'hsl(211, 12%, 43%)',
+    600: 'hsl(209, 14%, 37%)',
+    700: 'hsl(209, 18%, 30%)',
+    800: 'hsl(209, 20%, 25%)',
+    900: 'hsl(210, 24%, 16%)',
+};
 
 module.exports = {
     content: [
@@ -6,20 +19,17 @@ module.exports = {
     ],
     theme: {
         extend: {
-            backgroundImage: {
-                'storeone': "url('https://wallpapershome.com/images/pages/pic_v/13964.jpg')",
-                'storetwo': "url('https://wallpapershome.com/images/pages/pic_v/13972.jpg')",
-                'storethree': "url('https://wallpapershome.com/images/wallpapers/minecraft-4k-edition-1440x2560-e3-2017-xbox-one-x-screenshot-13960.jpg')",
+            fontFamily: {
+                header: ['"IBM Plex Sans"', '"Roboto"', 'system-ui', 'sans-serif'],
             },
             colors: {
-                black: '#000',
-                // "primary" and "neutral" are deprecated.
-                primary: blue,
-                neutral: zinc,
-
-                // Use cyan / gray instead.
-                gray: zinc,
-                cyan: cyan,
+                black: '#131a20',
+                // "primary" and "neutral" are deprecated, prefer the use of "blue" and "gray"
+                // in new code.
+                primary: colors.blue,
+                gray: gray,
+                neutral: gray,
+                cyan: colors.cyan,
             },
             fontSize: {
                 '2xs': '0.625rem',

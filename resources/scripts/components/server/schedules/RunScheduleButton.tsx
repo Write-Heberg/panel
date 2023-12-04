@@ -1,10 +1,10 @@
-import useFlash from '@/plugins/useFlash';
-import { ServerContext } from '@/state/server';
 import React, { useCallback, useState } from 'react';
-import { Button } from '@/components/elements/button/index';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
-import { Schedule } from '@/api/server/schedules/getServerSchedules';
+import { Button } from '@/components/elements/button/index';
 import triggerScheduleExecution from '@/api/server/schedules/triggerScheduleExecution';
+import { ServerContext } from '@/state/server';
+import useFlash from '@/plugins/useFlash';
+import { Schedule } from '@/api/server/schedules/getServerSchedules';
 
 const RunScheduleButton = ({ schedule }: { schedule: Schedule }) => {
     const [loading, setLoading] = useState(false);

@@ -10,7 +10,6 @@ use Pterodactyl\Services\Users\UserCreationService;
 use Pterodactyl\Repositories\Eloquent\SubuserRepository;
 use Pterodactyl\Contracts\Repository\UserRepositoryInterface;
 use Pterodactyl\Exceptions\Repository\RecordNotFoundException;
-use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Pterodactyl\Exceptions\Service\Subuser\UserIsServerOwnerException;
 use Pterodactyl\Exceptions\Service\Subuser\ServerSubuserExistsException;
 
@@ -23,8 +22,7 @@ class SubuserCreationService
         private ConnectionInterface $connection,
         private SubuserRepository $subuserRepository,
         private UserCreationService $userCreationService,
-        private UserRepositoryInterface $userRepository,
-        private SettingsRepositoryInterface $settings
+        private UserRepositoryInterface $userRepository
     ) {
     }
 
@@ -57,18 +55,12 @@ class SubuserCreationService
                 // to the end to make it "unique"...
                 $username = substr(preg_replace('/([^\w\.-]+)/', '', strtok($email, '@')), 0, 64) . Str::random(3);
 
-                $appr = true;
-                if ($this->settings->get('jexactyl::approvals:enabled') == 'true') {
-                    $appr = false;
-                }
-
                 $user = $this->userCreationService->handle([
                     'email' => $email,
                     'username' => $username,
                     'name_first' => 'Server',
                     'name_last' => 'Subuser',
                     'root_admin' => false,
-                    'approved' => $appr,
                 ]);
             }
 

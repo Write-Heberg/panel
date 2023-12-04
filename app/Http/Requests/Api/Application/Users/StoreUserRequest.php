@@ -21,7 +21,6 @@ class StoreUserRequest extends ApplicationApiRequest
 
         $response = collect($rules)->only([
             'external_id',
-            'discord_id',
             'email',
             'username',
             'password',

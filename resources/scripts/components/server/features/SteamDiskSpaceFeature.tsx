@@ -1,12 +1,12 @@
-import tw from 'twin.macro';
-import useFlash from '@/plugins/useFlash';
-import { useStoreState } from 'easy-peasy';
+import React, { useEffect, useState } from 'react';
 import { ServerContext } from '@/state/server';
 import Modal from '@/components/elements/Modal';
-import React, { useEffect, useState } from 'react';
-import { SocketEvent } from '@/components/server/events';
-import { Button } from '@/components/elements/button/index';
+import tw from 'twin.macro';
+import Button from '@/components/elements/Button';
 import FlashMessageRender from '@/components/FlashMessageRender';
+import useFlash from '@/plugins/useFlash';
+import { SocketEvent } from '@/components/server/events';
+import { useStoreState } from 'easy-peasy';
 
 const SteamDiskSpaceFeature = () => {
     const [visible, setVisible] = useState(false);

@@ -1,19 +1,20 @@
-import tw from 'twin.macro';
-import { format } from 'date-fns';
-import * as Icon from 'react-feather';
 import React, { useEffect } from 'react';
-import { useFlashKey } from '@/plugins/useFlash';
-import { useSSHKeys } from '@/api/account/ssh-keys';
 import ContentBox from '@/components/elements/ContentBox';
-import GreyRowBox from '@/components/elements/GreyRowBox';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
+import FlashMessageRender from '@/components/FlashMessageRender';
 import PageContentBlock from '@/components/elements/PageContentBlock';
-import CreateSSHKeyForm from '@/components/dashboard/forms/CreateSSHKeyForm';
+import tw from 'twin.macro';
+import GreyRowBox from '@/components/elements/GreyRowBox';
+import { useSSHKeys } from '@/api/account/ssh-keys';
+import { useFlashKey } from '@/plugins/useFlash';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faKey } from '@fortawesome/free-solid-svg-icons';
+import { format } from 'date-fns';
+import CreateSSHKeyForm from '@/components/dashboard/ssh/CreateSSHKeyForm';
 import DeleteSSHKeyButton from '@/components/dashboard/ssh/DeleteSSHKeyButton';
 
 export default () => {
     const { clearAndAddHttpError } = useFlashKey('account');
-
     const { data, isValidating, error } = useSSHKeys({
         revalidateOnMount: true,
         revalidateOnFocus: false,
@@ -24,12 +25,9 @@ export default () => {
     }, [error]);
 
     return (
-        <PageContentBlock
-            title={'Account SSH'}
-            description={'Create SSH keys to connect to your servers.'}
-            showFlashKey={'account'}
-        >
-            <div className={'j-up md:flex flex-nowrap my-10'}>
+        <PageContentBlock title={'SSH Keys'}>
+            <FlashMessageRender byKey={'account'} />
+            <div css={tw`md:flex flex-nowrap my-10`}>
                 <ContentBox title={'Add SSH Key'} css={tw`flex-none w-full md:w-1/2`}>
                     <CreateSSHKeyForm />
                 </ContentBox>
@@ -45,7 +43,7 @@ export default () => {
                                 key={key.fingerprint}
                                 css={[tw`bg-neutral-600 flex space-x-4 items-center`, index > 0 && tw`mt-2`]}
                             >
-                                <Icon.Key css={tw`text-neutral-300`} />
+                                <FontAwesomeIcon icon={faKey} css={tw`text-neutral-300`} />
                                 <div css={tw`flex-1`}>
                                     <p css={tw`text-sm break-words font-medium`}>{key.name}</p>
                                     <p css={tw`text-xs mt-1 font-mono truncate`}>SHA256:{key.fingerprint}</p>

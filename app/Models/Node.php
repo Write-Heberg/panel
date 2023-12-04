@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * @property int $id
  * @property string $uuid
  * @property bool $public
- * @property bool $deployable
  * @property string $name
  * @property string|null $description
  * @property int $location_id
@@ -73,7 +72,6 @@ class Node extends Model
         'daemonListen' => 'integer',
         'daemonSFTP' => 'integer',
         'behind_proxy' => 'boolean',
-        'deployable' => 'boolean',
         'public' => 'boolean',
         'maintenance_mode' => 'boolean',
     ];
@@ -94,7 +92,6 @@ class Node extends Model
         'name' => 'required|regex:/^([\w .-]{1,100})$/',
         'description' => 'string|nullable',
         'location_id' => 'required|exists:locations,id',
-        'deployable' => 'required|boolean',
         'public' => 'boolean',
         'fqdn' => 'required|string',
         'scheme' => 'required',
@@ -114,7 +111,6 @@ class Node extends Model
      * Default values for specific columns that are generally not changed on base installs.
      */
     protected $attributes = [
-        'deployable' => true,
         'public' => true,
         'behind_proxy' => false,
         'memory_overallocate' => 0,

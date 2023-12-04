@@ -5,13 +5,9 @@ export interface UserData {
     uuid: string;
     username: string;
     email: string;
-    approved: boolean;
-    verified: boolean;
-    discordId: string;
     language: string;
     rootAdmin: boolean;
     useTotp: boolean;
-    referralCode: string;
     createdAt: Date;
     updatedAt: Date;
 }

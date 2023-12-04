@@ -3,17 +3,15 @@
 namespace Pterodactyl\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Pterodactyl\Http\ViewComposers\StoreComposer;
-use Pterodactyl\Http\ViewComposers\SettingComposer;
+use Pterodactyl\Http\ViewComposers\AssetComposer;
 
 class ViewComposerServiceProvider extends ServiceProvider
 {
     /**
      * Register bindings in the container.
      */
-    public function boot()
+    public function boot(): void
     {
-        $this->app->make('view')->composer('*', SettingComposer::class);
-        $this->app->make('view')->composer('*', StoreComposer::class);
+        $this->app->make('view')->composer('*', AssetComposer::class);
     }
 }

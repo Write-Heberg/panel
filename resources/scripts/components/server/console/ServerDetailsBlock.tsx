@@ -1,19 +1,36 @@
-import classNames from 'classnames';
-import { ServerContext } from '@/state/server';
 import React, { useEffect, useMemo, useState } from 'react';
-import useWebsocketEvent from '@/plugins/useWebsocketEvent';
-import ConsoleShareContainer from './ConsoleShareContainer';
-import StatBlock from '@/components/server/console/StatBlock';
-import UptimeDuration from '@/components/server/UptimeDuration';
+import {
+    faClock,
+    faCloudDownloadAlt,
+    faCloudUploadAlt,
+    faHdd,
+    faMemory,
+    faMicrochip,
+    faWifi,
+} from '@fortawesome/free-solid-svg-icons';
 import { bytesToString, ip, mbToBytes } from '@/lib/formatters';
+import { ServerContext } from '@/state/server';
 import { SocketEvent, SocketRequest } from '@/components/server/events';
-import { faClock, faHdd, faMemory, faMicrochip, faScroll, faWifi } from '@fortawesome/free-solid-svg-icons';
+import UptimeDuration from '@/components/server/UptimeDuration';
+import StatBlock from '@/components/server/console/StatBlock';
+import useWebsocketEvent from '@/plugins/useWebsocketEvent';
+import classNames from 'classnames';
 import { capitalize } from '@/lib/strings';
-import styled from 'styled-components/macro';
-import tw from 'twin.macro';
-import RenewalInfo from './RenewalInfo';
 
-type Stats = Record<'memory' | 'cpu' | 'disk' | 'uptime', number>;
+type Stats = Record<'memory' | 'cpu' | 'disk' | 'uptime' | 'rx' | 'tx', number>;
+
+const getBackgroundColor = (value: number, max: number | null): string | undefined => {
+    const delta = !max ? 0 : value / max;
+
+    if (delta > 0.8) {
+        if (delta > 0.9) {
+            return 'bg-red-500';
+        }
+        return 'bg-yellow-500';
+    }
+
+    return undefined;
+};
 
 const Limit = ({ limit, children }: { limit: string | null; children: React.ReactNode }) => (
     <>
@@ -22,19 +39,13 @@ const Limit = ({ limit, children }: { limit: string | null; children: React.Reac
     </>
 );
 
-const Bar = styled.div`
-    ${tw`h-0.5 bg-cyan-400`};
-    transition: 500ms ease-in-out;
-`;
-
-export default ({ className }: { className?: string }) => {
-    const [stats, setStats] = useState<Stats>({ memory: 0, cpu: 0, disk: 0, uptime: 0 });
+const ServerDetailsBlock = ({ className }: { className?: string }) => {
+    const [stats, setStats] = useState<Stats>({ memory: 0, cpu: 0, disk: 0, uptime: 0, tx: 0, rx: 0 });
 
     const status = ServerContext.useStoreState((state) => state.status.value);
-    const instance = ServerContext.useStoreState((state) => state.socket.instance);
     const connected = ServerContext.useStoreState((state) => state.socket.connected);
+    const instance = ServerContext.useStoreState((state) => state.socket.instance);
     const limits = ServerContext.useStoreState((state) => state.server.data!.limits);
-    const renewable = ServerContext.useStoreState((state) => state.server.data!.renewable);
 
     const textLimits = useMemo(
         () => ({
@@ -71,17 +82,22 @@ export default ({ className }: { className?: string }) => {
             memory: stats.memory_bytes,
             cpu: stats.cpu_absolute,
             disk: stats.disk_bytes,
+            tx: stats.network.tx_bytes,
+            rx: stats.network.rx_bytes,
             uptime: stats.uptime || 0,
         });
     });
 
-    const cpuUsed = stats.cpu / (limits.cpu / 100);
-    const diskUsed = (stats.disk / 1024 / 1024 / limits.disk) * 100;
-    const memoryUsed = (stats.memory / 1024 / 1024 / limits.memory) * 100;
-
     return (
         <div className={classNames('grid grid-cols-6 gap-2 md:gap-4', className)}>
-            <StatBlock icon={faClock} title={'Uptime'}>
+            <StatBlock icon={faWifi} title={'Address'} copyOnClick={allocation}>
+                {allocation}
+            </StatBlock>
+            <StatBlock
+                icon={faClock}
+                title={'Uptime'}
+                color={getBackgroundColor(status === 'running' ? 0 : status !== 'offline' ? 9 : 10, 10)}
+            >
                 {status === null ? (
                     'Offline'
                 ) : stats.uptime > 0 ? (
@@ -90,55 +106,35 @@ export default ({ className }: { className?: string }) => {
                     capitalize(status)
                 )}
             </StatBlock>
-            <StatBlock icon={faWifi} title={'Address'} copyOnClick={allocation}>
-                {allocation}
-            </StatBlock>
-            <StatBlock icon={faMicrochip} title={'CPU'}>
+            <StatBlock icon={faMicrochip} title={'CPU Load'} color={getBackgroundColor(stats.cpu, limits.cpu)}>
                 {status === 'offline' ? (
                     <span className={'text-gray-400'}>Offline</span>
                 ) : (
                     <Limit limit={textLimits.cpu}>{stats.cpu.toFixed(2)}%</Limit>
                 )}
-                {cpuUsed > 100 ? (
-                    <Bar style={{ width: '100%' }} css={tw`bg-red-500`} />
-                ) : limits.cpu === 0 ? (
-                    <Bar style={{ width: '100%' }} css={tw`bg-neutral-900`} />
-                ) : (
-                    <Bar style={{ width: cpuUsed === undefined ? '100%' : `${cpuUsed}%` }} />
-                )}
             </StatBlock>
-            <StatBlock icon={faMemory} title={'Memory'}>
+            <StatBlock
+                icon={faMemory}
+                title={'Memory'}
+                color={getBackgroundColor(stats.memory / 1024, limits.memory * 1024)}
+            >
                 {status === 'offline' ? (
                     <span className={'text-gray-400'}>Offline</span>
                 ) : (
                     <Limit limit={textLimits.memory}>{bytesToString(stats.memory)}</Limit>
                 )}
-                {memoryUsed > 90 ? (
-                    <Bar style={{ width: '100%' }} css={tw`bg-red-500`} />
-                ) : limits.memory === 0 ? (
-                    <Bar style={{ width: '100%' }} css={tw`bg-neutral-900`} />
-                ) : (
-                    <Bar style={{ width: memoryUsed === undefined ? '100%' : `${memoryUsed}%` }} />
-                )}
             </StatBlock>
-            <StatBlock icon={faHdd} title={'Disk'}>
+            <StatBlock icon={faHdd} title={'Disk'} color={getBackgroundColor(stats.disk / 1024, limits.disk * 1024)}>
                 <Limit limit={textLimits.disk}>{bytesToString(stats.disk)}</Limit>
-                {diskUsed > 90 ? (
-                    <Bar style={{ width: '100%' }} css={tw`bg-red-500`} />
-                ) : limits.disk === 0 ? (
-                    <Bar style={{ width: '100%' }} css={tw`bg-neutral-900`} />
-                ) : (
-                    <Bar style={{ width: diskUsed === undefined ? '100%' : `${diskUsed}%` }} />
-                )}
             </StatBlock>
-            <StatBlock icon={faScroll} title={'Save Console Logs'}>
-                <ConsoleShareContainer />
+            <StatBlock icon={faCloudDownloadAlt} title={'Network (Inbound)'}>
+                {status === 'offline' ? <span className={'text-gray-400'}>Offline</span> : bytesToString(stats.rx)}
             </StatBlock>
-            {renewable && (
-                <StatBlock icon={faClock} title={'Renewal Date'}>
-                    <RenewalInfo />
-                </StatBlock>
-            )}
+            <StatBlock icon={faCloudUploadAlt} title={'Network (Outbound)'}>
+                {status === 'offline' ? <span className={'text-gray-400'}>Offline</span> : bytesToString(stats.tx)}
+            </StatBlock>
         </div>
     );
 };
+
+export default ServerDetailsBlock;

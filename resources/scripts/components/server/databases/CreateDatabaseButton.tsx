@@ -1,15 +1,15 @@
-import tw from 'twin.macro';
-import { object, string } from 'yup';
 import React, { useState } from 'react';
-import useFlash from '@/plugins/useFlash';
-import { httpErrorToHuman } from '@/api/http';
-import { ServerContext } from '@/state/server';
 import Modal from '@/components/elements/Modal';
-import Field from '@/components/elements/Field';
 import { Form, Formik, FormikHelpers } from 'formik';
-import { Button } from '@/components/elements/button/index';
-import FlashMessageRender from '@/components/FlashMessageRender';
+import Field from '@/components/elements/Field';
+import { object, string } from 'yup';
 import createServerDatabase from '@/api/server/databases/createServerDatabase';
+import { ServerContext } from '@/state/server';
+import { httpErrorToHuman } from '@/api/http';
+import FlashMessageRender from '@/components/FlashMessageRender';
+import useFlash from '@/plugins/useFlash';
+import Button from '@/components/elements/Button';
+import tw from 'twin.macro';
 
 interface Values {
     databaseName: string;
@@ -92,7 +92,7 @@ export default () => {
                             <div css={tw`flex flex-wrap justify-end mt-6`}>
                                 <Button
                                     type={'button'}
-                                    variant={Button.Variants.Secondary}
+                                    isSecondary
                                     css={tw`w-full sm:w-auto sm:mr-2`}
                                     onClick={() => setVisible(false)}
                                 >

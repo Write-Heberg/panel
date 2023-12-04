@@ -1,8 +1,8 @@
-import tw from 'twin.macro';
-import asModal from '@/hoc/asModal';
 import React, { useContext } from 'react';
+import tw from 'twin.macro';
+import Button from '@/components/elements/Button';
+import asModal from '@/hoc/asModal';
 import ModalContext from '@/context/ModalContext';
-import { Button } from '@/components/elements/button/index';
 import CopyOnClick from '@/components/elements/CopyOnClick';
 
 interface Props {

@@ -1,14 +1,15 @@
-import React from 'react';
-import tw from 'twin.macro';
-import { ApplicationStore } from '@/state';
-import { httpErrorToHuman } from '@/api/http';
-import { ServerContext } from '@/state/server';
-import { Actions, useStoreActions } from 'easy-peasy';
-import { Button } from '@/components/elements/button/index';
-import { ServerDatabase } from '@/api/server/databases/getServerDatabases';
+import React, { useState } from 'react';
 import rotateDatabasePassword from '@/api/server/databases/rotateDatabasePassword';
+import { Actions, useStoreActions } from 'easy-peasy';
+import { ApplicationStore } from '@/state';
+import { ServerContext } from '@/state/server';
+import { ServerDatabase } from '@/api/server/databases/getServerDatabases';
+import { httpErrorToHuman } from '@/api/http';
+import Button from '@/components/elements/Button';
+import tw from 'twin.macro';
 
 export default ({ databaseId, onUpdate }: { databaseId: string; onUpdate: (database: ServerDatabase) => void }) => {
+    const [loading, setLoading] = useState(false);
     const { addFlash, clearFlashes } = useStoreActions((actions: Actions<ApplicationStore>) => actions.flashes);
     const server = ServerContext.useStoreState((state) => state.server.data!);
 
@@ -17,6 +18,7 @@ export default ({ databaseId, onUpdate }: { databaseId: string; onUpdate: (datab
     }
 
     const rotate = () => {
+        setLoading(true);
         clearFlashes();
 
         rotateDatabasePassword(server.uuid, databaseId)
@@ -24,16 +26,17 @@ export default ({ databaseId, onUpdate }: { databaseId: string; onUpdate: (datab
             .catch((error) => {
                 console.error(error);
                 addFlash({
-                    type: 'danger',
+                    type: 'error',
                     title: 'Error',
                     message: httpErrorToHuman(error),
                     key: 'database-connection-modal',
                 });
-            });
+            })
+            .then(() => setLoading(false));
     };
 
     return (
-        <Button variant={Button.Variants.Secondary} color={'primary'} css={tw`mr-2`} onClick={rotate}>
+        <Button isSecondary color={'primary'} css={tw`mr-2`} onClick={rotate} isLoading={loading}>
             Rotate Password
         </Button>
     );

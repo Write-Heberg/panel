@@ -1,9 +1,9 @@
-import tw from 'twin.macro';
-import { useField } from 'formik';
-import isEqual from 'react-fast-compare';
-import Input from '@/components/elements/Input';
 import React, { memo, useCallback } from 'react';
+import { useField } from 'formik';
 import TitledGreyBox from '@/components/elements/TitledGreyBox';
+import tw from 'twin.macro';
+import Input from '@/components/elements/Input';
+import isEqual from 'react-fast-compare';
 
 interface Props {
     isEditable: boolean;

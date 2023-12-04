@@ -2,7 +2,7 @@ import * as React from 'react';
 import tw, { TwStyle } from 'twin.macro';
 import styled from 'styled-components/macro';
 
-export type FlashMessageType = 'success' | 'info' | 'warning' | 'danger';
+export type FlashMessageType = 'success' | 'info' | 'warning' | 'error';
 
 interface Props {
     title?: string;
@@ -12,7 +12,7 @@ interface Props {
 
 const styling = (type?: FlashMessageType): TwStyle | string => {
     switch (type) {
-        case 'danger':
+        case 'error':
             return tw`bg-red-600 border-red-800`;
         case 'info':
             return tw`bg-primary-600 border-primary-800`;
@@ -27,7 +27,7 @@ const styling = (type?: FlashMessageType): TwStyle | string => {
 
 const getBackground = (type?: FlashMessageType): TwStyle | string => {
     switch (type) {
-        case 'danger':
+        case 'error':
             return tw`bg-red-500`;
         case 'info':
             return tw`bg-primary-500`;

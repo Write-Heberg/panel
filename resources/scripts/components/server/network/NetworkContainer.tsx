@@ -1,17 +1,17 @@
-import tw from 'twin.macro';
-import isEqual from 'react-fast-compare';
-import Can from '@/components/elements/Can';
-import { ServerContext } from '@/state/server';
-import { useFlashKey } from '@/plugins/useFlash';
 import React, { useEffect, useState } from 'react';
 import Spinner from '@/components/elements/Spinner';
-import { Button } from '@/components/elements/button/index';
+import { useFlashKey } from '@/plugins/useFlash';
+import ServerContentBlock from '@/components/elements/ServerContentBlock';
+import { ServerContext } from '@/state/server';
+import AllocationRow from '@/components/server/network/AllocationRow';
+import Button from '@/components/elements/Button';
+import createServerAllocation from '@/api/server/network/createServerAllocation';
+import tw from 'twin.macro';
+import Can from '@/components/elements/Can';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import getServerAllocations from '@/api/swr/getServerAllocations';
-import AllocationRow from '@/components/server/network/AllocationRow';
+import isEqual from 'react-fast-compare';
 import { useDeepCompareEffect } from '@/plugins/useDeepCompareEffect';
-import ServerContentBlock from '@/components/elements/ServerContentBlock';
-import createServerAllocation from '@/api/server/network/createServerAllocation';
 
 const NetworkContainer = () => {
     const [loading, setLoading] = useState(false);
@@ -51,11 +51,7 @@ const NetworkContainer = () => {
     };
 
     return (
-        <ServerContentBlock
-            title={'Network'}
-            description={'Configure external networking and ports.'}
-            showFlashKey={'server:network'}
-        >
+        <ServerContentBlock showFlashKey={'server:network'} title={'Network'}>
             {!data ? (
                 <Spinner size={'large'} centered />
             ) : (
@@ -72,7 +68,7 @@ const NetworkContainer = () => {
                                     this server.
                                 </p>
                                 {allocationLimit > data.length && (
-                                    <Button css={tw`w-full sm:w-auto`} onClick={onCreateAllocation}>
+                                    <Button css={tw`w-full sm:w-auto`} color={'primary'} onClick={onCreateAllocation}>
                                         Create Allocation
                                     </Button>
                                 )}

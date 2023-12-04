@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Button } from '@/components/elements/button/index';
 import { Schedule } from '@/api/server/schedules/getServerSchedules';
 import TaskDetailsModal from '@/components/server/schedules/TaskDetailsModal';
+import { Button } from '@/components/elements/button/index';
 
 interface Props {
     schedule: Schedule;

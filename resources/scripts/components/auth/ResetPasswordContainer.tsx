@@ -1,17 +1,17 @@
-import tw from 'twin.macro';
 import React, { useState } from 'react';
+import { RouteComponentProps } from 'react-router';
 import { Link } from 'react-router-dom';
-import { object, ref, string } from 'yup';
-import { ApplicationStore } from '@/state';
+import performPasswordReset from '@/api/auth/performPasswordReset';
 import { httpErrorToHuman } from '@/api/http';
+import LoginFormContainer from '@/components/auth/LoginFormContainer';
+import { Actions, useStoreActions } from 'easy-peasy';
+import { ApplicationStore } from '@/state';
 import { Formik, FormikHelpers } from 'formik';
+import { object, ref, string } from 'yup';
 import Field from '@/components/elements/Field';
 import Input from '@/components/elements/Input';
-import { RouteComponentProps } from 'react-router';
-import { Actions, useStoreActions } from 'easy-peasy';
-import { Button } from '@/components/elements/button/index';
-import performPasswordReset from '@/api/auth/performPasswordReset';
-import LoginFormContainer from '@/components/auth/LoginFormContainer';
+import tw from 'twin.macro';
+import Button from '@/components/elements/Button';
 
 interface Values {
     password: string;
@@ -39,7 +39,7 @@ export default ({ match, location }: RouteComponentProps<{ token: string }>) => 
                 console.error(error);
 
                 setSubmitting(false);
-                addFlash({ type: 'danger', title: 'Error', message: httpErrorToHuman(error) });
+                addFlash({ type: 'error', title: 'Error', message: httpErrorToHuman(error) });
             });
     };
 
@@ -79,7 +79,7 @@ export default ({ match, location }: RouteComponentProps<{ token: string }>) => 
                         <Field light label={'Confirm New Password'} name={'passwordConfirmation'} type={'password'} />
                     </div>
                     <div css={tw`mt-6`}>
-                        <Button size={Button.Sizes.Large} css={tw`w-full`} type={'submit'} disabled={isSubmitting}>
+                        <Button size={'xlarge'} type={'submit'} disabled={isSubmitting} isLoading={isSubmitting}>
                             Reset Password
                         </Button>
                     </div>

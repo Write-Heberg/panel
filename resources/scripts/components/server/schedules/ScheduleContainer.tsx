@@ -1,17 +1,18 @@
-import tw from 'twin.macro';
-import useFlash from '@/plugins/useFlash';
-import Can from '@/components/elements/Can';
-import { httpErrorToHuman } from '@/api/http';
-import { ServerContext } from '@/state/server';
 import React, { useEffect, useState } from 'react';
+import getServerSchedules from '@/api/server/schedules/getServerSchedules';
+import { ServerContext } from '@/state/server';
 import Spinner from '@/components/elements/Spinner';
+import { useHistory, useRouteMatch } from 'react-router-dom';
+import FlashMessageRender from '@/components/FlashMessageRender';
+import ScheduleRow from '@/components/server/schedules/ScheduleRow';
+import { httpErrorToHuman } from '@/api/http';
+import EditScheduleModal from '@/components/server/schedules/EditScheduleModal';
+import Can from '@/components/elements/Can';
+import useFlash from '@/plugins/useFlash';
+import tw from 'twin.macro';
 import GreyRowBox from '@/components/elements/GreyRowBox';
 import { Button } from '@/components/elements/button/index';
-import { useHistory, useRouteMatch } from 'react-router-dom';
-import ScheduleRow from '@/components/server/schedules/ScheduleRow';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
-import getServerSchedules from '@/api/server/schedules/getServerSchedules';
-import EditScheduleModal from '@/components/server/schedules/EditScheduleModal';
 
 export default () => {
     const match = useRouteMatch();
@@ -37,11 +38,8 @@ export default () => {
     }, []);
 
     return (
-        <ServerContentBlock
-            title={'Schedules'}
-            description={'Manage scheduled functions for your server.'}
-            showFlashKey={'schedules'}
-        >
+        <ServerContentBlock title={'Schedules'}>
+            <FlashMessageRender byKey={'schedules'} css={tw`mb-4`} />
             {!schedules.length && loading ? (
                 <Spinner size={'large'} centered />
             ) : (

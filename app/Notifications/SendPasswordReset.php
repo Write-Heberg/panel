@@ -12,14 +12,14 @@ class SendPasswordReset extends Notification implements ShouldQueue
     use Queueable;
 
     /**
-     * Crée une nouvelle instance de notification.
+     * Create a new notification instance.
      */
     public function __construct(public string $token)
     {
     }
 
     /**
-     * Récupère les canaux de diffusion de la notification.
+     * Get the notification's delivery channels.
      */
     public function via(): array
     {
@@ -27,17 +27,14 @@ class SendPasswordReset extends Notification implements ShouldQueue
     }
 
     /**
-     * Récupère la représentation de l'e-mail de la notification.
+     * Get the mail representation of the notification.
      */
     public function toMail(mixed $notifiable): MailMessage
     {
         return (new MailMessage())
-            ->subject('Réinitialisation du mot de passe')
-            ->greeting('Bonjour !')
-            ->line('Vous recevez cet e-mail car nous avons reçu une demande de réinitialisation de mot de passe pour votre compte.')
-            ->line("Vous trouverez donc ci-dessous un bouton vous permettant de réaliser l'opération demandée.")
-            ->action('Réinitialiser le mot de passe', url('/auth/password/reset/' . $this->token . '?email=' . urlencode($notifiable->email)))
-            ->line("Si vous n'avez pas demandé de réinitialisation de mot de passe, aucune action supplémentaire n'est nécessaire.")
-            ->line('Merci de nous faire confiance pour héberger votre projet !');
+            ->subject('Reset Password')
+            ->line('You are receiving this email because we received a password reset request for your account.')
+            ->action('Reset Password', url('/auth/password/reset/' . $this->token . '?email=' . urlencode($notifiable->email)))
+            ->line('If you did not request a password reset, no further action is required.');
     }
 }

@@ -1,10 +1,10 @@
+import useSWR, { ConfigInterface, responseInterface } from 'swr';
+import { ActivityLog, Transformers } from '@definitions/user';
 import { AxiosError } from 'axios';
-import { useUserSWRKey } from '@/plugins/useSWRKey';
+import http, { PaginatedResult, QueryBuilderParams, withQueryBuilderParams } from '@/api/http';
 import { toPaginatedSet } from '@definitions/helpers';
 import useFilteredObject from '@/plugins/useFilteredObject';
-import { ActivityLog, Transformers } from '@definitions/user';
-import useSWR, { ConfigInterface, responseInterface } from 'swr';
-import http, { PaginatedResult, QueryBuilderParams, withQueryBuilderParams } from '@/api/http';
+import { useUserSWRKey } from '@/plugins/useSWRKey';
 
 export type ActivityLogFilters = QueryBuilderParams<'ip' | 'event', 'timestamp'>;
 

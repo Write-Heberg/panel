@@ -1,53 +1,75 @@
-[![Logo Image](https://cdn.discordapp.com/attachments/1012411945141424218/1012430446556090468/JexactylBannerBasic.jpg)](https://jexactyl.com)
+[![Logo Image](https://cdn.pterodactyl.io/logos/new/pterodactyl_logo.png)](https://pterodactyl.io)
 
-[![Discord](https://img.shields.io/discord/922284031129825280)](https://discord.com/invite/qttGR4Z5Pk)
-![Downloads - Total](https://img.shields.io/github/downloads/jexactyl/jexactyl/total)
-![Downloads - Latest](https://img.shields.io/github/downloads/jexactyl/jexactyl/latest/total)
-![Version](https://img.shields.io/github/v/release/jexactyl/jexactyl)
-![Contributors](https://img.shields.io/github/contributors-anon/jexactyl/jexactyl)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/pterodactyl/panel/ci.yaml?label=Tests&style=for-the-badge&branch=1.0-develop)
+![Discord](https://img.shields.io/discord/122900397965705216?label=Discord&logo=Discord&logoColor=white&style=for-the-badge)
+![GitHub Releases](https://img.shields.io/github/downloads/pterodactyl/panel/latest/total?style=for-the-badge)
+![GitHub contributors](https://img.shields.io/github/contributors/pterodactyl/panel?style=for-the-badge)
 
-<h1 align="center">Jexactyl</h1>
-<h5 align="center">
-    <strong>
-        Jexactyl is a fast, advanced and customisable game management panel and billing system in one.
-        Give your users the edge in terms of performance, reliability and pure functionality.
-    </strong>
-</h5>
+# Pterodactyl Panel
 
-## Installation
-Head over to our [Documentation](https://docs.jexactyl.com) to get started with self-hosting this software.
-If you need help at any point during the installation process, please let us know on [Discord](https://discord.com/invite/qttGR4Z5Pk).
+Pterodactyl® is a free, open-source game server management panel built with PHP, React, and Go. Designed with security 
+in mind, Pterodactyl runs all game servers in isolated Docker containers while exposing a beautiful and intuitive
+UI to end users.
 
-## Why use Jexactyl?
-* Billing system which supports [Stripe](https://stripe.com) and [PayPal](https://paypal.com) out of the box.
-* Full customizability via a simple administrative dashboard.
-* Ticket system in order to provide support to customers.
-* Enhanced customisability and configurations.
-* A fluent UI/UX with an easy-to-use API for both admins and clients.
-* User approvals, server renewals, and much much more.
+Stop settling for less. Make game servers a first class citizen on your platform.
+
+![Image](https://cdn.pterodactyl.io/site-assets/pterodactyl_v1_demo.gif)
+
+## Documentation
+
+* [Panel Documentation](https://pterodactyl.io/panel/1.0/getting_started.html)
+* [Wings Documentation](https://pterodactyl.io/wings/1.0/installing.html)
+* [Community Guides](https://pterodactyl.io/community/about.html)
+* Or, get additional help [via Discord](https://discord.gg/pterodactyl)
 
 ## Sponsors
-*Want to sponsor Jexactyl? [Donate Here.](https://donate.stripe.com/6oE02Zftd9cC34IbIS)*
 
-| Company | About | Link |
-| ------- | ----- | ------- |
-| [**HostEZ**](https://hostez.io) | Providing North America Valheim, Minecraft and other popular games with low latency, high uptime and maximum availability. EZ! | [Website](https://hostez.io) |
-| [**Nero Nodes**](https://neronodes.net) | A Minecraft server provider that's completely free, 24/7. | [GitHub](https://github.com/nero-nodes) |
-| [**Lightbulb Host**](https://lightbulb.host) | A Discord bot host that offers free hosting, 24/7. | [Discord](https://discord.wumpus.host) |
-| [**ShadowHub Hosting**](https://shadowhub.tk) | Free discord bot & web server Hosting, with cheap VPS. | [Discord](https://discord.gg/sXxJ7PkhC3) |
+I would like to extend my sincere thanks to the following sponsors for helping fund Pterodactyl's development.
+[Interested in becoming a sponsor?](https://github.com/sponsors/matthewpi)
 
-## Previews
-![image](https://user-images.githubusercontent.com/72230943/201116518-af5e3291-74f7-433a-b035-6d80e8c7e8f8.png)
-![image](https://user-images.githubusercontent.com/72230943/201116580-ae864e7c-aac7-4766-ab9c-c6cb97d0b015.png)
-![image](https://user-images.githubusercontent.com/72230943/201116688-b53d721e-c30f-424e-8a53-025f313ec98f.png)
-![image](https://user-images.githubusercontent.com/72230943/201116840-92c00c15-5717-4121-83cd-69397f9bacba.png)
-![image](https://user-images.githubusercontent.com/72230943/201116914-8b1c8867-c462-4b25-ae47-803b2e4ea39c.png)
-![image](https://user-images.githubusercontent.com/72230943/201116959-a626e6fc-18a9-4c06-869e-2f13b37b8457.png)
-![image](https://user-images.githubusercontent.com/72230943/201117028-3db8aa2e-b14b-4679-9f2c-c5afb208767c.png)
+| Company                                                               | About                                                                                                                                                                                                 |
+|-----------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [**WISP**](https://wisp.gg)                                           | Extra features.                                                                                                                                                                                       |
+| [**Aussie Server Hosts**](https://aussieserverhosts.com/)             | No frills Australian Owned and operated High Performance Server hosting for some of the most demanding games serving Australia and New Zealand.                                                       |
+| [**WemX**](https://wemx.net/)                                         | WemX helps automate your hosting company or SaaS business by automating billing, user management, authentication, and much more.                                                                      |
+| [**BisectHosting**](https://www.bisecthosting.com/)                   | BisectHosting provides Minecraft, Valheim and other server hosting services with the highest reliability and lightning fast support since 2012.                                                       |
+| [**MineStrator**](https://minestrator.com/)                           | Looking for the most highend French hosting company for your minecraft server? More than 24,000 members on our discord trust us. Give us a try!                                                       |
+| [**VibeGAMES**](https://vibegames.net/)                               | VibeGAMES is a game server provider that specializes in DDOS protection for the games we offer. We have multiple locations in the US, Brazil, France, Germany, Singapore, Australia and South Africa. |
+| [**DutchIS**](https://dutchis.net?ref=pterodactyl)                    | DutchIS provides instant infrastructure such as pay per use VPS hosting. Start your game hosting journey on DutchIS.                                                                                  |
+| [**Skoali**](https://skoali.com/)                                     | Skoali is a French company that hosts game servers and other types of services (VPS, WEB, Dedicated servers, ...). We also have a free plan for Minecraft and Garry's Mod.                            |
+| [**Rabbit Computing**](https://www.rabbitcomputing.com/link.php?id=5) | Rabbit Computing offers powerful VPS servers, highly available game hosting, and fully unlimited web hosting. Use code README for 20% off your first three months!                                    |
 
+### Supported Games
 
-## Licensing
-Some Javascript and CSS used within the panel are licensed under a `MIT` or `Apache 2.0` license. Please check their
-respective header files for more information.
+Pterodactyl supports a wide variety of games by utilizing Docker containers to isolate each instance. This gives
+you the power to run game servers without bloating machines with a host of additional dependencies.
 
-*Jexactyl is not affiliated with [Pterodactyl Software](https://pterodactyl.io).*
+Some of our core supported games include:
+
+* Minecraft — including Paper, Sponge, Bungeecord, Waterfall, and more
+* Rust
+* Terraria
+* Teamspeak
+* Mumble
+* Team Fortress 2
+* Counter Strike: Global Offensive
+* Garry's Mod
+* ARK: Survival Evolved
+
+In addition to our standard nest of supported games, our community is constantly pushing the limits of this software
+and there are plenty more games available provided by the community. Some of these games include:
+
+* Factorio
+* San Andreas: MP
+* Pocketmine MP
+* Squad
+* Xonotic
+* Starmade
+* Discord ATLBot, and most other Node.js/Python discord bots
+* [and many more...](https://github.com/parkervcp/eggs)
+
+## License
+
+Pterodactyl® Copyright © 2015 - 2022 Dane Everitt and contributors.
+
+Code released under the [MIT License](./LICENSE.md).

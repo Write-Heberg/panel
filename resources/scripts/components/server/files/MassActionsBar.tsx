@@ -1,16 +1,16 @@
-import tw from 'twin.macro';
-import useFlash from '@/plugins/useFlash';
-import Fade from '@/components/elements/Fade';
-import { ServerContext } from '@/state/server';
-import Portal from '@/components/elements/Portal';
 import React, { useEffect, useState } from 'react';
-import { Dialog } from '@/components/elements/dialog';
-import deleteFiles from '@/api/server/files/deleteFiles';
+import tw from 'twin.macro';
 import { Button } from '@/components/elements/button/index';
-import useFileManagerSwr from '@/plugins/useFileManagerSwr';
-import compressFiles from '@/api/server/files/compressFiles';
+import Fade from '@/components/elements/Fade';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
+import useFileManagerSwr from '@/plugins/useFileManagerSwr';
+import useFlash from '@/plugins/useFlash';
+import compressFiles from '@/api/server/files/compressFiles';
+import { ServerContext } from '@/state/server';
+import deleteFiles from '@/api/server/files/deleteFiles';
 import RenameFileModal from '@/components/server/files/RenameFileModal';
+import Portal from '@/components/elements/Portal';
+import { Dialog } from '@/components/elements/dialog';
 
 const MassActionsBar = () => {
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
@@ -93,7 +93,7 @@ const MassActionsBar = () => {
                     />
                 )}
                 <Portal>
-                    <div className={'fixed bottom-0 mb-6 flex justify-center w-full z-50'}>
+                    <div className={'pointer-events-none fixed bottom-0 mb-6 flex justify-center w-full z-50'}>
                         <Fade timeout={75} in={selectedFiles.length > 0} unmountOnExit>
                             <div css={tw`flex items-center space-x-4 pointer-events-auto rounded p-4 bg-black/50`}>
                                 <Button onClick={() => setShowMove(true)}>Move</Button>

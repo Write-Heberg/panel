@@ -55,9 +55,8 @@ class NestSeeder extends Seeder
     {
         if (is_null($nest)) {
             $this->creationService->handle([
-                'private' => false,
                 'name' => 'Minecraft',
-                'description' => 'Minecraft - the classic game from Mojang. With support for Vanilla MC, Spigot, and many others',
+                'description' => 'Minecraft - the classic game from Mojang. With support for Vanilla MC, Spigot, and many others!',
             ], 'support@pterodactyl.io');
         }
     }
@@ -71,9 +70,8 @@ class NestSeeder extends Seeder
     {
         if (is_null($nest)) {
             $this->creationService->handle([
-                'private' => false,
                 'name' => 'Source Engine',
-                'description' => 'Includes support for most Source Dedicated Server games',
+                'description' => 'Includes support for most Source Dedicated Server games.',
             ], 'support@pterodactyl.io');
         }
     }
@@ -87,9 +85,8 @@ class NestSeeder extends Seeder
     {
         if (is_null($nest)) {
             $this->creationService->handle([
-                'private' => false,
                 'name' => 'Voice Servers',
-                'description' => 'Voice servers such as Mumble and Teamspeak 3',
+                'description' => 'Voice servers such as Mumble and Teamspeak 3.',
             ], 'support@pterodactyl.io');
         }
     }
@@ -103,9 +100,8 @@ class NestSeeder extends Seeder
     {
         if (is_null($nest)) {
             $this->creationService->handle([
-                'private' => false,
                 'name' => 'Rust',
-                'description' => 'Rust - A game where you must fight to survive',
+                'description' => 'Rust - A game where you must fight to survive.',
             ], 'support@pterodactyl.io');
         }
     }

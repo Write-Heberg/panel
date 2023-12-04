@@ -16,6 +16,6 @@ class Theme
 
     protected function getUrl($path): string
     {
-        return '/themes/default/' . ltrim($path, '/');
+        return '/themes/pterodactyl/' . ltrim($path, '/');
     }
 }

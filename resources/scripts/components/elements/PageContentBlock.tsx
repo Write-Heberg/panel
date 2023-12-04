@@ -1,27 +1,16 @@
-import tw from 'twin.macro';
 import React, { useEffect } from 'react';
-import { useStoreState } from '@/state/hooks';
-import { Alert } from '@/components/elements/alert';
-import { CSSTransition } from 'react-transition-group';
-import FlashMessageRender from '@/components/FlashMessageRender';
 import ContentContainer from '@/components/elements/ContentContainer';
+import { CSSTransition } from 'react-transition-group';
+import tw from 'twin.macro';
+import FlashMessageRender from '@/components/FlashMessageRender';
 
 export interface PageContentBlockProps {
     title?: string;
-    description?: string | null;
     className?: string;
     showFlashKey?: string;
 }
 
-const PageContentBlock: React.FC<PageContentBlockProps> = ({
-    title,
-    description,
-    showFlashKey,
-    className,
-    children,
-}) => {
-    const alert = useStoreState((state) => state.settings.data!.alert);
-
+const PageContentBlock: React.FC<PageContentBlockProps> = ({ title, showFlashKey, className, children }) => {
     useEffect(() => {
         if (title) {
             document.title = title;
@@ -30,34 +19,25 @@ const PageContentBlock: React.FC<PageContentBlockProps> = ({
 
     return (
         <CSSTransition timeout={150} classNames={'fade'} appear in>
-            <div css={tw`my-4`}>
-                <ContentContainer className={className}>
-                    {alert.message && (
-                        <Alert type={alert.type} className={'my-4'}>
-                            {alert.message}
-                        </Alert>
-                    )}
-                    {showFlashKey && <FlashMessageRender byKey={showFlashKey} css={tw`my-4`} />}
-                    {description && (
-                        <>
-                            <h1 className={'j-left text-5xl'}>{title}</h1>
-                            <h3 className={'j-left text-2xl text-neutral-500'}>{description}</h3>
-                        </>
-                    )}
+            <>
+                <ContentContainer css={tw`my-4 sm:my-10`} className={className}>
+                    {showFlashKey && <FlashMessageRender byKey={showFlashKey} css={tw`mb-4`} />}
                     {children}
                 </ContentContainer>
-                <ContentContainer css={tw`text-sm text-center my-4`}>
-                    <p css={tw`text-neutral-500 sm:float-left`}>
-                        &copy; <a href={'https://jexactyl.com'}>Jexactyl,</a> built on{' '}
-                        <a href={'https://pterodactyl.io'}>Pterodactyl.</a>
-                    </p>
-                    <p css={tw`text-neutral-500 sm:float-right`}>
-                        <a href={'https://jexactyl.com'}> Site </a>
-                        &bull;
-                        <a href={'https://github.com/jexactyl/jexactyl'}> GitHub </a>
+                <ContentContainer css={tw`mb-4`}>
+                    <p css={tw`text-center text-neutral-500 text-xs`}>
+                        <a
+                            rel={'noopener nofollow noreferrer'}
+                            href={'https://pterodactyl.io'}
+                            target={'_blank'}
+                            css={tw`no-underline text-neutral-500 hover:text-neutral-300`}
+                        >
+                            Pterodactyl&reg;
+                        </a>
+                        &nbsp;&copy; 2015 - {new Date().getFullYear()}
                     </p>
                 </ContentContainer>
-            </div>
+            </>
         </CSSTransition>
     );
 };

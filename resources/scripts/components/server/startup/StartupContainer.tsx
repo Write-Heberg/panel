@@ -1,20 +1,20 @@
-import tw from 'twin.macro';
-import isEqual from 'react-fast-compare';
-import useFlash from '@/plugins/useFlash';
-import { httpErrorToHuman } from '@/api/http';
-import { ServerContext } from '@/state/server';
-import Input from '@/components/elements/Input';
-import Select from '@/components/elements/Select';
-import Spinner from '@/components/elements/Spinner';
-import getServerStartup from '@/api/swr/getServerStartup';
-import InputSpinner from '@/components/elements/InputSpinner';
 import React, { useCallback, useEffect, useState } from 'react';
 import TitledGreyBox from '@/components/elements/TitledGreyBox';
-import { ServerError } from '@/components/elements/ScreenBlock';
+import tw from 'twin.macro';
 import VariableBox from '@/components/server/startup/VariableBox';
-import { useDeepCompareEffect } from '@/plugins/useDeepCompareEffect';
-import setSelectedDockerImage from '@/api/server/setSelectedDockerImage';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
+import getServerStartup from '@/api/swr/getServerStartup';
+import Spinner from '@/components/elements/Spinner';
+import { ServerError } from '@/components/elements/ScreenBlock';
+import { httpErrorToHuman } from '@/api/http';
+import { ServerContext } from '@/state/server';
+import { useDeepCompareEffect } from '@/plugins/useDeepCompareEffect';
+import Select from '@/components/elements/Select';
+import isEqual from 'react-fast-compare';
+import Input from '@/components/elements/Input';
+import setSelectedDockerImage from '@/api/server/setSelectedDockerImage';
+import InputSpinner from '@/components/elements/InputSpinner';
+import useFlash from '@/plugins/useFlash';
 
 const StartupContainer = () => {
     const [loading, setLoading] = useState(false);
@@ -83,12 +83,8 @@ const StartupContainer = () => {
             <ServerError title={'Oops!'} message={httpErrorToHuman(error)} onRetry={() => mutate()} />
         )
     ) : (
-        <ServerContentBlock
-            title={'Startup Settings'}
-            description={'Fine-tune variables for your server during startup.'}
-            showFlashKey={'startup:image'}
-        >
-            <div className={'md:flex j-up'}>
+        <ServerContentBlock title={'Startup Settings'} showFlashKey={'startup:image'}>
+            <div css={tw`md:flex`}>
                 <TitledGreyBox title={'Startup Command'} css={tw`flex-1`}>
                     <div css={tw`px-1 py-2`}>
                         <p css={tw`font-mono bg-neutral-900 rounded py-2 px-4`}>{data.invocation}</p>
@@ -129,7 +125,7 @@ const StartupContainer = () => {
                 </TitledGreyBox>
             </div>
             <h3 css={tw`mt-8 mb-2 text-2xl`}>Variables</h3>
-            <div className={'j-up grid gap-8 md:grid-cols-2'}>
+            <div css={tw`grid gap-8 md:grid-cols-2`}>
                 {data.variables.map((variable) => (
                     <VariableBox key={variable.envVariable} variable={variable} />
                 ))}

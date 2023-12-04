@@ -20,9 +20,6 @@ use Pterodactyl\Exceptions\Http\Server\ServerStateConflictException;
  * @property string $uuid
  * @property string $uuidShort
  * @property int $node_id
- * @property bool $renewable
- * @property int $renewal
- * @property string|null $bg
  * @property string $name
  * @property string $description
  * @property string|null $status
@@ -143,11 +140,6 @@ class Server extends Model
     protected $with = ['allocation'];
 
     /**
-     * The attributes that should be mutated to dates.
-     */
-    protected $dates = [self::CREATED_AT, self::UPDATED_AT, 'deleted_at', 'installed_at'];
-
-    /**
      * Fields that are not mass assignable.
      */
     protected $guarded = ['id', self::CREATED_AT, self::UPDATED_AT, 'deleted_at', 'installed_at'];
@@ -157,9 +149,6 @@ class Server extends Model
         'owner_id' => 'required|integer|exists:users,id',
         'name' => 'required|string|min:1|max:191',
         'node_id' => 'required|exists:nodes,id',
-        'renewable' => 'sometimes|boolean',
-        'renewal' => 'sometimes|integer',
-        'bg' => 'nullable|string',
         'description' => 'string',
         'status' => 'nullable|string',
         'memory' => 'required|numeric|min:0',
@@ -185,9 +174,6 @@ class Server extends Model
      */
     protected $casts = [
         'node_id' => 'integer',
-        'renewable' => 'boolean',
-        'renewal' => 'integer',
-        'bg' => 'string',
         'skip_scripts' => 'boolean',
         'owner_id' => 'integer',
         'memory' => 'integer',
@@ -202,6 +188,10 @@ class Server extends Model
         'database_limit' => 'integer',
         'allocation_limit' => 'integer',
         'backup_limit' => 'integer',
+        self::CREATED_AT => 'datetime',
+        self::UPDATED_AT => 'datetime',
+        'deleted_at' => 'datetime',
+        'installed_at' => 'datetime',
     ];
 
     /**

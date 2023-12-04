@@ -1,21 +1,18 @@
-import useSWR from 'swr';
-import tw from 'twin.macro';
+import React, { useEffect, useState } from 'react';
+import { Server } from '@/api/server/getServer';
 import getServers from '@/api/getServers';
+import ServerRow from '@/components/dashboard/ServerRow';
+import Spinner from '@/components/elements/Spinner';
+import PageContentBlock from '@/components/elements/PageContentBlock';
 import useFlash from '@/plugins/useFlash';
 import { useStoreState } from 'easy-peasy';
-import { PaginatedResult } from '@/api/http';
-import { useLocation } from 'react-router-dom';
-import { Server } from '@/api/server/getServer';
-import Switch from '@/components/elements/Switch';
-import React, { useEffect, useState } from 'react';
-import Spinner from '@/components/elements/Spinner';
-import NotFoundSvg from '@/assets/images/not_found.svg';
-import ServerRow from '@/components/dashboard/ServerRow';
-import Pagination from '@/components/elements/Pagination';
-import ScreenBlock from '@/components/elements/ScreenBlock';
 import { usePersistedState } from '@/plugins/usePersistedState';
-import ResourceBar from '@/components/elements/store/ResourceBar';
-import PageContentBlock from '@/components/elements/PageContentBlock';
+import Switch from '@/components/elements/Switch';
+import tw from 'twin.macro';
+import useSWR from 'swr';
+import { PaginatedResult } from '@/api/http';
+import Pagination from '@/components/elements/Pagination';
+import { useLocation } from 'react-router-dom';
 
 export default () => {
     const { search } = useLocation();
@@ -52,16 +49,12 @@ export default () => {
     }, [error]);
 
     return (
-        <PageContentBlock title={'Dashboard'} css={tw`mt-4 sm:mt-10`} showFlashKey={'dashboard'}>
-            <ResourceBar className={'my-10'} titles />
+        <PageContentBlock title={'Dashboard'} showFlashKey={'dashboard'}>
             {rootAdmin && (
-                <div css={tw`mb-10 flex justify-between items-center`}>
-                    <div>
-                        <h1 className={'j-left text-5xl'}>Your Servers</h1>
-                        <h3 className={'j-left text-2xl mt-2 text-neutral-500'}>
-                            Select a server to view, update or modify.
-                        </h3>
-                    </div>
+                <div css={tw`mb-2 flex justify-end items-center`}>
+                    <p css={tw`uppercase text-xs text-neutral-400 mr-2`}>
+                        {showOnlyAdmin ? "Showing others' servers" : 'Showing your servers'}
+                    </p>
                     <Switch
                         name={'show_all_servers'}
                         defaultChecked={showOnlyAdmin}
@@ -75,25 +68,15 @@ export default () => {
                 <Pagination data={servers} onPageSelect={setPage}>
                     {({ items }) =>
                         items.length > 0 ? (
-                            <div className={'lg:grid lg:grid-cols-3 gap-4'}>
-                                <>
-                                    {items.map((server) => (
-                                        <ServerRow
-                                            key={server.uuid}
-                                            server={server}
-                                            className={'j-up'}
-                                            css={tw`mt-2`}
-                                        />
-                                    ))}
-                                </>
-                            </div>
+                            items.map((server, index) => (
+                                <ServerRow key={server.uuid} server={server} css={index > 0 ? tw`mt-2` : undefined} />
+                            ))
                         ) : (
-                            <ScreenBlock
-                                title={'Seems quite quiet here...'}
-                                message={'There are no available servers to display.'}
-                                image={NotFoundSvg}
-                                noContainer
-                            />
+                            <p css={tw`text-center text-sm text-neutral-400`}>
+                                {showOnlyAdmin
+                                    ? 'There are no other servers to display.'
+                                    : 'There are no servers associated with your account.'}
+                            </p>
                         )
                     }
                 </Pagination>

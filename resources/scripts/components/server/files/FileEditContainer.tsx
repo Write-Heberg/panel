@@ -1,25 +1,25 @@
-import tw from 'twin.macro';
-import modes from '@/modes';
-import { dirname } from 'path';
-import useFlash from '@/plugins/useFlash';
-import Can from '@/components/elements/Can';
-import { httpErrorToHuman } from '@/api/http';
-import { ServerContext } from '@/state/server';
-import Select from '@/components/elements/Select';
 import React, { useEffect, useState } from 'react';
-import { encodePathSegments, hashToPath } from '@/helpers';
-import { Button } from '@/components/elements/button/index';
-import { ServerError } from '@/components/elements/ScreenBlock';
-import ErrorBoundary from '@/components/elements/ErrorBoundary';
 import getFileContents from '@/api/server/files/getFileContents';
-import FlashMessageRender from '@/components/FlashMessageRender';
+import { httpErrorToHuman } from '@/api/http';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
-import { useHistory, useLocation, useParams } from 'react-router';
 import saveFileContents from '@/api/server/files/saveFileContents';
-import FileNameModal from '@/components/server/files/FileNameModal';
-import PageContentBlock from '@/components/elements/PageContentBlock';
-import CodemirrorEditor from '@/components/elements/CodemirrorEditor';
 import FileManagerBreadcrumbs from '@/components/server/files/FileManagerBreadcrumbs';
+import { useHistory, useLocation, useParams } from 'react-router';
+import FileNameModal from '@/components/server/files/FileNameModal';
+import Can from '@/components/elements/Can';
+import FlashMessageRender from '@/components/FlashMessageRender';
+import PageContentBlock from '@/components/elements/PageContentBlock';
+import { ServerError } from '@/components/elements/ScreenBlock';
+import tw from 'twin.macro';
+import Button from '@/components/elements/Button';
+import Select from '@/components/elements/Select';
+import modes from '@/modes';
+import useFlash from '@/plugins/useFlash';
+import { ServerContext } from '@/state/server';
+import ErrorBoundary from '@/components/elements/ErrorBoundary';
+import { encodePathSegments, hashToPath } from '@/helpers';
+import { dirname } from 'path';
+import CodemirrorEditor from '@/components/elements/CodemirrorEditor';
 
 export default () => {
     const [error, setError] = useState('');
@@ -87,7 +87,7 @@ export default () => {
         <PageContentBlock>
             <FlashMessageRender byKey={'files:view'} css={tw`mb-4`} />
             <ErrorBoundary>
-                <div className={'mb-4 j-right'}>
+                <div css={tw`mb-4`}>
                     <FileManagerBreadcrumbs withinFileEditor isNewFile={action !== 'edit'} />
                 </div>
             </ErrorBoundary>
@@ -129,8 +129,8 @@ export default () => {
                     }}
                 />
             </div>
-            <div className={'j-up flex justify-end mt-4'}>
-                <div className={'flex-1 sm:flex-none rounded bg-neutral-900 mr-4'}>
+            <div css={tw`flex justify-end mt-4`}>
+                <div css={tw`flex-1 sm:flex-none rounded bg-neutral-900 mr-4`}>
                     <Select value={mode} onChange={(e) => setMode(e.currentTarget.value)}>
                         {modes.map((mode) => (
                             <option key={`${mode.name}_${mode.mime}`} value={mode.mime}>

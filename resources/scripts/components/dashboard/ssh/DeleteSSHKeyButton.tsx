@@ -1,10 +1,11 @@
 import tw from 'twin.macro';
-import * as Icon from 'react-feather';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import React, { useState } from 'react';
-import Code from '@/components/elements/Code';
 import { useFlashKey } from '@/plugins/useFlash';
-import { Dialog } from '@/components/elements/dialog';
 import { deleteSSHKey, useSSHKeys } from '@/api/account/ssh-keys';
+import { Dialog } from '@/components/elements/dialog';
+import Code from '@/components/elements/Code';
 
 export default ({ name, fingerprint }: { name: string; fingerprint: string }) => {
     const { clearAndAddHttpError } = useFlashKey('account');
@@ -35,7 +36,10 @@ export default ({ name, fingerprint }: { name: string; fingerprint: string }) =>
                 Removing the <Code>{name}</Code> SSH key will invalidate its usage across the Panel.
             </Dialog.Confirm>
             <button css={tw`ml-4 p-2 text-sm`} onClick={() => setVisible(true)}>
-                <Icon.Trash css={tw`text-neutral-400 hover:text-red-400 transition-colors duration-150`} />
+                <FontAwesomeIcon
+                    icon={faTrashAlt}
+                    css={tw`text-neutral-400 hover:text-red-400 transition-colors duration-150`}
+                />
             </button>
         </>
     );

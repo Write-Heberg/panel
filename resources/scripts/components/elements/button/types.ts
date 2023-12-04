@@ -11,7 +11,6 @@ enum Size {
 
 enum Variant {
     Primary,
-    Success,
     Secondary,
 }
 

@@ -36,22 +36,22 @@ class StoreSSHKeyRequest extends ClientApiRequest
             try {
                 $this->key = PublicKeyLoader::loadPublicKey($this->input('public_key'));
             } catch (NoKeyLoadedException $exception) {
-                $this->validator->errors()->add('public_key', "La clé publique fournie n'est pas valide.");
+                $this->validator->errors()->add('public_key', 'The public key provided is not valid.');
 
                 return;
             }
 
             if ($this->key instanceof DSA) {
-                $this->validator->errors()->add('public_key', 'Les clés DSA ne sont pas prises en charge.');
+                $this->validator->errors()->add('public_key', 'DSA keys are not supported.');
             }
 
             if ($this->key instanceof RSA && $this->key->getLength() < 2048) {
-                $this->validator->errors()->add('public_key', "Les clés RSA doivent avoir une longueur d'au moins 2048 octets.");
+                $this->validator->errors()->add('public_key', 'RSA keys must be at least 2048 bytes in length.');
             }
 
             $fingerprint = $this->key->getFingerprint('sha256');
             if ($this->user()->sshKeys()->where('fingerprint', $fingerprint)->exists()) {
-                $this->validator->errors()->add('public_key', 'La clé publique fournie existe déjà sur votre compte.');
+                $this->validator->errors()->add('public_key', 'The public key provided already exists on your account.');
             }
         });
     }

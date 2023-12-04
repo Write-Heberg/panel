@@ -22,7 +22,7 @@
         @section('user-data')
             @if(!is_null(Auth::user()))
                 <script>
-                    window.JexactylUser = {!! json_encode(Auth::user()->toVueObject()) !!};
+                    window.PterodactylUser = {!! json_encode(Auth::user()->toVueObject()) !!};
                 </script>
             @endif
             @if(!empty($siteConfiguration))
@@ -30,24 +30,7 @@
                     window.SiteConfiguration = {!! json_encode($siteConfiguration) !!};
                 </script>
             @endif
-            @if(!empty($storeConfiguration))
-                <script>
-                    window.StoreConfiguration = {!! json_encode($storeConfiguration) !!};
-                </script>
-            @endif
         @show
-
-        @if(!empty($siteConfiguration['background']))
-            <style>
-                body {
-                    background-image: url({!! $siteConfiguration['background'] !!});
-                    background-repeat: no-repeat;
-                    background-attachment: fixed;
-                    background-size: cover;
-                }
-            </style>
-        @endif
-
         <style>
             @import url('//fonts.googleapis.com/css?family=Rubik:300,400,500&display=swap');
             @import url('//fonts.googleapis.com/css?family=IBM+Plex+Mono|IBM+Plex+Sans:500&display=swap');
@@ -57,7 +40,7 @@
 
         @include('layouts.scripts')
     </head>
-    <body>
+    <body class="{{ $css['body'] ?? 'bg-neutral-50' }}">
         @section('content')
             @yield('above-container')
             @yield('container')

@@ -1,13 +1,12 @@
-import tw from 'twin.macro';
 import React, { useState } from 'react';
-import { ApplicationStore } from '@/state';
-import { httpErrorToHuman } from '@/api/http';
+import deleteSchedule from '@/api/server/schedules/deleteSchedule';
 import { ServerContext } from '@/state/server';
 import { Actions, useStoreActions } from 'easy-peasy';
-import { Dialog } from '@/components/elements/dialog';
+import { ApplicationStore } from '@/state';
+import { httpErrorToHuman } from '@/api/http';
 import { Button } from '@/components/elements/button/index';
+import { Dialog } from '@/components/elements/dialog';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
-import deleteSchedule from '@/api/server/schedules/deleteSchedule';
 
 interface Props {
     scheduleId: number;
@@ -49,7 +48,11 @@ export default ({ scheduleId, onDeleted }: Props) => {
                 <SpinnerOverlay visible={isLoading} />
                 All tasks will be removed and any running processes will be terminated.
             </Dialog.Confirm>
-            <Button.Danger css={tw`flex-1 sm:flex-none mr-4 border-transparent`} onClick={() => setVisible(true)}>
+            <Button.Danger
+                variant={Button.Variants.Secondary}
+                className={'flex-1 sm:flex-none mr-4 border-transparent'}
+                onClick={() => setVisible(true)}
+            >
                 Delete
             </Button.Danger>
         </>

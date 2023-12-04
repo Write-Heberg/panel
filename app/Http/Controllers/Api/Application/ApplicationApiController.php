@@ -10,18 +10,12 @@ use Illuminate\Container\Container;
 use Pterodactyl\Http\Controllers\Controller;
 use Pterodactyl\Extensions\Spatie\Fractalistic\Fractal;
 use Pterodactyl\Transformers\Api\Application\BaseTransformer;
-use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
 
 abstract class ApplicationApiController extends Controller
 {
     protected Request $request;
 
     protected Fractal $fractal;
-
-    /**
-     * @var \Pterodactyl\Contracts\Repository\SettingsRepositoryInterface
-     */
-    protected $settings;
 
     /**
      * ApplicationApiController constructor.
@@ -46,14 +40,10 @@ abstract class ApplicationApiController extends Controller
      * Perform dependency injection of certain classes needed for core functionality
      * without littering the constructors of classes that extend this abstract.
      */
-    public function loadDependencies(
-        Fractal $fractal,
-        Request $request,
-        SettingsRepositoryInterface $settings,
-    ) {
+    public function loadDependencies(Fractal $fractal, Request $request)
+    {
         $this->fractal = $fractal;
         $this->request = $request;
-        $this->settings = $settings;
     }
 
     /**

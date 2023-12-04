@@ -1,22 +1,24 @@
-import tw from 'twin.macro';
-import { format } from 'date-fns';
-import * as Icon from 'react-feather';
-import Code from '@/components/elements/Code';
-import { useFlashKey } from '@/plugins/useFlash';
 import React, { useEffect, useState } from 'react';
-import deleteApiKey from '@/api/account/deleteApiKey';
-import { Dialog } from '@/components/elements/dialog';
 import ContentBox from '@/components/elements/ContentBox';
-import GreyRowBox from '@/components/elements/GreyRowBox';
+import CreateApiKeyForm from '@/components/dashboard/forms/CreateApiKeyForm';
 import getApiKeys, { ApiKey } from '@/api/account/getApiKeys';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faKey, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import deleteApiKey from '@/api/account/deleteApiKey';
+import FlashMessageRender from '@/components/FlashMessageRender';
+import { format } from 'date-fns';
 import PageContentBlock from '@/components/elements/PageContentBlock';
-import CreateApiKeyForm from '@/components/dashboard/forms/CreateApiKeyForm';
+import tw from 'twin.macro';
+import GreyRowBox from '@/components/elements/GreyRowBox';
+import { Dialog } from '@/components/elements/dialog';
+import { useFlashKey } from '@/plugins/useFlash';
+import Code from '@/components/elements/Code';
 
 export default () => {
-    const [loading, setLoading] = useState(true);
-    const [keys, setKeys] = useState<ApiKey[]>([]);
     const [deleteIdentifier, setDeleteIdentifier] = useState('');
+    const [keys, setKeys] = useState<ApiKey[]>([]);
+    const [loading, setLoading] = useState(true);
     const { clearAndAddHttpError } = useFlashKey('account');
 
     useEffect(() => {
@@ -40,12 +42,9 @@ export default () => {
     };
 
     return (
-        <PageContentBlock
-            title={'Account API'}
-            description={'Create API keys to interact with the Panel.'}
-            showFlashKey={'account'}
-        >
-            <div className={'j-up md:flex flex-nowrap my-10'}>
+        <PageContentBlock title={'Account API'}>
+            <FlashMessageRender byKey={'account'} />
+            <div css={tw`md:flex flex-nowrap my-10`}>
                 <ContentBox title={'Create API Key'} css={tw`flex-none w-full md:w-1/2`}>
                     <CreateApiKeyForm onKeyCreated={(key) => setKeys((s) => [...s!, key])} />
                 </ContentBox>
@@ -68,9 +67,9 @@ export default () => {
                         keys.map((key, index) => (
                             <GreyRowBox
                                 key={key.identifier}
-                                css={[tw`bg-neutral-700 flex items-center`, index > 0 && tw`mt-2`]}
+                                css={[tw`bg-neutral-600 flex items-center`, index > 0 && tw`mt-2`]}
                             >
-                                <Icon.Key css={tw`text-neutral-300`} />
+                                <FontAwesomeIcon icon={faKey} css={tw`text-neutral-300`} />
                                 <div css={tw`ml-4 flex-1 overflow-hidden`}>
                                     <p css={tw`text-sm break-words`}>{key.description}</p>
                                     <p css={tw`text-2xs text-neutral-300 uppercase`}>
@@ -82,7 +81,8 @@ export default () => {
                                     <code css={tw`font-mono py-1 px-2 bg-neutral-900 rounded`}>{key.identifier}</code>
                                 </p>
                                 <button css={tw`ml-4 p-2 text-sm`} onClick={() => setDeleteIdentifier(key.identifier)}>
-                                    <Icon.Trash
+                                    <FontAwesomeIcon
+                                        icon={faTrashAlt}
                                         css={tw`text-neutral-400 hover:text-red-400 transition-colors duration-150`}
                                     />
                                 </button>

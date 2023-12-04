@@ -70,7 +70,7 @@ class ServersController extends Controller
     public function setDetails(Request $request, Server $server): RedirectResponse
     {
         $this->detailsModificationService->handle($server, $request->only([
-            'owner_id', 'external_id', 'name', 'description', 'renewable', 'renewal',
+            'owner_id', 'external_id', 'name', 'description',
         ]));
 
         $this->alert->success(trans('admin/server.alerts.details_updated'))->flash();
@@ -164,11 +164,7 @@ class ServersController extends Controller
      */
     public function delete(Request $request, Server $server): RedirectResponse
     {
-        $this->deletionService
-            ->withForce($request->filled('force_delete'))
-            ->returnResources($request->filled('return_resources'))
-            ->handle($server);
-
+        $this->deletionService->withForce($request->filled('force_delete'))->handle($server);
         $this->alert->success(trans('admin/server.alerts.server_deleted'))->flash();
 
         return redirect()->route('admin.servers');

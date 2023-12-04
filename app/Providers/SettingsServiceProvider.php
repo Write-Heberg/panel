@@ -17,20 +17,19 @@ class SettingsServiceProvider extends ServiceProvider
      * if they exist.
      */
     protected array $keys = [
-        'app:logo',
         'app:name',
         'app:locale',
-        'theme:admin',
         'recaptcha:enabled',
         'recaptcha:secret_key',
         'recaptcha:website_key',
-        'theme:user:background',
         'pterodactyl:guzzle:timeout',
-        'pterodactyl:auth:2fa_required',
         'pterodactyl:guzzle:connect_timeout',
+        'pterodactyl:console:count',
+        'pterodactyl:console:frequency',
+        'pterodactyl:auth:2fa_required',
         'pterodactyl:client_features:allocations:enabled',
-        'pterodactyl:client_features:allocations:range_end',
         'pterodactyl:client_features:allocations:range_start',
+        'pterodactyl:client_features:allocations:range_end',
     ];
 
     /**
@@ -58,7 +57,7 @@ class SettingsServiceProvider extends ServiceProvider
     /**
      * Boot the service provider.
      */
-    public function boot(ConfigRepository $config, Encrypter $encrypter, Log $log, SettingsRepositoryInterface $settings)
+    public function boot(ConfigRepository $config, Encrypter $encrypter, Log $log, SettingsRepositoryInterface $settings): void
     {
         // Only set the email driver settings from the database if we
         // are configured using SMTP as the driver.

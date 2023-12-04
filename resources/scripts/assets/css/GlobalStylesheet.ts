@@ -3,15 +3,16 @@ import { createGlobalStyle } from 'styled-components/macro';
 
 export default createGlobalStyle`
     body {
-        ${tw`bg-neutral-900 font-sans font-medium text-gray-200`};
+        ${tw`font-sans bg-neutral-800 text-neutral-200`};
+        letter-spacing: 0.015em;
     }
 
     h1, h2, h3, h4, h5, h6 {
-        ${tw`tracking-normal`};
+        ${tw`font-medium tracking-normal font-header`};
     }
 
     p {
-        ${tw`leading-snug`};
+        ${tw`text-neutral-200 leading-snug font-sans`};
     }
 
     form {

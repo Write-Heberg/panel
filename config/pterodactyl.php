@@ -92,7 +92,7 @@ return [
 
     'cdn' => [
         'cache_time' => 60,
-        'url' => 'https://versions.jexactyl.com',
+        'url' => 'https://cdn.pterodactyl.io/releases/latest.json',
     ],
 
     /*
@@ -115,7 +115,7 @@ return [
         ],
 
         'allocations' => [
-            'enabled' => env('PTERODACTYL_CLIENT_ALLOCATIONS_ENABLED', true),
+            'enabled' => env('PTERODACTYL_CLIENT_ALLOCATIONS_ENABLED', false),
             'range_start' => env('PTERODACTYL_CLIENT_ALLOCATIONS_RANGE_START'),
             'range_end' => env('PTERODACTYL_CLIENT_ALLOCATIONS_RANGE_END'),
         ],
@@ -176,5 +176,17 @@ return [
         'send_install_notification' => env('PTERODACTYL_SEND_INSTALL_NOTIFICATION', true),
         // Should an email be sent to a server owner whenever their server is reinstalled?
         'send_reinstall_notification' => env('PTERODACTYL_SEND_REINSTALL_NOTIFICATION', true),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Telemetry Settings
+    |--------------------------------------------------------------------------
+    |
+    | This section controls the telemetry sent by Pterodactyl.
+    */
+
+    'telemetry' => [
+        'enabled' => env('PTERODACTYL_TELEMETRY_ENABLED', true),
     ],
 ];

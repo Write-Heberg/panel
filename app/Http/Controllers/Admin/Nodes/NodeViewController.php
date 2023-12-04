@@ -55,7 +55,6 @@ class NodeViewController extends Controller
         return $this->view->make('admin.nodes.view.settings', [
             'node' => $node,
             'locations' => $this->locationRepository->all(),
-            'deployable' => $node->deployable,
         ]);
     }
 

@@ -1,6 +1,6 @@
 import http from '@/api/http';
-import { History } from 'history';
 import { AxiosError } from 'axios';
+import { History } from 'history';
 
 export const setupInterceptors = (history: History) => {
     http.interceptors.response.use(

@@ -1,13 +1,13 @@
-import tw from 'twin.macro';
+import React, { useEffect, useState } from 'react';
+import { ServerContext } from '@/state/server';
+import TitledGreyBox from '@/components/elements/TitledGreyBox';
+import reinstallServer from '@/api/server/reinstallServer';
+import { Actions, useStoreActions } from 'easy-peasy';
 import { ApplicationStore } from '@/state';
 import { httpErrorToHuman } from '@/api/http';
-import { ServerContext } from '@/state/server';
-import React, { useEffect, useState } from 'react';
-import { Actions, useStoreActions } from 'easy-peasy';
-import { Dialog } from '@/components/elements/dialog';
-import reinstallServer from '@/api/server/reinstallServer';
+import tw from 'twin.macro';
 import { Button } from '@/components/elements/button/index';
-import TitledGreyBox from '@/components/elements/TitledGreyBox';
+import { Dialog } from '@/components/elements/dialog';
 
 export default () => {
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
@@ -27,7 +27,7 @@ export default () => {
             .catch((error) => {
                 console.error(error);
 
-                addFlash({ key: 'settings', type: 'danger', message: httpErrorToHuman(error) });
+                addFlash({ key: 'settings', type: 'error', message: httpErrorToHuman(error) });
             })
             .then(() => setModalVisible(false));
     };

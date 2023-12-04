@@ -28,7 +28,6 @@ use Pterodactyl\Notifications\SendPasswordReset as ResetPasswordNotification;
  * @property string $uuid
  * @property string $username
  * @property string $email
- * @property string|null $discord_id
  * @property string|null $name_first
  * @property string|null $name_last
  * @property string $password
@@ -54,17 +53,6 @@ use Pterodactyl\Notifications\SendPasswordReset as ResetPasswordNotification;
  * @property int|null $ssh_keys_count
  * @property \Illuminate\Database\Eloquent\Collection|\Pterodactyl\Models\ApiKey[] $tokens
  * @property int|null $tokens_count
- * @property int $store_balance
- * @property int $store_cpu
- * @property int $store_memory
- * @property int $store_disk
- * @property int $store_slots
- * @property int $store_ports
- * @property int $store_backups
- * @property int $store_databases
- * @property string $referral_code
- * @property bool|null $approved
- * @property bool $verified
  *
  * @method static \Database\Factories\UserFactory factory(...$parameters)
  * @method static Builder|User newModelQuery()
@@ -128,7 +116,6 @@ class User extends Model implements
         'external_id',
         'username',
         'email',
-        'discord_id',
         'name_first',
         'name_last',
         'password',
@@ -138,16 +125,6 @@ class User extends Model implements
         'totp_authenticated_at',
         'gravatar',
         'root_admin',
-        'store_balance',
-        'store_cpu',
-        'store_memory',
-        'store_disk',
-        'store_slots',
-        'store_ports',
-        'store_backups',
-        'store_databases',
-        'referral_code',
-        'approved',
     ];
 
     /**
@@ -157,9 +134,8 @@ class User extends Model implements
         'root_admin' => 'boolean',
         'use_totp' => 'boolean',
         'gravatar' => 'boolean',
+        'totp_authenticated_at' => 'datetime',
     ];
-
-    protected $dates = ['totp_authenticated_at'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -175,7 +151,6 @@ class User extends Model implements
         'language' => 'en',
         'use_totp' => false,
         'totp_secret' => null,
-        'approved' => false,
     ];
 
     /**
@@ -185,7 +160,6 @@ class User extends Model implements
         'uuid' => 'required|string|size:36|unique:users,uuid',
         'email' => 'required|email|between:1,191|unique:users,email',
         'external_id' => 'sometimes|nullable|string|max:191|unique:users,external_id',
-        'discord_id' => 'nullable|string|regex:/^[0-9]{17,20}$/|unique:users,discord_id',
         'username' => 'required|between:1,191|unique:users,username',
         'name_first' => 'required|string|between:1,191',
         'name_last' => 'required|string|between:1,191',
@@ -194,16 +168,6 @@ class User extends Model implements
         'language' => 'string',
         'use_totp' => 'boolean',
         'totp_secret' => 'nullable|string',
-        'approved' => 'nullable|boolean',
-        'verified' => 'boolean',
-        'store_balance' => 'sometimes|int',
-        'store_cpu' => 'sometimes|int',
-        'store_memory' => 'sometimes|int',
-        'store_disk' => 'sometimes|int',
-        'store_slots' => 'sometimes|int',
-        'store_ports' => 'sometimes|int',
-        'store_backups' => 'sometimes|int',
-        'store_database' => 'sometimes|int',
     ];
 
     /**
@@ -221,7 +185,7 @@ class User extends Model implements
     }
 
     /**
-     * Return the user model in a format that can be passed over to React templates.
+     * Return the user model in a format that can be passed over to Vue templates.
      */
     public function toVueObject(): array
     {
@@ -276,16 +240,6 @@ class User extends Model implements
     public function recoveryTokens(): HasMany
     {
         return $this->hasMany(RecoveryToken::class);
-    }
-
-    public function referralCodes(): HasMany
-    {
-        return $this->hasMany(ReferralCode::class);
-    }
-
-    public function tickets(): HasMany
-    {
-        return $this->hasMany(Ticket::class, 'client_id');
     }
 
     public function sshKeys(): HasMany

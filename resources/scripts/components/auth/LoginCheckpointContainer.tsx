@@ -1,15 +1,15 @@
-import tw from 'twin.macro';
 import React, { useState } from 'react';
-import useFlash from '@/plugins/useFlash';
+import { Link, RouteComponentProps } from 'react-router-dom';
+import loginCheckpoint from '@/api/auth/loginCheckpoint';
+import LoginFormContainer from '@/components/auth/LoginFormContainer';
 import { ActionCreator } from 'easy-peasy';
 import { StaticContext } from 'react-router';
+import { useFormikContext, withFormik } from 'formik';
+import useFlash from '@/plugins/useFlash';
 import { FlashStore } from '@/state/flashes';
 import Field from '@/components/elements/Field';
-import { useFormikContext, withFormik } from 'formik';
-import loginCheckpoint from '@/api/auth/loginCheckpoint';
-import { Button } from '@/components/elements/button/index';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import LoginFormContainer from '@/components/auth/LoginFormContainer';
+import tw from 'twin.macro';
+import Button from '@/components/elements/Button';
 
 interface Values {
     code: string;
@@ -44,7 +44,7 @@ const LoginCheckpointContainer = () => {
                 />
             </div>
             <div css={tw`mt-6`}>
-                <Button size={Button.Sizes.Large} css={tw`w-full`} type={'submit'} disabled={isSubmitting}>
+                <Button size={'xlarge'} type={'submit'} disabled={isSubmitting} isLoading={isSubmitting}>
                     Continue
                 </Button>
             </div>

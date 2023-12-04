@@ -1,7 +1,7 @@
-import tw from 'twin.macro';
 import React, { Suspense } from 'react';
-import ErrorBoundary from '@/components/elements/ErrorBoundary';
 import styled, { css, keyframes } from 'styled-components/macro';
+import tw from 'twin.macro';
+import ErrorBoundary from '@/components/elements/ErrorBoundary';
 
 export type SpinnerSize = 'small' | 'base' | 'large';
 

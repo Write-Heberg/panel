@@ -1,19 +1,19 @@
 import React from 'react';
-import tw from 'twin.macro';
+import { ServerContext } from '@/state/server';
+import TitledGreyBox from '@/components/elements/TitledGreyBox';
+import { Field as FormikField, Form, Formik, FormikHelpers, useFormikContext } from 'formik';
+import { Actions, useStoreActions } from 'easy-peasy';
+import renameServer from '@/api/server/renameServer';
+import Field from '@/components/elements/Field';
 import { object, string } from 'yup';
+import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import { ApplicationStore } from '@/state';
 import { httpErrorToHuman } from '@/api/http';
-import { ServerContext } from '@/state/server';
-import Field from '@/components/elements/Field';
-import Label from '@/components/elements/Label';
-import renameServer from '@/api/server/renameServer';
-import { Actions, useStoreActions } from 'easy-peasy';
-import { Textarea } from '@/components/elements/Input';
 import { Button } from '@/components/elements/button/index';
-import TitledGreyBox from '@/components/elements/TitledGreyBox';
-import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
+import tw from 'twin.macro';
+import Label from '@/components/elements/Label';
 import FormikFieldWrapper from '@/components/elements/FormikFieldWrapper';
-import { Field as FormikField, Form, Formik, FormikHelpers, useFormikContext } from 'formik';
+import { Textarea } from '@/components/elements/Input';
 
 interface Values {
     name: string;

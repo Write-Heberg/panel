@@ -2,90 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use Pterodactyl\Http\Controllers\Admin;
-use Pterodactyl\Http\Controllers\Admin\Jexactyl;
 use Pterodactyl\Http\Middleware\Admin\Servers\ServerInstalled;
 
-/*
-|--------------------------------------------------------------------------
-| Admin Controller Routes
-|--------------------------------------------------------------------------
-|
-| Endpoint: /admin
-|
-*/
-Route::group(['prefix' => '/'], function () {
-    Route::get('/', [Jexactyl\IndexController::class, 'index'])->name('admin.index');
-
-    Route::group(['prefix' => '/appearance'], function () {
-        Route::get('/', [Jexactyl\AppearanceController::class, 'index']);
-        Route::patch('/', [Jexactyl\AppearanceController::class, 'update'])->name('admin.jexactyl.appearance');
-    });
-
-    Route::group(['prefix' => '/mail'], function () {
-        Route::get('/', [Jexactyl\MailController::class, 'index']);
-        Route::patch('/', [Jexactyl\MailController::class, 'update'])->name('admin.jexactyl.mail');
-        Route::post('/test', [Jexactyl\MailController::class, 'test'])->name('admin.jexactyl.mail.test');
-    });
-
-    Route::group(['prefix' => '/advanced'], function () {
-        Route::get('/', [Jexactyl\AdvancedController::class, 'index']);
-        Route::patch('/', [Jexactyl\AdvancedController::class, 'update'])->name('admin.jexactyl.advanced');
-    });
-
-    Route::group(['prefix' => '/store'], function () {
-        Route::get('/', [Jexactyl\StoreController::class, 'index']);
-        Route::patch('/', [Jexactyl\StoreController::class, 'update'])->name('admin.jexactyl.store');
-    });
-
-    Route::group(['prefix' => '/registration'], function () {
-        Route::get('/', [Jexactyl\RegistrationController::class, 'index']);
-        Route::patch('/', [Jexactyl\RegistrationController::class, 'update'])->name('admin.jexactyl.registration');
-    });
-
-    Route::group(['prefix' => '/approvals'], function () {
-        Route::get('/', [Jexactyl\ApprovalsController::class, 'index']);
-
-        Route::post('/deny/{id}', [Jexactyl\ApprovalsController::class, 'deny'])->name('admin.jexactyl.approvals.deny');
-        Route::post('/approve/all', [Jexactyl\ApprovalsController::class, 'approveAll'])->name('admin.jexactyl.approvals.all');
-        Route::post('/approve/{id}', [Jexactyl\ApprovalsController::class, 'approve'])->name('admin.jexactyl.approvals.approve');
-        Route::patch('/', [Jexactyl\ApprovalsController::class, 'update'])->name('admin.jexactyl.approvals');
-    });
-
-    Route::group(['prefix' => '/server'], function () {
-        Route::get('/', [Jexactyl\ServerController::class, 'index']);
-        Route::patch('/', [Jexactyl\ServerController::class, 'update'])->name('admin.jexactyl.server');
-    });
-
-    Route::group(['prefix' => '/referrals'], function () {
-        Route::get('/', [Jexactyl\ReferralsController::class, 'index']);
-        Route::patch('/', [Jexactyl\ReferralsController::class, 'update'])->name('admin.jexactyl.referrals');
-    });
-
-    Route::group(['prefix' => '/alerts'], function () {
-        Route::get('/', [Jexactyl\AlertsController::class, 'index']);
-        Route::patch('/', [Jexactyl\AlertsController::class, 'update'])->name('admin.jexactyl.alerts');
-        Route::post('/remove', [Jexactyl\AlertsController::class, 'remove'])->name('admin.jexactyl.alerts.remove');
-    });
-});
-
-/*
-|--------------------------------------------------------------------------
-| Ticket Controller Routes
-|--------------------------------------------------------------------------
-|
-| Endpoint: /admin/tickets
-|
-*/
-Route::group(['prefix' => 'tickets'], function () {
-    Route::get('/', [Admin\TicketsController::class, 'index'])->name('admin.tickets.index');
-    Route::get('/{ticket:id}', [Admin\TicketsController::class, 'view'])->name('admin.tickets.view');
-
-    Route::post('/', [Admin\TicketsController::class, 'toggle'])->name('admin.tickets.toggle');
-    Route::post('/{ticket:id}/status', [Admin\TicketsController::class, 'status'])->name('admin.tickets.status');
-    Route::post('/{ticket:id}/delete', [Admin\TicketsController::class, 'delete'])->name('admin.tickets.delete');
-    Route::post('/{ticket:id}/message', [Admin\TicketsController::class, 'message'])->name('admin.tickets.message');
-});
-
+Route::get('/', [Admin\BaseController::class, 'index'])->name('admin.index');
 
 /*
 |--------------------------------------------------------------------------
@@ -139,33 +58,42 @@ Route::group(['prefix' => 'databases'], function () {
 
 /*
 |--------------------------------------------------------------------------
-| Node Controller Routes
+| Settings Controller Routes
 |--------------------------------------------------------------------------
 |
-| Endpoint: /admin/nodes
+| Endpoint: /admin/settings
 |
 */
-Route::group(['prefix' => 'nodes'], function () {
-    Route::get('/', [Admin\Nodes\NodeController::class, 'index'])->name('admin.nodes');
-    Route::get('/new', [Admin\NodesController::class, 'create'])->name('admin.nodes.new');
-    Route::get('/view/{node:id}', [Admin\Nodes\NodeViewController::class, 'index'])->name('admin.nodes.view');
-    Route::get('/view/{node:id}/settings', [Admin\Nodes\NodeViewController::class, 'settings'])->name('admin.nodes.view.settings');
-    Route::get('/view/{node:id}/configuration', [Admin\Nodes\NodeViewController::class, 'configuration'])->name('admin.nodes.view.configuration');
-    Route::get('/view/{node:id}/allocation', [Admin\Nodes\NodeViewController::class, 'allocations'])->name('admin.nodes.view.allocation');
-    Route::get('/view/{node:id}/servers', [Admin\Nodes\NodeViewController::class, 'servers'])->name('admin.nodes.view.servers');
-    Route::get('/view/{node:id}/system-information', Admin\Nodes\SystemInformationController::class);
+Route::group(['prefix' => 'settings'], function () {
+    Route::get('/', [Admin\Settings\IndexController::class, 'index'])->name('admin.settings');
+    Route::get('/mail', [Admin\Settings\MailController::class, 'index'])->name('admin.settings.mail');
+    Route::get('/advanced', [Admin\Settings\AdvancedController::class, 'index'])->name('admin.settings.advanced');
 
-    Route::post('/new', [Admin\NodesController::class, 'store']);
-    Route::post('/view/{node:id}/allocation', [Admin\NodesController::class, 'createAllocation']);
-    Route::post('/view/{node:id}/allocation/remove', [Admin\NodesController::class, 'allocationRemoveBlock'])->name('admin.nodes.view.allocation.removeBlock');
-    Route::post('/view/{node:id}/allocation/alias', [Admin\NodesController::class, 'allocationSetAlias'])->name('admin.nodes.view.allocation.setAlias');
-    Route::post('/view/{node:id}/settings/token', Admin\NodeAutoDeployController::class)->name('admin.nodes.view.configuration.token');
+    Route::post('/mail/test', [Admin\Settings\MailController::class, 'test'])->name('admin.settings.mail.test');
 
-    Route::patch('/view/{node:id}/settings', [Admin\NodesController::class, 'updateSettings']);
+    Route::patch('/', [Admin\Settings\IndexController::class, 'update']);
+    Route::patch('/mail', [Admin\Settings\MailController::class, 'update']);
+    Route::patch('/advanced', [Admin\Settings\AdvancedController::class, 'update']);
+});
 
-    Route::delete('/view/{node:id}/delete', [Admin\NodesController::class, 'delete'])->name('admin.nodes.view.delete');
-    Route::delete('/view/{node:id}/allocation/remove/{allocation:id}', [Admin\NodesController::class, 'allocationRemoveSingle'])->name('admin.nodes.view.allocation.removeSingle');
-    Route::delete('/view/{node:id}/allocations', [Admin\NodesController::class, 'allocationRemoveMultiple'])->name('admin.nodes.view.allocation.removeMultiple');
+/*
+|--------------------------------------------------------------------------
+| User Controller Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/users
+|
+*/
+Route::group(['prefix' => 'users'], function () {
+    Route::get('/', [Admin\UserController::class, 'index'])->name('admin.users');
+    Route::get('/accounts.json', [Admin\UserController::class, 'json'])->name('admin.users.json');
+    Route::get('/new', [Admin\UserController::class, 'create'])->name('admin.users.new');
+    Route::get('/view/{user:id}', [Admin\UserController::class, 'view'])->name('admin.users.view');
+
+    Route::post('/new', [Admin\UserController::class, 'store']);
+
+    Route::patch('/view/{user:id}', [Admin\UserController::class, 'update']);
+    Route::delete('/view/{user:id}', [Admin\UserController::class, 'delete']);
 });
 
 /*
@@ -213,25 +141,33 @@ Route::group(['prefix' => 'servers'], function () {
 
 /*
 |--------------------------------------------------------------------------
-| User Controller Routes
+| Node Controller Routes
 |--------------------------------------------------------------------------
 |
-| Endpoint: /admin/users
+| Endpoint: /admin/nodes
 |
 */
-Route::group(['prefix' => 'users'], function () {
-    Route::get('/', [Admin\Users\UserController::class, 'index'])->name('admin.users');
-    Route::get('/accounts.json', [Admin\Users\UserController::class, 'json'])->name('admin.users.json');
-    Route::get('/new', [Admin\Users\UserController::class, 'create'])->name('admin.users.new');
-    Route::get('/view/{user:id}', [Admin\Users\UserController::class, 'view'])->name('admin.users.view');
-    Route::get('/view/{user:id}/resources', [Admin\Users\ResourceController::class, 'view'])->name('admin.users.resources');
+Route::group(['prefix' => 'nodes'], function () {
+    Route::get('/', [Admin\Nodes\NodeController::class, 'index'])->name('admin.nodes');
+    Route::get('/new', [Admin\NodesController::class, 'create'])->name('admin.nodes.new');
+    Route::get('/view/{node:id}', [Admin\Nodes\NodeViewController::class, 'index'])->name('admin.nodes.view');
+    Route::get('/view/{node:id}/settings', [Admin\Nodes\NodeViewController::class, 'settings'])->name('admin.nodes.view.settings');
+    Route::get('/view/{node:id}/configuration', [Admin\Nodes\NodeViewController::class, 'configuration'])->name('admin.nodes.view.configuration');
+    Route::get('/view/{node:id}/allocation', [Admin\Nodes\NodeViewController::class, 'allocations'])->name('admin.nodes.view.allocation');
+    Route::get('/view/{node:id}/servers', [Admin\Nodes\NodeViewController::class, 'servers'])->name('admin.nodes.view.servers');
+    Route::get('/view/{node:id}/system-information', Admin\Nodes\SystemInformationController::class);
 
-    Route::post('/new', [Admin\Users\UserController::class, 'store']);
+    Route::post('/new', [Admin\NodesController::class, 'store']);
+    Route::post('/view/{node:id}/allocation', [Admin\NodesController::class, 'createAllocation']);
+    Route::post('/view/{node:id}/allocation/remove', [Admin\NodesController::class, 'allocationRemoveBlock'])->name('admin.nodes.view.allocation.removeBlock');
+    Route::post('/view/{node:id}/allocation/alias', [Admin\NodesController::class, 'allocationSetAlias'])->name('admin.nodes.view.allocation.setAlias');
+    Route::post('/view/{node:id}/settings/token', Admin\NodeAutoDeployController::class)->name('admin.nodes.view.configuration.token');
 
-    Route::patch('/view/{user:id}', [Admin\Users\UserController::class, 'update']);
-    Route::patch('/view/{user:id}/resources', [Admin\Users\ResourceController::class, 'update']);
+    Route::patch('/view/{node:id}/settings', [Admin\NodesController::class, 'updateSettings']);
 
-    Route::delete('/view/{user:id}', [Admin\Users\UserController::class, 'delete']);
+    Route::delete('/view/{node:id}/delete', [Admin\NodesController::class, 'delete'])->name('admin.nodes.view.delete');
+    Route::delete('/view/{node:id}/allocation/remove/{allocation:id}', [Admin\NodesController::class, 'allocationRemoveSingle'])->name('admin.nodes.view.allocation.removeSingle');
+    Route::delete('/view/{node:id}/allocations', [Admin\NodesController::class, 'allocationRemoveMultiple'])->name('admin.nodes.view.allocation.removeMultiple');
 });
 
 /*

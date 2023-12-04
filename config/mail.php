@@ -27,7 +27,7 @@ return [
     | sending an e-mail. You will specify which one you are using for your
     | mailers below. You are free to add additional mailers as required.
     |
-    | Supported: "smtp", "sendmail", "mailgun", "ses",
+    | Supported: "smtp", "sendmail", "mailgun", "ses", "ses-v2",
     |            "postmark", "log", "array", "failover"
     |
     */
@@ -92,7 +92,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', env('MAIL_FROM', 'hello@example.com')),
-        'name' => env('MAIL_FROM_NAME', 'Jexactyl Panel'),
+        'name' => env('MAIL_FROM_NAME', 'Pterodactyl Panel'),
     ],
 
     /*

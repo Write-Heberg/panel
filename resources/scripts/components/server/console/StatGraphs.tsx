@@ -1,15 +1,15 @@
-import { theme } from 'twin.macro';
-import * as Icon from 'react-feather';
-import { Line } from 'react-chartjs-2';
-import { hexToRgba } from '@/lib/helpers';
-import { ServerContext } from '@/state/server';
-import { bytesToString } from '@/lib/formatters';
 import React, { useEffect, useRef } from 'react';
+import { ServerContext } from '@/state/server';
 import { SocketEvent } from '@/components/server/events';
-import Tooltip from '@/components/elements/tooltip/Tooltip';
 import useWebsocketEvent from '@/plugins/useWebsocketEvent';
-import ChartBlock from '@/components/server/console/ChartBlock';
+import { Line } from 'react-chartjs-2';
 import { useChart, useChartTickLabel } from '@/components/server/console/chart';
+import { hexToRgba } from '@/lib/helpers';
+import { bytesToString } from '@/lib/formatters';
+import { CloudDownloadIcon, CloudUploadIcon } from '@heroicons/react/solid';
+import { theme } from 'twin.macro';
+import ChartBlock from '@/components/server/console/ChartBlock';
+import Tooltip from '@/components/elements/tooltip/Tooltip';
 
 export default () => {
     const status = ServerContext.useStoreState((state) => state.status.value);
@@ -35,8 +35,8 @@ export default () => {
             return {
                 ...opts,
                 label: !index ? 'Network In' : 'Network Out',
-                borderColor: !index ? theme('colors.cyan.400') : theme('colors.green.400'),
-                backgroundColor: hexToRgba(!index ? theme('colors.cyan.700') : theme('colors.green.700'), 0.5),
+                borderColor: !index ? theme('colors.cyan.400') : theme('colors.yellow.400'),
+                backgroundColor: hexToRgba(!index ? theme('colors.cyan.700') : theme('colors.yellow.700'), 0.5),
             };
         },
     });
@@ -79,10 +79,10 @@ export default () => {
                 legend={
                     <>
                         <Tooltip arrow content={'Inbound'}>
-                            <Icon.UploadCloud className={'mr-2 w-4 h-4 text-green-400'} />
+                            <CloudDownloadIcon className={'mr-2 w-4 h-4 text-yellow-400'} />
                         </Tooltip>
                         <Tooltip arrow content={'Outbound'}>
-                            <Icon.DownloadCloud className={'w-4 h-4 text-cyan-400'} />
+                            <CloudUploadIcon className={'w-4 h-4 text-cyan-400'} />
                         </Tooltip>
                     </>
                 }

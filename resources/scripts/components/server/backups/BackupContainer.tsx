@@ -1,14 +1,15 @@
-import tw from 'twin.macro';
+import React, { useContext, useEffect, useState } from 'react';
+import Spinner from '@/components/elements/Spinner';
 import useFlash from '@/plugins/useFlash';
 import Can from '@/components/elements/Can';
-import { ServerContext } from '@/state/server';
-import Spinner from '@/components/elements/Spinner';
-import Pagination from '@/components/elements/Pagination';
-import BackupRow from '@/components/server/backups/BackupRow';
-import React, { useContext, useEffect, useState } from 'react';
-import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import CreateBackupButton from '@/components/server/backups/CreateBackupButton';
+import FlashMessageRender from '@/components/FlashMessageRender';
+import BackupRow from '@/components/server/backups/BackupRow';
+import tw from 'twin.macro';
 import getServerBackups, { Context as ServerBackupContext } from '@/api/swr/getServerBackups';
+import { ServerContext } from '@/state/server';
+import ServerContentBlock from '@/components/elements/ServerContentBlock';
+import Pagination from '@/components/elements/Pagination';
 
 const BackupContainer = () => {
     const { page, setPage } = useContext(ServerBackupContext);
@@ -32,7 +33,8 @@ const BackupContainer = () => {
     }
 
     return (
-        <ServerContentBlock title={'Backups'} description={'Protect your data with backups.'} showFlashKey={'backups'}>
+        <ServerContentBlock title={'Backups'}>
+            <FlashMessageRender byKey={'backups'} css={tw`mb-4`} />
             <Pagination data={backups} onPageSelect={setPage}>
                 {({ items }) =>
                     !items.length ? (
