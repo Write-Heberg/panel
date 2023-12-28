@@ -21,6 +21,7 @@ use Pterodactyl\Services\Users\UserDeletionService;
 use Pterodactyl\Http\Requests\Admin\UserFormRequest;
 use Pterodactyl\Http\Requests\Admin\NewUserFormRequest;
 use Pterodactyl\Contracts\Repository\UserRepositoryInterface;
+use Pterodactyl\Models\Role;
 
 class UserController extends Controller
 {
@@ -57,7 +58,7 @@ class UserController extends Controller
             ->allowedSorts(['id', 'uuid'])
             ->paginate(50);
 
-        return $this->view->make('admin.users.index', ['users' => $users]);
+        return $this->view->make('admin.users.index', ['users' => $users, 'roles' => Role::all()]);
     }
 
     /**
@@ -78,6 +79,8 @@ class UserController extends Controller
         return $this->view->make('admin.users.view', [
             'user' => $user,
             'languages' => $this->getAvailableLanguages(true),
+            'roles' => Role::all(),
+            'u_role' => $user->role,
         ]);
     }
 
