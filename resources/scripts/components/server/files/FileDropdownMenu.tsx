@@ -78,7 +78,7 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
         // If the delete actually fails, we'll fetch the current directory contents again automatically.
         mutate((files) => files.filter((f) => f.key !== file.key), false);
 
-        deleteFiles(uuid, directory, [file.name]).catch((error) => {
+        deleteFiles(uuid, directory, [file.name], false).catch((error) => {
             mutate();
             clearAndAddHttpError({ key: 'files', error });
         });
@@ -136,8 +136,7 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
                 confirm={'Delete'}
                 onConfirmed={doDeletion}
             >
-                You will not be able to recover the contents of&nbsp;
-                <span className={'font-semibold text-gray-50'}>{file.name}</span> once deleted.
+                After deleting a file it can be recovered from the recycle bin for 24 hours after deletion, after that they are permanently lost.
             </Dialog.Confirm>
             <DropdownMenu
                 ref={onClickRef}

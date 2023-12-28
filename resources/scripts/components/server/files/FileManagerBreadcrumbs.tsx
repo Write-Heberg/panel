@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ServerContext } from '@/state/server';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useRouteMatch } from 'react-router-dom';
 import { encodePathSegments, hashToPath } from '@/helpers';
 import tw from 'twin.macro';
 
@@ -15,6 +15,7 @@ export default ({ renderLeft, withinFileEditor, isNewFile }: Props) => {
     const id = ServerContext.useStoreState((state) => state.server.data!.id);
     const directory = ServerContext.useStoreState((state) => state.files.directory);
     const { hash } = useLocation();
+    const match = useRouteMatch();
 
     useEffect(() => {
         const path = hashToPath(hash);
@@ -61,6 +62,9 @@ export default ({ renderLeft, withinFileEditor, isNewFile }: Props) => {
                     </span>
                 )
             )}
+            {((match.url).includes('trashcan')) &&
+                <span css={tw`px-1 text-neutral-300`}>Recycle Bin</span>
+            }
             {file && (
                 <React.Fragment>
                     <span css={tw`px-1 text-neutral-300`}>{file}</span>
