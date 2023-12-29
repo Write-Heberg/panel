@@ -16,7 +16,7 @@
 <div class="row">
     <div class="col-xs-12">
         <div class="alert alert-info">
-        You can assign a role via the <a href="{{route('admin.users')}}">Users</a> page. When a role is assigned, the user will have only access to the functions the role has permission for.
+        You can assign a role via the <a href="{{route('admin.users')}}">Users</a> page. When a role is assigned, the user will have access to all servers, but only has the permissions given to the role.
         </div>
     </div>
 </div>
