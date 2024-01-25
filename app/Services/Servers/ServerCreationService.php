@@ -103,6 +103,10 @@ class ServerCreationService
             throw $exception;
         }
 
+        Server::where('id', $server->id)->update([
+            'position' => $server->id,
+        ]);
+
         return $server;
     }
 
