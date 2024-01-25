@@ -12,6 +12,7 @@ import http from '@/api/http';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import Tooltip from '@/components/elements/tooltip/Tooltip';
 import Avatar from '@/components/Avatar';
+import getUserRole from '@/api/getUserRole';
 
 const RightNavigation = styled.div`
     & > a,
@@ -34,7 +35,15 @@ const RightNavigation = styled.div`
 
 export default () => {
     const name = useStoreState((state: ApplicationStore) => state.settings.data!.name);
-    const rootAdmin = useStoreState((state: ApplicationStore) => state.user.data!.rootAdmin);
+    const [userRoleData, setUserRoleData] = React.useState(false);
+
+    React.useEffect(() => {
+        async function getUserRoleData () {
+            const user = await getUserRole();
+            setUserRoleData(user.role);
+        }
+        getUserRoleData();
+    }, []);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     const onTriggerLogout = () => {
@@ -66,7 +75,7 @@ export default () => {
                             <FontAwesomeIcon icon={faLayerGroup} />
                         </NavLink>
                     </Tooltip>
-                    {rootAdmin && (
+                    {userRoleData === true && (
                         <Tooltip placement={'bottom'} content={'Admin'}>
                             <a href={'/admin'} rel={'noreferrer'}>
                                 <FontAwesomeIcon icon={faCogs} />

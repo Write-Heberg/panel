@@ -22,6 +22,7 @@ import ErrorBoundary from '@/components/elements/ErrorBoundary';
 import { FileActionCheckbox } from '@/components/server/files/SelectFileCheckbox';
 import { hashToPath } from '@/helpers';
 import style from './style.module.css';
+import Trashcan from '@/components/server/files/Trashcan';
 
 const sortFiles = (files: FileObject[]): FileObject[] => {
     const sortedFiles: FileObject[] = files
@@ -89,9 +90,8 @@ export default () => {
                 <Spinner size={'large'} centered />
             ) : (
                 <>
-                    {!files.length ? (
-                        <p css={tw`text-sm text-neutral-400 text-center`}>This directory seems to be empty.</p>
-                    ) : (
+                    <Trashcan/>
+                    {(files.length > 0) && (
                         <CSSTransition classNames={'fade'} timeout={150} appear in>
                             <div>
                                 {files.length > 250 && (
