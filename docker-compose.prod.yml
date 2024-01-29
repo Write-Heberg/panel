@@ -22,7 +22,7 @@ x-common:
     MAIL_DRIVER: "smtp"
     MAIL_HOST: "writeheberg-fr01c.mail.protection.outlook.com"
     MAIL_PORT: "25"
-    MAIL_USERNAME: "a.eteocle"
+    MAIL_USERNAME: ""
     MAIL_PASSWORD: ""
     MAIL_ENCRYPTION: "ssl"
 
