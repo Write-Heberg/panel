@@ -38,7 +38,7 @@ services:
     container_name: Pterodactyl-DEV-DB-WRTHGB
     restart: always
     networks:
-      - PANEL-DEV
+      - panel-dev
     command: --default-authentication-plugin=mysql_native_password
     volumes:
       - "/data/volumes/pterodactyl/dev/database:/var/lib/mysql"
@@ -50,7 +50,7 @@ services:
     image: redis:alpine
     container_name: Pterodactyl-DEV-CACHE-WRTHGB
     networks:
-      - PANEL-DEV
+      - panel-dev
     restart: always
   panel:
     build:
@@ -60,7 +60,7 @@ services:
     pull_policy: build # Portainer need it for rebuild when updating
     restart: always
     networks:
-      - PANEL-DEV
+      - panel-dev
     links:
       - database
       - cache
