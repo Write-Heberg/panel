@@ -10,20 +10,21 @@ x-common:
     &panel-environment
     APP_URL: "https://panel.write-heberg.fr"
     # A list of valid timezones can be found here: http://php.net/manual/en/timezones.php
-    APP_TIMEZONE: "UTC"
+    APP_TIMEZONE: "Europe/Paris"
     APP_SERVICE_AUTHOR: "contact@write-heberg.fr"
     # Uncomment the line below and set to a non-empty value if you want to use Let's Encrypt
     # to generate an SSL certificate for the Panel.
     # LE_EMAIL: ""
   mail:
     &mail-environment
-    MAIL_FROM: "noreply@example.com"
+    MAIL_FROM: "noreply@write-heberg.fr"
+    MAIL_FROM_NAME: "Write Heberg' | Panel"
     MAIL_DRIVER: "smtp"
-    MAIL_HOST: "mail"
-    MAIL_PORT: "1025"
-    MAIL_USERNAME: ""
+    MAIL_HOST: "writeheberg-fr01c.mail.protection.outlook.com"
+    MAIL_PORT: "25"
+    MAIL_USERNAME: "a.eteocle"
     MAIL_PASSWORD: ""
-    MAIL_ENCRYPTION: "true"
+    MAIL_ENCRYPTION: "ssl"
 
 #
 # ------------------------------------------------------------------------------------------
@@ -33,6 +34,7 @@ x-common:
 # below if you understand what you are doing.
 #
 services:
+
   database:
     image: mariadb:10.5
     container_name: Pterodactyl-DB-WRTHGB
@@ -46,12 +48,14 @@ services:
       MYSQL_USER: "pterodactyl"
     networks:
       - panel
+
   cache:
     image: redis:alpine
     container_name: Pterodactyl-CACHE-WRTHGB
     restart: always
     networks:
       - panel
+
   panel:
     build:
         context: "."
@@ -92,6 +96,42 @@ services:
       - "traefik.http.services.redirecttohttpspanel.loadbalancer.server.port=80"
     networks:
       - panel
+
+  phpMyAdmin:
+    image: phpmyadmin:latest
+    container_name: Pterodactyl-PHPMYADMIN-WRTHGB
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - panel
+    links:
+      - database
+      - panel
+    restart: always
+    environment:
+      PMA_HOST: database
+      PMA_ARBITRARY: 1
+      PMA_ABSOLUTE_URI: https://phpmyadmin.write-heberg.fr
+      UPLOAD_LIMIT: 512M
+      HIDE_PHP_VERSION: true
+      MAX_EXECUTION_TIME: 600
+      MEMORY_LIMIT: 256M
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.phpmyadminpanel.rule=Host(`phpmyadmin.write-heberg.fr`)"
+      - "traefik.http.routers.phpmyadminpanel.entrypoints=websecure"
+      - "traefik.http.routers.phpmyadminpanel.tls=true"
+      - "traefik.http.routers.phpmyadminpanel.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.phpmyadminpanelhttp.rule=Host(`phpmyadmin.write-heberg.fr`)"
+      - "traefik.http.routers.phpmyadminpanelhttp.entrypoints=web"
+      - "traefik.http.routers.phpmyadminpanelhttp.middlewares=redirecttohttpsphpmyadminpanel@docker"
+      - "traefik.http.middlewares.redirecttohttpsphpmyadminpanel.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.redirecttohttpsphpmyadminpanel.redirectscheme.permanent=true"
+      - "traefik.http.services.redirecttohttpsphpmyadminpanel.loadbalancer.server.port=80"
+    networks:
+      - panel
+
 
 networks:
   panel:
