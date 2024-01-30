@@ -38,7 +38,6 @@
                             <th>Email</th>
                             <th>Client Name</th>
                             <th>Username</th>
-                            <th>Role</th>
                             <th class="text-center">2FA</th>
                             <th class="text-center"><span data-toggle="tooltip" data-placement="top" title="Servers that this user is marked as the owner of.">Servers Owned</span></th>
                             <th class="text-center"><span data-toggle="tooltip" data-placement="top" title="Servers that this user can access because they are marked as a subuser.">Can Access</span></th>
@@ -52,12 +51,6 @@
                                 <td><a href="{{ route('admin.users.view', $user->id) }}">{{ $user->email }}</a> @if($user->root_admin)<i class="fa fa-star text-yellow"></i>@endif</td>
                                 <td>{{ $user->name_last }}, {{ $user->name_first }}</td>
                                 <td>{{ $user->username }}</td>
-                                @foreach($roles as $role)
-                                    @if($user->role == $role->id)
-                                        <td><a style="color: {{$role->color}};">{{ $role->name }}</a></td>
-                                    @endif
-                                @endforeach
-                                @if($user->role == 0) <td>None</td> @endif
                                 <td class="text-center">
                                     @if($user->use_totp)
                                         <i class="fa fa-lock text-green"></i>

@@ -48,7 +48,7 @@ const MassActionsBar = () => {
         clearFlashes('files');
         setLoadingMessage('Deleting files...');
 
-        deleteFiles(uuid, directory, selectedFiles, false)
+        deleteFiles(uuid, directory, selectedFiles)
             .then(() => {
                 mutate((files) => files.filter((f) => selectedFiles.indexOf(f.name) < 0), false);
                 setSelectedFiles([]);
@@ -75,8 +75,8 @@ const MassActionsBar = () => {
                 >
                     <p className={'mb-2'}>
                         Are you sure you want to delete&nbsp;
-                        <span className={'font-semibold text-gray-50'}>{selectedFiles.length} files</span>? After deleting the files listed
-                        below they can be recovered from the recycle bin for 24 hours after deletion, after that they are permanently lost.
+                        <span className={'font-semibold text-gray-50'}>{selectedFiles.length} files</span>? This is a
+                        permanent action and the files cannot be recovered.
                     </p>
                     {selectedFiles.slice(0, 15).map((file) => (
                         <li key={file}>{file}</li>

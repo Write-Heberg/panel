@@ -3,9 +3,6 @@
 namespace Pterodactyl\Http\Controllers\Api\Client\Servers;
 
 use Carbon\CarbonImmutable;
-use Throwable;
-use Carbon\Carbon;
-use Pterodactyl\Models\DeletedFile;
 use Illuminate\Http\Response;
 use Pterodactyl\Models\Server;
 use Illuminate\Http\JsonResponse;
@@ -49,11 +46,6 @@ class FileController extends ClientApiController
             ->setServer($server)
             ->getDirectory($request->get('directory') ?? '/');
 
-        if ($request->get('directory') === '/') {
-            foreach($contents as $row => $value) {
-                if($value['name'] === $server->uuid) unset($contents[$row]);
-            }
-        }
         return $this->fractal->collection($contents)
             ->transformWith($this->getTransformer(FileObjectTransformer::class))
             ->toArray();
@@ -222,66 +214,10 @@ class FileController extends ClientApiController
      */
     public function delete(DeleteFileRequest $request, Server $server): JsonResponse
     {
-        $perm = $request->input('perm');
-
-        $files = $this->fileRepository
-            ->setServer($server)
-            ->getDirectory($request->get('root') ?? '/');
-
-        try {
-            $deleted_files = $this->fileRepository->setServer($server)->getDirectory('/' . $server->uuid);
-        } catch (Throwable $e) {
-            $this->fileRepository
-                ->setServer($server)
-                ->createDirectory($server->uuid, '/');
-        }
-
-        foreach($request->input('files') as $deletion_file) {
-            if(!$perm && !is_null($perm)) {
-                foreach($files as $file) {
-                    if($file['name'] == $deletion_file) {
-                        $size = $file['size'];
-                        $is_file = $file['file'];
-                    }
-                }
-                if(DeletedFile::where('file_name', $deletion_file)->first() && isset($deleted_files)) {
-                    $exist = 0;
-                    foreach($deleted_files as $deleted_file) {
-                        if(preg_match("@" . $deletion_file . " \((?<fileID>\d+)\)@", $deleted_file['name']) || $deletion_file == $deleted_file['name']) {
-                            $exist = $exist + 1;
-                        }
-                    }
-                    if($exist > 0) {
-                        $this->fileRepository->setServer($server)->renameFiles($request->input('root'), array(array('from' => $deletion_file, 'to' => $deletion_file . ' (' . (string) $exist . ')')));
-                        $deletion_file = $deletion_file . ' (' . (string) $exist . ')';
-                    }
-                }
-
-                DeletedFile::insert([
-                    'server_id' => $server->id,
-                    'directory' => $request->input('root'),
-                    'file_name' => $deletion_file,
-                    'is_file' => $is_file,
-                    'size' => $size,
-                    'deleted_at' => Carbon::now(),
-                ]);
-
-                $count = substr_count($request->input('root'), '/');
-
-                $this->fileRepository
-                    ->setServer($server)
-                    ->renameFiles($request->input('root'), array(array('from' => $deletion_file, 'to' => str_repeat('../', $count) . $server->uuid . '/' . $deletion_file)));
-            } else {
-                $deleted_file = DeletedFile::where('server_id', $server->id)->where('file_name', $deletion_file)->first();
-                if($deleted_file) $deleted_file->delete();
-
-                $this->fileRepository->setServer($server)
-                    ->deleteFiles(
-                        $request->input('root'),
-                        $request->input('files')
-                    );
-            }
-        }
+        $this->fileRepository->setServer($server)->deleteFiles(
+            $request->input('root'),
+            $request->input('files')
+        );
 
         Activity::event('server:file.delete')
             ->property('directory', $request->input('root'))

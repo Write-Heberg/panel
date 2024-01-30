@@ -18,8 +18,6 @@ use Pterodactyl\Http\Middleware\Api\Client\Server\AuthenticateServerAccess;
 */
 Route::get('/', [Client\ClientController::class, 'index'])->name('api:client.index');
 Route::get('/permissions', [Client\ClientController::class, 'permissions']);
-Route::get('/role', [Client\GetUserRoleController::class, 'index']);
-Route::post('/sortServer', [Client\SortServersController::class, 'index']);
 
 Route::prefix('/account')->middleware(AccountSubject::class)->group(function () {
     Route::prefix('/')->withoutMiddleware(RequireTwoFactorAuthentication::class)->group(function () {
@@ -90,9 +88,6 @@ Route::group([
         Route::post('/chmod', [Client\Servers\FileController::class, 'chmod']);
         Route::post('/pull', [Client\Servers\FileController::class, 'pull'])->middleware(['throttle:10,5']);
         Route::get('/upload', Client\Servers\FileUploadController::class);
-        Route::get('/trashsize', [Client\Servers\TrashcanController::class, 'size']);
-        Route::post('/restore', [Client\Servers\TrashcanController::class, 'restore']);
-
     });
 
     Route::group(['prefix' => '/schedules'], function () {

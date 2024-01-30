@@ -9,7 +9,6 @@ use Illuminate\Database\ConnectionInterface;
 use Pterodactyl\Repositories\Wings\DaemonServerRepository;
 use Pterodactyl\Services\Databases\DatabaseManagementService;
 use Pterodactyl\Exceptions\Http\Connection\DaemonConnectionException;
-use Pterodactyl\Models\DeletedFile;
 
 class ServerDeletionService
 {
@@ -77,9 +76,7 @@ class ServerDeletionService
                     Log::warning($exception);
                 }
             }
-            foreach(DeletedFile::where('server_id', $server->id)->get() as $deleted_file) {
-                $deleted_file->delete();
-            }
+
             $server->delete();
         });
     }

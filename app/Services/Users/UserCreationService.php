@@ -2,7 +2,6 @@
 
 namespace Pterodactyl\Services\Users;
 
-use Pterodactyl\Models\Role;
 use Ramsey\Uuid\Uuid;
 use Pterodactyl\Models\User;
 use Illuminate\Contracts\Hashing\Hasher;
@@ -10,7 +9,7 @@ use Illuminate\Database\ConnectionInterface;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Pterodactyl\Notifications\AccountCreated;
 use Pterodactyl\Contracts\Repository\UserRepositoryInterface;
-use Pterodactyl\Contracts\Repository\SettingsRepositoryInterface;
+
 class UserCreationService
 {
     /**
@@ -20,8 +19,7 @@ class UserCreationService
         private ConnectionInterface $connection,
         private Hasher $hasher,
         private PasswordBroker $passwordBroker,
-        private UserRepositoryInterface $repository,
-        private SettingsRepositoryInterface $settings,
+        private UserRepositoryInterface $repository
     ) {
     }
 
@@ -42,12 +40,10 @@ class UserCreationService
             $generateResetToken = true;
             $data['password'] = $this->hasher->make(str_random(30));
         }
-        // if no default role, give no role to user
-        $defaultRoleId = Role::find($this->settings->get('settings::app:role', -1));
+
         /** @var \Pterodactyl\Models\User $user */
         $user = $this->repository->create(array_merge($data, [
             'uuid' => Uuid::uuid4()->toString(),
-            'role' => $defaultRoleId->id ?? null,
         ]), true, true);
 
         if (isset($generateResetToken)) {

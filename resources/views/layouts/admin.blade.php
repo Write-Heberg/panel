@@ -86,11 +86,6 @@
                             </a>
                         </li>
                         <li class="header">MANAGEMENT</li>
-                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.permissions') ?: 'active' }}">
-                            <a href="{{ route('admin.permissions.index')}}">
-                                <i class="fa fa-times"></i> <span>Permission Management</span>
-                            </a>
-                        </li>
                         <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.databases') ?: 'active' }}">
                             <a href="{{ route('admin.databases') }}">
                                 <i class="fa fa-database"></i> <span>Databases</span>
