@@ -24,11 +24,14 @@ class SubuserObserver
     {
         event(new Events\Subuser\Created($subuser));
 
-        $subuser->user->notify(new AddedToServer([
-            'user' => $subuser->user->name_first,
-            'name' => $subuser->server->name,
-            'uuidShort' => $subuser->server->uuidShort,
-        ]));
+        if($subuser->visible == true) {
+            $subuser->user->notify(new AddedToServer([
+                'user' => $subuser->user->name_first,
+                'name' => $subuser->server->name,
+                'uuidShort' => $subuser->server->uuidShort,
+            ]));
+        }
+
     }
 
     /**

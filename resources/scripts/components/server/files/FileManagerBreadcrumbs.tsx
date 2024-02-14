@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { ServerContext } from '@/state/server';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useRouteMatch } from 'react-router-dom';
 import { encodePathSegments, hashToPath } from '@/helpers';
 import tw from 'twin.macro';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     renderLeft?: JSX.Element;
@@ -11,10 +12,12 @@ interface Props {
 }
 
 export default ({ renderLeft, withinFileEditor, isNewFile }: Props) => {
+    const { t } = useTranslation('arix/server/files');
     const [file, setFile] = useState<string | null>(null);
     const id = ServerContext.useStoreState((state) => state.server.data!.id);
     const directory = ServerContext.useStoreState((state) => state.files.directory);
     const { hash } = useLocation();
+    const match = useRouteMatch();
 
     useEffect(() => {
         const path = hashToPath(hash);
@@ -38,10 +41,10 @@ export default ({ renderLeft, withinFileEditor, isNewFile }: Props) => {
             });
 
     return (
-        <div css={tw`flex flex-grow-0 items-center text-sm text-neutral-500 overflow-x-hidden`}>
-            {renderLeft || <div css={tw`w-12`} />}/<span css={tw`px-1 text-neutral-300`}>home</span>/
+        <div css={tw`flex flex-shrink-0 flex-grow-0 items-center text-sm text-neutral-500 overflow-x-hidden`}>
+            {renderLeft || <div css={tw`w-12`} />}/<span css={tw`px-1 text-neutral-300`}>{t('home')}</span>/
             <NavLink to={`/server/${id}/files`} css={tw`px-1 text-neutral-200 no-underline hover:text-neutral-100`}>
-                container
+                {t('container')}
             </NavLink>
             /
             {breadcrumbs().map((crumb, index) =>
@@ -61,6 +64,9 @@ export default ({ renderLeft, withinFileEditor, isNewFile }: Props) => {
                     </span>
                 )
             )}
+            {((match.url).includes('trashcan')) &&
+                <span css={tw`px-1 text-neutral-300`}>Recycle Bin</span>
+            }
             {file && (
                 <React.Fragment>
                     <span css={tw`px-1 text-neutral-300`}>{file}</span>

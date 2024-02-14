@@ -19,6 +19,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Pterodactyl\Notifications\SendPasswordReset as ResetPasswordNotification;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * Pterodactyl\Models\User.
@@ -90,6 +91,7 @@ class User extends Model implements
     use HasAccessTokens;
     use Notifiable;
 
+
     public const USER_LEVEL_USER = 0;
     public const USER_LEVEL_ADMIN = 1;
 
@@ -125,6 +127,7 @@ class User extends Model implements
         'totp_authenticated_at',
         'gravatar',
         'root_admin',
+        'role',
     ];
 
     /**
@@ -135,6 +138,7 @@ class User extends Model implements
         'use_totp' => 'boolean',
         'gravatar' => 'boolean',
         'totp_authenticated_at' => 'datetime',
+        'role' => 'int',
     ];
 
     /**
@@ -151,6 +155,7 @@ class User extends Model implements
         'language' => 'en',
         'use_totp' => false,
         'totp_secret' => null,
+        'role' => null,
     ];
 
     /**
@@ -168,6 +173,7 @@ class User extends Model implements
         'language' => 'string',
         'use_totp' => 'boolean',
         'totp_secret' => 'nullable|string',
+        'role' => 'nullable|numeric',
     ];
 
     /**
@@ -256,18 +262,32 @@ class User extends Model implements
         return $this->morphToMany(ActivityLog::class, 'subject', 'activity_log_subjects');
     }
 
-    /**
-     * Returns all the servers that a user can access by way of being the owner of the
-     * server, or because they are assigned as a subuser for that server.
-     */
-    public function accessibleServers(): Builder
+    public function subuserServers(): Builder
     {
         return Server::query()
             ->select('servers.*')
             ->leftJoin('subusers', 'subusers.server_id', '=', 'servers.id')
             ->where(function (Builder $builder) {
-                $builder->where('servers.owner_id', $this->id)->orWhere('subusers.user_id', $this->id);
+                $builder->where('subusers.user_id', $this->id);
             })
             ->groupBy('servers.id');
+    }
+
+    public function ownerServers(): Builder
+    {
+        return Server::query()
+            ->select('servers.*')
+            ->where(function (Builder $builder) {
+                $builder->where('servers.owner_id', $this->id);
+            })
+            ->groupBy('servers.id');
+    }
+
+    /**
+     * Returns the role that a user has.
+     */
+    public function getRole(): HasOne
+    {
+        return $this->hasOne(Role::class, 'id', 'role');
     }
 }

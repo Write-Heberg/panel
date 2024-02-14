@@ -81,6 +81,7 @@ class Egg extends Model
      */
     protected $fillable = [
         'name',
+        'image',
         'description',
         'features',
         'docker_images',
@@ -117,6 +118,7 @@ class Egg extends Model
         'nest_id' => 'required|bail|numeric|exists:nests,id',
         'uuid' => 'required|string|size:36',
         'name' => 'required|string|max:191',
+        'image' => 'nullable|url',
         'description' => 'string|nullable',
         'features' => 'array|nullable',
         'author' => 'required|string|email',
@@ -135,6 +137,7 @@ class Egg extends Model
     ];
 
     protected $attributes = [
+        'image' => null,
         'features' => null,
         'file_denylist' => null,
         'config_stop' => null,
