@@ -4,11 +4,11 @@ x-common:
     &db-environment
     # Do not remove the "&db-password" from the end of the line below, it is important
     # for Panel functionality.
-    MYSQL_PASSWORD: &db-password "pterodactyl"
-    MYSQL_ROOT_PASSWORD: "root"
+    MYSQL_PASSWORD: &db-password "${DB_PASSWORD-:CHANGE_ME}"
+    MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-root}"
   panel:
     &panel-environment
-    APP_URL: "https://dev.write-heberg.fr"
+    APP_URL: "https://panel-dev.write-heberg.fr"
     # A list of valid timezones can be found here: http://php.net/manual/en/timezones.php
     APP_TIMEZONE: "UTC"
     APP_SERVICE_AUTHOR: "noreply@example.com"
@@ -37,9 +37,11 @@ services:
     image: mariadb:10.5
     container_name: Pterodactyl-DEV-DB-WRTHGB
     restart: always
+    networks:
+      - panel-dev
     command: --default-authentication-plugin=mysql_native_password
     volumes:
-      - "/srv/pterodactyl/database:/var/lib/mysql"
+      - "/data/volumes/pterodactyl/dev/database:/var/lib/mysql"
     environment:
       <<: *db-environment
       MYSQL_DATABASE: "panel"
@@ -47,22 +49,26 @@ services:
   cache:
     image: redis:alpine
     container_name: Pterodactyl-DEV-CACHE-WRTHGB
+    networks:
+      - panel-dev
     restart: always
   panel:
     build:
-        context: "."
-        dockerfile: "./Dockerfile"
+      context: "."
+      dockerfile: "./Dockerfile"
     container_name: Pterodactyl-DEV-PANEL-WRTHGB
     pull_policy: build # Portainer need it for rebuild when updating
     restart: always
+    networks:
+      - panel-dev
     links:
       - database
       - cache
     volumes:
-      - "/data/volumes/dev/write-heberg.fr/www/var/:/app/var/"
-      - "/data/volumes/dev/write-heberg.fr/www/nginx/:/etc/nginx/http.d/"
-      - "/data/volumes/dev/write-heberg.fr/www/certs/:/etc/letsencrypt/"
-      - "/data/volumes/dev/write-heberg.fr/www/logs/:/app/storage/logs"
+      - "/data/volumes/pterodactyl/dev/www/var/:/app/var/"
+      - "/data/volumes/pterodactyl/dev/www/nginx/:/etc/nginx/http.d/"
+      - "/data/volumes/pterodactyl/dev/www/certs/:/etc/letsencrypt/"
+      - "/data/volumes/pterodactyl/dev/www/logs/:/app/storage/logs"
     environment:
       <<: [*panel-environment, *mail-environment]
       DB_PASSWORD: *db-password
@@ -76,18 +82,18 @@ services:
       DB_PORT: "3306"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.pma.rule=Host(`dev.write-heberg.fr`)"
-      - "traefik.http.routers.pma.entrypoints=websecure"
-      - "traefik.http.routers.pma.tls=true"
-      - "traefik.http.routers.pma.tls.certresolver=myresolver"
-      - "traefik.http.routers.pmahttp.rule=Host(`dev.write-heberg.fr`)"
-      - "traefik.http.routers.pmahttp.entrypoints=web"
-      - "traefik.http.routers.pmahttp.middlewares=redirecttohttpsdev@docker"
-      - "traefik.http.middlewares.redirecttohttpspma.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.redirecttohttpspma.redirectscheme.permanent=true"
-      - "traefik.http.services.redirecttohttpspma.loadbalancer.server.port=80"
+      - "traefik.http.routers.panel-dev.rule=Host(`panel-dev.write-heberg.fr`)"
+      - "traefik.http.routers.panel-dev.entrypoints=websecure"
+      - "traefik.http.routers.panel-dev.tls=true"
+      - "traefik.http.routers.panel-dev.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.panel-devhttp.rule=Host(`panel-dev.write-heberg.fr`)"
+      - "traefik.http.routers.panel-devhttp.entrypoints=web"
+      - "traefik.http.routers.panel-devhttp.middlewares=redirecttohttpspanel-dev@docker"
+      - "traefik.http.middlewares.redirecttohttpspanel-dev.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.redirecttohttpspanel-dev.redirectscheme.permanent=true"
+      - "traefik.http.services.redirecttohttpspanel-dev.loadbalancer.server.port=80"
 
 networks:
-  PANEL-DEV:
-    name: panel-dev
+  panel-dev:
+    name: public_wan
     external: true
