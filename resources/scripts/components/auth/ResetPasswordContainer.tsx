@@ -11,7 +11,8 @@ import { object, ref, string } from 'yup';
 import Field from '@/components/elements/Field';
 import Input from '@/components/elements/Input';
 import tw from 'twin.macro';
-import Button from '@/components/elements/Button';
+import { Button } from '@/components/elements/button/index';
+import { useTranslation } from 'react-i18next';
 
 interface Values {
     password: string;
@@ -19,6 +20,7 @@ interface Values {
 }
 
 export default ({ match, location }: RouteComponentProps<{ token: string }>) => {
+    const { t } = useTranslation('arix/auth');
     const [email, setEmail] = useState('');
 
     const { clearFlashes, addFlash } = useStoreActions((actions: Actions<ApplicationStore>) => actions.flashes);
@@ -52,43 +54,42 @@ export default ({ match, location }: RouteComponentProps<{ token: string }>) => 
             }}
             validationSchema={object().shape({
                 password: string()
-                    .required('A new password is required.')
-                    .min(8, 'Your new password should be at least 8 characters in length.'),
+                    .required(t('reset.password-required'))
+                    .min(8, t('reset.at-least-8-characters')),
                 passwordConfirmation: string()
-                    .required('Your new password does not match.')
+                    .required(t('reset.password-does-not-match'))
                     // @ts-expect-error this is valid
-                    .oneOf([ref('password'), null], 'Your new password does not match.'),
+                    .oneOf([ref('password'), null], t('reset.password-does-not-match')),
             })}
         >
             {({ isSubmitting }) => (
-                <LoginFormContainer title={'Reset Password'} css={tw`w-full flex`}>
+                <LoginFormContainer title={t('reset.title')} css={tw`w-full flex`}>
                     <div>
-                        <label>Email</label>
-                        <Input value={email} isLight disabled />
+                        <label>{t('reset.email')}</label>
+                        <Input value={email} disabled />
                     </div>
                     <div css={tw`mt-6`}>
                         <Field
-                            light
-                            label={'New Password'}
+                            label={t('reset.password')}
                             name={'password'}
                             type={'password'}
-                            description={'Passwords must be at least 8 characters in length.'}
+                            description={t('reset.at-least-8-characters')}
                         />
                     </div>
                     <div css={tw`mt-6`}>
-                        <Field light label={'Confirm New Password'} name={'passwordConfirmation'} type={'password'} />
+                        <Field label={t('reset.confirm-password')} name={'passwordConfirmation'} type={'password'} />
                     </div>
                     <div css={tw`mt-6`}>
-                        <Button size={'xlarge'} type={'submit'} disabled={isSubmitting} isLoading={isSubmitting}>
-                            Reset Password
+                        <Button type={'submit'} disabled={isSubmitting} className={'w-full !py-3'}>
+                            {t('reset.title')}
                         </Button>
                     </div>
                     <div css={tw`mt-6 text-center`}>
                         <Link
                             to={'/auth/login'}
-                            css={tw`text-xs text-neutral-500 tracking-wide no-underline uppercase hover:text-neutral-600`}
+                            css={tw`text-xs text-neutral-300 tracking-wide uppercase no-underline hover:text-neutral-200`}
                         >
-                            Return to Login
+                            {t('reset.return-to-login')}
                         </Link>
                     </div>
                 </LoginFormContainer>

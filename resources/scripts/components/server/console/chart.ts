@@ -7,22 +7,44 @@ import {
     LinearScale,
     LineElement,
     PointElement,
+    Tooltip,
 } from 'chart.js';
 import { DeepPartial } from 'ts-essentials';
+import { ApplicationStore } from '@/state';
+import { useStoreState } from 'easy-peasy';
 import { useState } from 'react';
 import { deepmerge, deepmergeCustom } from 'deepmerge-ts';
 import { theme } from 'twin.macro';
 import { hexToRgba } from '@/lib/helpers';
 
-ChartJS.register(LineElement, PointElement, Filler, LinearScale);
+ChartJS.register(LineElement, PointElement, Filler, LinearScale, Tooltip);
 
 const options: ChartOptions<'line'> = {
     responsive: true,
     animation: false,
     plugins: {
+        tooltip: {
+            enabled: true,
+            intersect: false,   
+            position: 'nearest',
+            displayColors: false,
+            bodyColor: '#B2B2C1',
+            xAlign: 'center',
+            yAlign: 'bottom',
+            cornerRadius: 5,
+            padding: 10,
+            backgroundColor: '#42425B',
+            bodyFont: {
+                weight: '600',
+            },
+            callbacks: {
+                title: function () {
+                    return '';
+                },
+            },
+        },
         legend: { display: false },
         title: { display: false },
-        tooltip: { enabled: false },
     },
     layout: {
         padding: 0,
@@ -44,12 +66,12 @@ const options: ChartOptions<'line'> = {
             min: 0,
             type: 'linear',
             grid: {
-                display: true,
+                display: false,
                 color: theme('colors.gray.700'),
                 drawBorder: false,
             },
             ticks: {
-                display: true,
+                display: false,
                 count: 3,
                 color: theme('colors.gray.200'),
                 font: {
@@ -78,6 +100,7 @@ type ChartDatasetCallback = (value: ChartDataset<'line'>, index: number) => Char
 
 function getEmptyData(label: string, sets = 1, callback?: ChartDatasetCallback | undefined): ChartData<'line'> {
     const next = callback || ((value) => value);
+    const primary = useStoreState((state: ApplicationStore) => state.settings.data!.arix.primary);
 
     return {
         labels: Array(20)
@@ -89,10 +112,10 @@ function getEmptyData(label: string, sets = 1, callback?: ChartDatasetCallback |
                 next(
                     {
                         fill: true,
-                        label,
+                        label: label,
                         data: Array(20).fill(-5),
-                        borderColor: theme('colors.cyan.400'),
-                        backgroundColor: hexToRgba(theme('colors.cyan.700'), 0.5),
+                        borderColor: primary,
+                        backgroundColor: hexToRgba(primary, 0.5),
                     },
                     index
                 )

@@ -8,6 +8,43 @@ Route::get('/', [Admin\BaseController::class, 'index'])->name('admin.index');
 
 /*
 |--------------------------------------------------------------------------
+| Theme Controller Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/theme
+|
+*/
+Route::group(['prefix' => 'arix'], function () {
+    Route::get('/', [Admin\Arix\ArixController::class, 'index'])->name('admin.arix');
+    Route::post('/', [Admin\Arix\ArixController::class, 'store']);
+
+    Route::get('/layout', [Admin\Arix\ArixLayoutController::class, 'index'])->name('admin.arix.layout');
+    Route::post('/layout', [Admin\Arix\ArixLayoutController::class, 'store']);
+
+    Route::get('/components', [Admin\Arix\ArixComponentsController::class, 'index'])->name('admin.arix.components');
+    Route::post('/components', [Admin\Arix\ArixComponentsController::class, 'store']);
+
+    Route::get('/announcement', [Admin\Arix\ArixAnnouncementController::class, 'index'])->name('admin.arix.announcement');
+    Route::post('/announcement', [Admin\Arix\ArixAnnouncementController::class, 'store']);
+
+    Route::get('/mail', [Admin\Arix\ArixMailController::class, 'index'])->name('admin.arix.mail');
+    Route::post('/mail', [Admin\Arix\ArixMailController::class, 'store']);
+
+    Route::get('/styling', [Admin\Arix\ArixStylingController::class, 'index'])->name('admin.arix.styling');
+    Route::post('/styling', [Admin\Arix\ArixStylingController::class, 'store']);
+
+    Route::get('/meta', [Admin\Arix\ArixMetaController::class, 'index'])->name('admin.arix.meta');
+    Route::post('/meta', [Admin\Arix\ArixMetaController::class, 'store']);
+
+    Route::get('/colors', [Admin\Arix\ArixColorsController::class, 'index'])->name('admin.arix.colors');
+    Route::post('/colors', [Admin\Arix\ArixColorsController::class, 'store']);
+
+    Route::get('/advanced', [Admin\Arix\ArixAdvancedController::class, 'index'])->name('admin.arix.advanced');
+    Route::post('/advanced', [Admin\Arix\ArixAdvancedController::class, 'store']);
+});
+
+/*
+|--------------------------------------------------------------------------
 | Location Controller Routes
 |--------------------------------------------------------------------------
 |

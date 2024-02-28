@@ -5,8 +5,10 @@ import triggerScheduleExecution from '@/api/server/schedules/triggerScheduleExec
 import { ServerContext } from '@/state/server';
 import useFlash from '@/plugins/useFlash';
 import { Schedule } from '@/api/server/schedules/getServerSchedules';
+import { useTranslation } from 'react-i18next';
 
 const RunScheduleButton = ({ schedule }: { schedule: Schedule }) => {
+    const { t } = useTranslation('arix/server/schedules');
     const [loading, setLoading] = useState(false);
     const { clearFlashes, clearAndAddHttpError } = useFlash();
 
@@ -31,14 +33,13 @@ const RunScheduleButton = ({ schedule }: { schedule: Schedule }) => {
     return (
         <>
             <SpinnerOverlay visible={loading} size={'large'} />
-            <Button
-                variant={Button.Variants.Secondary}
+            <Button.Text
                 className={'flex-1 sm:flex-none'}
                 disabled={schedule.isProcessing}
                 onClick={onTriggerExecute}
             >
-                Run Now
-            </Button>
+                {t('run-now')}
+            </Button.Text>
         </>
     );
 };

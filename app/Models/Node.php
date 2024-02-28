@@ -80,7 +80,7 @@ class Node extends Model
      * Fields that are mass assignable.
      */
     protected $fillable = [
-        'public', 'name', 'location_id',
+        'public', 'name', 'alert', 'daemon_text', 'container_text', 'location_id',
         'fqdn', 'scheme', 'behind_proxy',
         'memory', 'memory_overallocate', 'disk',
         'disk_overallocate', 'upload_size', 'daemonBase',
@@ -90,6 +90,9 @@ class Node extends Model
 
     public static array $validationRules = [
         'name' => 'required|regex:/^([\w .-]{1,100})$/',
+        'alert' => 'nullable|string|max:200',
+        'daemon_text' => 'required|string|max:100',
+        'container_text' => 'required|string|max:100',
         'description' => 'string|nullable',
         'location_id' => 'required|exists:locations,id',
         'public' => 'boolean',
@@ -111,6 +114,7 @@ class Node extends Model
      * Default values for specific columns that are generally not changed on base installs.
      */
     protected $attributes = [
+        'alert' => null,
         'public' => true,
         'behind_proxy' => false,
         'memory_overallocate' => 0,
