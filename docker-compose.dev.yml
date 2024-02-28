@@ -1,0 +1,99 @@
+version: '3.8'
+x-common:
+  database:
+    &db-environment
+    # Do not remove the "&db-password" from the end of the line below, it is important
+    # for Panel functionality.
+    MYSQL_PASSWORD: &db-password "${DB_PASSWORD-:CHANGE_ME}"
+    MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-root}"
+  panel:
+    &panel-environment
+    APP_URL: "https://panel-dev.write-heberg.fr"
+    # A list of valid timezones can be found here: http://php.net/manual/en/timezones.php
+    APP_TIMEZONE: "UTC"
+    APP_SERVICE_AUTHOR: "noreply@example.com"
+    # Uncomment the line below and set to a non-empty value if you want to use Let's Encrypt
+    # to generate an SSL certificate for the Panel.
+    # LE_EMAIL: ""
+  mail:
+    &mail-environment
+    MAIL_FROM: "noreply@example.com"
+    MAIL_DRIVER: "smtp"
+    MAIL_HOST: "mail"
+    MAIL_PORT: "1025"
+    MAIL_USERNAME: ""
+    MAIL_PASSWORD: ""
+    MAIL_ENCRYPTION: "true"
+
+#
+# ------------------------------------------------------------------------------------------
+# DANGER ZONE BELOW
+#
+# The remainder of this file likely does not need to be changed. Please only make modifications
+# below if you understand what you are doing.
+#
+services:
+  database:
+    image: mariadb:10.5
+    container_name: Pterodactyl-DEV-DB-WRTHGB
+    restart: always
+    networks:
+      - panel-dev
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - "/data/volumes/pterodactyl/dev/database:/var/lib/mysql"
+    environment:
+      <<: *db-environment
+      MYSQL_DATABASE: "panel"
+      MYSQL_USER: "pterodactyl"
+  cache:
+    image: redis:alpine
+    container_name: Pterodactyl-DEV-CACHE-WRTHGB
+    networks:
+      - panel-dev
+    restart: always
+  panel:
+    build:
+      context: "."
+      dockerfile: "./Dockerfile"
+    container_name: Pterodactyl-DEV-PANEL-WRTHGB
+    pull_policy: build # Portainer need it for rebuild when updating
+    restart: always
+    networks:
+      - panel-dev
+    links:
+      - database
+      - cache
+    volumes:
+      - "/data/volumes/pterodactyl/dev/www/var/:/app/var/"
+      - "/data/volumes/pterodactyl/dev/www/nginx/:/etc/nginx/http.d/"
+      - "/data/volumes/pterodactyl/dev/www/certs/:/etc/letsencrypt/"
+      - "/data/volumes/pterodactyl/dev/www/logs/:/app/storage/logs"
+    environment:
+      <<: [*panel-environment, *mail-environment]
+      DB_PASSWORD: *db-password
+      APP_ENV: "development"
+      APP_ENVIRONMENT_ONLY: "false"
+      CACHE_DRIVER: "redis"
+      SESSION_DRIVER: "redis"
+      QUEUE_DRIVER: "redis"
+      REDIS_HOST: "cache"
+      DB_HOST: "database"
+      DB_PORT: "3306"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.panel-dev.rule=Host(`panel-dev.write-heberg.fr`)"
+      - "traefik.http.routers.panel-dev.entrypoints=websecure"
+      - "traefik.http.routers.panel-dev.tls=true"
+      - "traefik.http.routers.panel-dev.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.panel-devhttp.rule=Host(`panel-dev.write-heberg.fr`)"
+      - "traefik.http.routers.panel-devhttp.entrypoints=web"
+      - "traefik.http.routers.panel-devhttp.middlewares=redirecttohttpspanel-dev@docker"
+      - "traefik.http.middlewares.redirecttohttpspanel-dev.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.redirecttohttpspanel-dev.redirectscheme.permanent=true"
+      - "traefik.http.services.redirecttohttpspanel-dev.loadbalancer.server.port=80"
+
+networks:
+  panel-dev:
+    name: public_wan
+    external: true
