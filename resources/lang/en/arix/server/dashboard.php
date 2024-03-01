@@ -1,22 +1,22 @@
 <?php
 
 return [
-    'dashboard' => 'Dashboard',
+    'dashboard' => 'Tableau de bord',
 
     'sftp' => [
-        'title' => 'SFTP Details',
-        'server-address' => 'Server Address',
-        'username' => 'Username',
-        'description' => 'Your SFTP password is the same as the password you use to access this panel.',
-        'launch-sftp' => 'Launch SFTP',
+        'title' => 'Détails SFTP',
+        'server-address' => 'Adresse du serveur',
+        'username' => 'Nom d\'utilisateur',
+        'description' => 'Votre mot de passe SFTP est le même que celui que vous utilisez pour accéder à ce site.',
+        'launch-sftp' => 'Lancer SFTP',
     ],
     'server-info' => [
-        'title' => 'Server Info',
-        'hostname' => 'Hostname',
-        'node-id' => 'Node ID',
-        'server-id' => 'Server ID',
+        'title' => 'Informations sur le serveur',
+        'hostname' => 'Nom d\'hôte',
+        'node-id' => 'ID du nœud',
+        'server-id' => 'ID du serveur',
         
-        'uptime' => 'Uptime',
-        'server-ip' => 'Server IP',
+        'uptime' => 'Temps de fonctionnement',
+        'server-ip' => 'IP du serveur',
     ],
 ];
