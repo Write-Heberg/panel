@@ -1,18 +1,18 @@
 <?php
 
-return[
-    'network' => 'Network',
-    'manage-allocation' => 'Manage allocation',
-    'create-allocation' => 'Create Allocation',
-    'currently-using' => 'You are currently using {{current}} of {{max}} allowed allocations for this server.',
+return [
+    'network' => 'Réseau',
+    'manage-allocation' => 'Gérer les allocations',
+    'create-allocation' => 'Créer une allocation',
+    'currently-using' => 'Vous utilisez actuellement {{current}} des {{max}} allocations autorisées pour ce serveur.',
 
     'IP' => 'IP',
     'port' => 'Port',
     'notes' => 'Notes',
-    'primary' => 'Primary',
-    'make-primary' => 'Make Primary',
+    'primary' => 'Primaire',
+    'make-primary' => 'Rendre primaire',
 
-    'remove-allocation' => 'Remove Allocation',
-    'remove-allocation-description' => 'This allocation will be immediately removed from your server.',
-    'delete' => 'Delete'
+    'remove-allocation' => 'Supprimer l\'allocation',
+    'remove-allocation-description' => 'Cette allocation sera immédiatement supprimée de votre serveur.',
+    'delete' => 'Supprimer'
 ];

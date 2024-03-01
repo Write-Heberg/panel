@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'startup-settings' => 'Startup Settings',
-    'startup-command' => 'Startup Command',
-    'docker-image' => 'Docker Image',
-    'read-only' => 'Read Only',
-    'select-docker-feature' => 'This is an advanced feature allowing you to select a Docker image to use when running this server instance.',
-    'custom-docker-image' => 'This {"server\'s"} Docker image has been manually set by an administrator and cannot be changed through this UI.',
-    'variables' => 'Variables'
+    'startup-settings' => 'Paramètres de Démarrage',
+    'startup-command' => 'Commande de Démarrage',
+    'docker-image' => 'Image Docker',
+    'read-only' => 'Lecture Seule',
+    'select-docker-feature' => 'Ceci est une fonctionnalité avancée vous permettant de sélectionner une image Docker à utiliser lors de l\'exécution de cette instance de serveur.',
+    'custom-docker-image' => 'L\'image Docker de ce {"server"} a été définie manuellement par un administrateur et ne peut pas être modifiée via cette interface utilisateur.',
+    'variables' => 'Variables',
 ];
