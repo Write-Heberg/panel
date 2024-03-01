@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'account-activity-log' => 'Account Activity Log',
-    'activity-log' => 'Activity Log',
-    'clear-filters' => 'Clear Filters',
-    'metadata' => 'Metadata',
-    'close' => 'Close',
-    'no-logs-server' => 'No activity logs available for this server.'
+    'account-activity-log' => 'Journal d\'activité du compte',
+    'activity-log' => 'Journal d\'activité',
+    'clear-filters' => 'Effacer les filtres',
+    'metadata' => 'Métadonnées',
+    'close' => 'Fermer',
+    'no-logs-server' => 'Aucun journal d\'activité disponible pour ce serveur.'
 ];
