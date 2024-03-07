@@ -218,32 +218,7 @@ export default () => {
                         <FaDiscord className={'text-[2.5rem] text-white/70 group-hover:text-white duration-300'}/>
                     </a>}
             </div>
-            {!servers ? (
-                <Spinner centered size={'large'} />
-            ) : (
-                <div className="grid lg:grid-cols-2 gap-4">
-                    <Pagination data={servers} onPageSelect={setPage}>
-                        {({ items }) =>
-                            items.length > 0 ? (
-                                items.map((server, index) => (
-                                    serverRow == 1
-                                        ? <ServerCardGradient key={server.uuid} server={server} css={index > 0 ? tw`mt-2` : undefined} />
-                                        : serverRow == 2
-                                            ? <ServerCardBanner key={server.uuid} server={server} css={index > 0 ? tw`mt-2` : undefined} />
-                                            : serverRow == 3
-                                            && <ServerCard key={server.uuid} server={server} css={index > 0 ? tw`mt-2` : undefined} />
-                                ))
-                            ) : (
-                                <p css={tw`text-center text-sm text-neutral-400 lg:col-span-2 col-span-1`}>
-                                    {showOnlyAdmin
-                                        ? t('there-are-no-servers')
-                                        : t('there-are-no-servers-associated')}
-                                </p>
-                            )
-                        }
-                    </Pagination>
-                </div>
-            )}
+            <SortableList />
         </PageContentBlock>
     );
 };
