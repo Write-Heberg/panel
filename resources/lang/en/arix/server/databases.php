@@ -25,6 +25,7 @@ return [
     'database-details' => 'Détails de la base de données',
     'cancel' => 'Annuler',
     'close' => 'Fermer',
+    'phpmyadmin' => 'Ouvrir PhpMyAdmin',
 
     'create' => [
         'title' => 'Créer une nouvelle base de données',
@@ -33,6 +34,7 @@ return [
         'connection-from' => 'Connexion depuis',
         'connection-from-description' => 'Où les connexions doivent être autorisées. Laissez vide pour autoriser les connexions depuis n\'importe où.',
         'cancel' => 'Annuler',
-        'create-database' => 'Créer la base de données'
+        'create-database' => 'Créer la base de données',
+        'button' => 'Nouvelle base de donnée'
     ]
 ];
