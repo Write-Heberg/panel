@@ -34,6 +34,7 @@ export default () => {
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const uuid = useStoreState((state) => state.user.data!.uuid);
     const [showOnlyAdmin, setShowOnlyAdmin] = usePersistedState(`${uuid}:show_all_servers`, false);
+    const rootAdmin = useStoreState((state: ApplicationStore) => state.user.data!.rootAdmin);
     const discordBox = useStoreState((state: ApplicationStore) => state.settings.data!.arix.discordBox);
     const discord = useStoreState((state: ApplicationStore) => state.settings.data!.arix.discord);
     const billing = useStoreState((state: ApplicationStore) => state.settings.data!.arix.billing);
@@ -196,7 +197,7 @@ export default () => {
                         <p className={'text-gray-50'}>{t('welcome-back')}</p>
                         <p className={'font-light'}>{t('all-servers-you-have-access-to')}</p>
                     </div>
-                    {showOnlyAdmin && (
+                    {rootAdmin && (
                         <div css={tw`flex justify-end items-center`}>
                             <p css={tw`uppercase text-xs text-neutral-400 mr-2`}>
                                 {showOnlyAdmin ? t('others-servers') : t('your-servers')}
