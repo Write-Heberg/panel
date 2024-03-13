@@ -64,7 +64,7 @@ services:
     pull_policy: build # Portainer need it for rebuild when updating
     restart: always
     links:
-      - database
+      - databases
       - cache
     volumes:
       - "/data/volumes/pterodactyl/prod/www/var/:/app/var/"
@@ -80,7 +80,7 @@ services:
       SESSION_DRIVER: "redis"
       QUEUE_DRIVER: "redis"
       REDIS_HOST: "cache"
-      DB_HOST: "database"
+      DB_HOST: "databases"
       DB_PORT: "3306"
     labels:
       - "traefik.enable=true"
