@@ -35,7 +35,7 @@ x-common:
 #
 services:
 
-  database:
+  databases:
     image: mariadb:10.5
     container_name: Pterodactyl-DB-WRTHGB
     restart: always
@@ -106,11 +106,11 @@ services:
     depends_on:
       - panel
     links:
-      - database
+      - databases
       - panel
     restart: always
     environment:
-      PMA_HOST: database
+      PMA_HOSTS: NODE01-FR.WRITE-HEBERG.FR, DATABASES
       PMA_ARBITRARY: 1
       PMA_ABSOLUTE_URI: https://phpmyadmin.write-heberg.fr
       UPLOAD_LIMIT: 512M
