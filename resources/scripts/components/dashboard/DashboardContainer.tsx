@@ -34,6 +34,7 @@ export default () => {
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const uuid = useStoreState((state) => state.user.data!.uuid);
     const [showOnlyAdmin, setShowOnlyAdmin] = usePersistedState(`${uuid}:show_all_servers`, false);
+    const rootAdmin = useStoreState((state: ApplicationStore) => state.user.data!.rootAdmin);
     const discordBox = useStoreState((state: ApplicationStore) => state.settings.data!.arix.discordBox);
     const discord = useStoreState((state: ApplicationStore) => state.settings.data!.arix.discord);
     const billing = useStoreState((state: ApplicationStore) => state.settings.data!.arix.billing);
@@ -196,7 +197,7 @@ export default () => {
                         <p className={'text-gray-50'}>{t('welcome-back')}</p>
                         <p className={'font-light'}>{t('all-servers-you-have-access-to')}</p>
                     </div>
-                    {showOnlyAdmin && (
+                    {rootAdmin && (
                         <div css={tw`flex justify-end items-center`}>
                             <p css={tw`uppercase text-xs text-neutral-400 mr-2`}>
                                 {showOnlyAdmin ? t('others-servers') : t('your-servers')}
@@ -218,32 +219,7 @@ export default () => {
                         <FaDiscord className={'text-[2.5rem] text-white/70 group-hover:text-white duration-300'}/>
                     </a>}
             </div>
-            {!servers ? (
-                <Spinner centered size={'large'} />
-            ) : (
-                <div className="grid lg:grid-cols-2 gap-4">
-                    <Pagination data={servers} onPageSelect={setPage}>
-                        {({ items }) =>
-                            items.length > 0 ? (
-                                items.map((server, index) => (
-                                    serverRow == 1
-                                        ? <ServerCardGradient key={server.uuid} server={server} css={index > 0 ? tw`mt-2` : undefined} />
-                                        : serverRow == 2
-                                            ? <ServerCardBanner key={server.uuid} server={server} css={index > 0 ? tw`mt-2` : undefined} />
-                                            : serverRow == 3
-                                            && <ServerCard key={server.uuid} server={server} css={index > 0 ? tw`mt-2` : undefined} />
-                                ))
-                            ) : (
-                                <p css={tw`text-center text-sm text-neutral-400 lg:col-span-2 col-span-1`}>
-                                    {showOnlyAdmin
-                                        ? t('there-are-no-servers')
-                                        : t('there-are-no-servers-associated')}
-                                </p>
-                            )
-                        }
-                    </Pagination>
-                </div>
-            )}
+            <SortableList />
         </PageContentBlock>
     );
 };
