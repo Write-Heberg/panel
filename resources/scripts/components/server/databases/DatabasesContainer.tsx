@@ -14,6 +14,8 @@ import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import { useDeepMemoize } from '@/plugins/useDeepMemoize';
 import { DatabaseIcon } from '@heroicons/react/outline';
 import { useTranslation } from 'react-i18next';
+import {Button} from "@/components/elements/button";
+import {FaExternalLinkAlt} from "react-icons/fa";
 
 export default () => {
     const { t } = useTranslation('arix/server/databases');
@@ -25,6 +27,7 @@ export default () => {
 
     const databases = useDeepMemoize(ServerContext.useStoreState((state) => state.databases.data));
     const setDatabases = ServerContext.useStoreActions((state) => state.databases.setDatabases);
+    const phpmyadminUrl = 'https://phpmyadmin.write-heberg.fr';
 
     useEffect(() => {
         setLoading(!databases.length);
@@ -56,6 +59,10 @@ export default () => {
                                 </p>
                             )}
                         </div>
+                        <Button>
+                            <FaExternalLinkAlt css={tw`fa-w-16`} />
+                            <a href={phpmyadminUrl} target="_blank">{t('phpmyadmin')}</a>
+                        </Button>
                         <Can action={'database.create'}>
                             {databaseLimit > 0 && databaseLimit !== databases.length && (
                                 <CreateDatabaseButton />
