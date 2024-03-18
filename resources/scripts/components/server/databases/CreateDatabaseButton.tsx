@@ -37,7 +37,6 @@ export default () => {
     const [visible, setVisible] = useState(false);
 
     const appendDatabase = ServerContext.useStoreActions((actions) => actions.databases.appendDatabase);
-    const phpmyadminUrl = 'https://phpmyadmin.write-heberg.fr'
 
     const submit = (values: Values, { setSubmitting }: FormikHelpers<Values>) => {
         clearFlashes('database:create');
@@ -110,9 +109,6 @@ export default () => {
                     </Modal>
                 )}
             </Formik>
-            <Button>
-                <Link to={phpmyadminUrl} target="_blank">{t('phpmyadmin')}</Link>
-            </Button>
             <Button onClick={() => setVisible(true)}>{t('create.button')}</Button>
         </>
     );
