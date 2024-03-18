@@ -60,7 +60,7 @@ export default () => {
                             )}
                         </div>
                         <Button>
-                            <FaExternalLinkAlt css={tw`fa-w-16`} />
+                            <FaExternalLinkAlt/>
                             <a href={phpmyadminUrl} target="_blank">{t('phpmyadmin')}</a>
                         </Button>
                         <Can action={'database.create'}>
