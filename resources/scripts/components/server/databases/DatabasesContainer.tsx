@@ -59,15 +59,17 @@ export default () => {
                                 </p>
                             )}
                         </div>
-                        <Button>
-                            <FaExternalLinkAlt/>
-                            <a href={phpmyadminUrl} target="_blank">{t('phpmyadmin')}</a>
-                        </Button>
-                        <Can action={'database.create'}>
-                            {databaseLimit > 0 && databaseLimit !== databases.length && (
-                                <CreateDatabaseButton />
-                            )}
-                        </Can>
+                        <div className="flex justify-end gap-2">
+                            <Button>
+                                <FaExternalLinkAlt/>
+                                <a href={phpmyadminUrl} target="_blank">{t('phpmyadmin')}</a>
+                            </Button>
+                            <Can action={'database.create'}>
+                                {databaseLimit > 0 && databaseLimit !== databases.length && (
+                                    <CreateDatabaseButton/>
+                                )}
+                            </Can>
+                        </div>
                     </div>
                     <TableList>
                         <tr>
@@ -76,8 +78,8 @@ export default () => {
                             <th>{t('endpoint')}</th>
                             <th></th>
                         </tr>
-                            {databases.length > 0 ? (
-                                databases.map((database, index) => (
+                        {databases.length > 0 ? (
+                            databases.map((database, index) => (
                                     <DatabaseRow
                                         key={database.id}
                                         database={database}
