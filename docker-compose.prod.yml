@@ -7,7 +7,7 @@ x-common:
     MYSQL_PASSWORD: &db-password "${DB_PASSWORD-:CHANGE_ME}"
     MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-root}"
   panel:
-    panel-environment
+    &panel-environment
     APP_URL: "https://panel.write-heberg.fr"
     # A list of valid timezones can be found here: http://php.net/manual/en/timezones.php
     APP_TIMEZONE: "Europe/Paris"
