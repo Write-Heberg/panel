@@ -35,7 +35,7 @@ x-common:
 #
 services:
 
-  database:
+  databases:
     image: mariadb:10.5
     container_name: Pterodactyl-DB-WRTHGB
     restart: always
@@ -51,7 +51,7 @@ services:
 
   cache:
     image: redis:alpine
-    container_name: Pterodactyl-CACHE-WRTHGB
+    container_name: Pterodactyl-CACHE-WRTHBG
     restart: always
     networks:
       - panel
@@ -64,7 +64,7 @@ services:
     pull_policy: build # Portainer need it for rebuild when updating
     restart: always
     links:
-      - database
+      - databases
       - cache
     volumes:
       - "/data/volumes/pterodactyl/prod/www/var/:/app/var/"
@@ -80,7 +80,7 @@ services:
       SESSION_DRIVER: "redis"
       QUEUE_DRIVER: "redis"
       REDIS_HOST: "cache"
-      DB_HOST: "database"
+      DB_HOST: "databases"
       DB_PORT: "3306"
     labels:
       - "traefik.enable=true"
@@ -99,19 +99,18 @@ services:
 
   phpMyAdmin:
     image: phpmyadmin:latest
-    container_name: Pterodactyl-PHPMYADMIN-WRTHGB
+    container_name: Pterodactyl-PHPMYADMIN-WRTHBG
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     depends_on:
       - panel
     links:
-      - database
+      - databases
       - panel
     restart: always
     environment:
-      PMA_HOST: database
-      PMA_ARBITRARY: 1
+      PMA_HOSTS: NODE01-FR.WRITE-HEBERG.FR, DATABASES
       PMA_ABSOLUTE_URI: https://phpmyadmin.write-heberg.fr
       UPLOAD_LIMIT: 512M
       HIDE_PHP_VERSION: true
