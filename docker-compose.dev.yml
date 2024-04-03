@@ -69,6 +69,7 @@ services:
       - "/data/volumes/pterodactyl/dev/www/nginx/:/etc/nginx/http.d/"
       - "/data/volumes/pterodactyl/dev/www/certs/:/etc/letsencrypt/"
       - "/data/volumes/pterodactyl/dev/www/logs/:/app/storage/logs"
+    env_file: stack.env # Portainer's .env file
     environment:
       <<: [*panel-environment, *mail-environment]
       DB_PASSWORD: *db-password
