@@ -273,16 +273,6 @@ class User extends Model implements
             ->groupBy('servers.id');
     }
 
-    public function ownerServers(): Builder
-    {
-        return Server::query()
-            ->select('servers.*')
-            ->where(function (Builder $builder) {
-                $builder->where('servers.owner_id', $this->id);
-            })
-            ->groupBy('servers.id');
-    }
-
     /**
      * Returns the role that a user has.
      */

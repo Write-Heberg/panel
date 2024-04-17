@@ -49,13 +49,12 @@ class ClientController extends ClientApiController
             // If they aren't an admin but want all the admin servers don't fail the request, just
             // make it a query that will never return any results back.
             $builder = $type === 'admin-all'
-                ? $builder
+                ? ($user->role ? $builder : $builder->whereRaw('1 = 2'))
                 : $builder->whereIn('servers.id', $user->subuserServers()->pluck('id')->all());
-        } elseif ($type === 'owner') {
-            $builder = $builder->where('servers.owner_id', $user->id);
         } else {
-            $builder = $builder->whereIn('servers.id', $user->ownerServers()->pluck('id')->all())->orderBy('position', 'asc');
+            $builder = $builder->where('servers.owner_id', $user->id);
         }
+
 
         $servers = $builder->paginate(min($request->query('per_page', 50), 100))->appends($request->query());
 
