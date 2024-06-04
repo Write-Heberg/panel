@@ -138,5 +138,5 @@ services:
 
 networks:
   panel:
-#    name: public_wan
-#    external: true
+    name: public_wan
+    external: true
