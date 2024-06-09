@@ -1,20 +1,13 @@
-version: '3.8'
 x-common:
   database:
     &db-environment
-    # Do not remove the "&db-password" from the end of the line below, it is important
-    # for Panel functionality.
     MYSQL_PASSWORD: &db-password "${DB_PASSWORD-:CHANGE_ME}"
     MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-root}"
   panel:
     &panel-environment
     APP_URL: "http://panel.write-heberg.fr"
-    # A list of valid timezones can be found here: http://php.net/manual/en/timezones.php
     APP_TIMEZONE: "Europe/Paris"
     APP_SERVICE_AUTHOR: "contact@write-heberg.fr"
-    # Uncomment the line below and set to a non-empty value if you want to use Let's Encrypt
-    # to generate an SSL certificate for the Panel.
-    # LE_EMAIL: ""
   mail:
     &mail-environment
     MAIL_FROM: "noreply@write-heberg.fr"
@@ -26,41 +19,12 @@ x-common:
     MAIL_PASSWORD: ""
     MAIL_ENCRYPTION: "ssl"
 
-#
-# ------------------------------------------------------------------------------------------
-# DANGER ZONE BELOW
-#
-# The remainder of this file likely does not need to be changed. Please only make modifications
-# below if you understand what you are doing.
-#
 services:
-
-  databases:
-    image: mariadb:10.5
-    container_name: Pterodactyl-DB-WRTHGB
-    restart: always
-    command: --default-authentication-plugin=mysql_native_password
-    volumes:
-      - "/data/volumes/pterodactyl/prod/database:/var/lib/mysql"
-    environment:
-      <<: *db-environment
-      MYSQL_DATABASE: "panel"
-      MYSQL_USER: "pterodactyl"
-    networks:
-      - panel
-
-  cache:
-    image: redis:alpine
-    container_name: Pterodactyl-CACHE-WRTHBG
-    restart: always
-    networks:
-      - panel
-
   panel:
     build:
       context: "."
       dockerfile: "./Dockerfile"
-    container_name: Pterodactyl-PANEL-WRTHGB
+    container_name: ptero-PANEL-WRTHBG
     pull_policy: build # Portainer need it for rebuild when updating
     restart: always
     links:
@@ -72,20 +36,17 @@ services:
       - "/data/volumes/pterodactyl/prod/www/certs/:/etc/letsencrypt/"
       - "/data/volumes/pterodactyl/prod/www/logs/:/app/storage/logs"
     env_file: stack.env
-#    ports:
-#      - "80:80"
-#      - "443:443"
     environment:
       <<: [*panel-environment, *mail-environment]
       DB_PASSWORD: *db-password
-      APP_ENV: "production"
-      APP_ENVIRONMENT_ONLY: "false"
-      CACHE_DRIVER: "redis"
-      SESSION_DRIVER: "redis"
-      QUEUE_DRIVER: "redis"
-      REDIS_HOST: "cache"
-      DB_HOST: "databases"
-      DB_PORT: "3306"
+      APP_ENV: production
+      APP_ENVIRONMENT_ONLY: false
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      QUEUE_DRIVER: redis
+      REDIS_HOST: cache
+      DB_HOST: databases
+      DB_PORT: 3306
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.panel.rule=Host(`panel.write-heberg.fr`)"
@@ -103,7 +64,7 @@ services:
 
   phpMyAdmin:
     image: phpmyadmin:latest
-    container_name: Pterodactyl-PHPMYADMIN-WRTHBG
+    container_name: ptero-PMA-WRTHBG
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -135,6 +96,26 @@ services:
     networks:
       - panel
 
+  databases:
+    image: mariadb:10.5
+    container_name: ptero-DB-WRTHBG
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - "/data/volumes/pterodactyl/prod/database:/var/lib/mysql"
+    environment:
+      <<: *db-environment
+      MYSQL_DATABASE: "panel"
+      MYSQL_USER: "pterodactyl"
+    networks:
+      - panel
+
+  cache:
+    image: redis:alpine
+    container_name: ptero-CACHE-WRTHBG
+    restart: always
+    networks:
+      - panel
 
 networks:
   panel:
