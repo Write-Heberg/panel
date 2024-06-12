@@ -14,6 +14,7 @@ import tw from 'twin.macro';
 import Label from '@/components/elements/Label';
 import FormikFieldWrapper from '@/components/elements/FormikFieldWrapper';
 import { Textarea } from '@/components/elements/Input';
+import { useTranslation } from 'react-i18next';
 
 interface Values {
     name: string;
@@ -21,21 +22,22 @@ interface Values {
 }
 
 const RenameServerBox = () => {
+    const { t } = useTranslation('arix/server/settings');
     const { isSubmitting } = useFormikContext<Values>();
 
     return (
-        <TitledGreyBox title={'Change Server Details'} css={tw`relative`}>
+        <TitledGreyBox title={t('rename.title')} css={tw`relative`}>
             <SpinnerOverlay visible={isSubmitting} />
             <Form css={tw`mb-0`}>
-                <Field id={'name'} name={'name'} label={'Server Name'} type={'text'} />
+                <Field id={'name'} name={'name'} label={t('rename.server-name')} type={'text'} />
                 <div css={tw`mt-6`}>
-                    <Label>Server Description</Label>
+                    <Label>{t('rename.server-description')}</Label>
                     <FormikFieldWrapper name={'description'}>
                         <FormikField as={Textarea} name={'description'} rows={3} />
                     </FormikFieldWrapper>
                 </div>
                 <div css={tw`mt-6 text-right`}>
-                    <Button type={'submit'}>Save</Button>
+                    <Button type={'submit'}>{t('rename.save')}</Button>
                 </div>
             </Form>
         </TitledGreyBox>

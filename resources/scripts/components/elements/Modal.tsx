@@ -22,7 +22,8 @@ export interface ModalProps extends RequiredModalProps {
 
 export const ModalMask = styled.div`
     ${tw`fixed z-50 overflow-auto flex w-full inset-0`};
-    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter:blur(8px);
+    background: rgba(0, 0, 0, 0.5);
 `;
 
 const ModalContainer = styled.div<{ alignTop?: boolean }>`
@@ -130,7 +131,7 @@ const Modal: React.FC<ModalProps> = ({
                         </Fade>
                     )}
                     <div
-                        css={tw`bg-neutral-800 p-3 sm:p-4 md:p-6 rounded shadow-md overflow-y-scroll transition-all duration-150`}
+                        css={tw`bg-neutral-600 ring-4 ring-gray-700 p-3 md:p-5 rounded-box overflow-y-scroll transition-all duration-150`}
                     >
                         {children}
                     </div>

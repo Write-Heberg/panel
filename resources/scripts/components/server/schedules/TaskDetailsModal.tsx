@@ -17,6 +17,7 @@ import Select from '@/components/elements/Select';
 import ModalContext from '@/context/ModalContext';
 import asModal from '@/hoc/asModal';
 import FormikSwitch from '@/components/elements/FormikSwitch';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     schedule: Schedule;
@@ -65,6 +66,7 @@ const ActionListener = () => {
 };
 
 const TaskDetailsModal = ({ schedule, task }: Props) => {
+    const { t } = useTranslation('arix/server/schedules');
     const { dismiss } = useContext(ModalContext);
     const { clearFlashes, addError } = useFlash();
 
@@ -83,7 +85,7 @@ const TaskDetailsModal = ({ schedule, task }: Props) => {
         if (backupLimit === 0 && values.action === 'backup') {
             setSubmitting(false);
             addError({
-                message: "A backup task cannot be created when the server's backup limit is set to 0.",
+                message: t('task.message'),
                 key: 'schedule:task',
             });
         } else {
@@ -119,57 +121,53 @@ const TaskDetailsModal = ({ schedule, task }: Props) => {
             {({ isSubmitting, values }) => (
                 <Form css={tw`m-0`}>
                     <FlashMessageRender byKey={'schedule:task'} css={tw`mb-4`} />
-                    <h2 css={tw`text-2xl mb-6`}>{task ? 'Edit Task' : 'Create Task'}</h2>
+                    <h2 css={tw`font-header text-xl font-medium mb-2 text-gray-50`}>{task ? t('task.edit-task') : t('task.create-task')}</h2>
                     <div css={tw`flex`}>
                         <div css={tw`mr-2 w-1/3`}>
-                            <Label>Action</Label>
+                            <Label>{t('task.action')}</Label>
                             <ActionListener />
                             <FormikFieldWrapper name={'action'}>
                                 <FormikField as={Select} name={'action'}>
-                                    <option value={'command'}>Send command</option>
-                                    <option value={'power'}>Send power action</option>
-                                    <option value={'backup'}>Create backup</option>
+                                    <option value={'command'}>{t('task.send-command')}</option>
+                                    <option value={'power'}>{t('task.send-power-action')}</option>
+                                    <option value={'backup'}>{t('task.create-backup')}</option>
                                 </FormikField>
                             </FormikFieldWrapper>
                         </div>
                         <div css={tw`flex-1 ml-6`}>
                             <Field
                                 name={'timeOffset'}
-                                label={'Time offset (in seconds)'}
-                                description={
-                                    'The amount of time to wait after the previous task executes before running this one. If this is the first task on a schedule this will not be applied.'
-                                }
+                                label={t('task.offset')}
+                                description={t('task.offset-description')}
                             />
                         </div>
                     </div>
                     <div css={tw`mt-6`}>
                         {values.action === 'command' ? (
                             <div>
-                                <Label>Payload</Label>
+                                <Label>{t('task.payload')}</Label>
                                 <FormikFieldWrapper name={'payload'}>
                                     <FormikField as={Textarea} name={'payload'} rows={6} />
                                 </FormikFieldWrapper>
                             </div>
                         ) : values.action === 'power' ? (
                             <div>
-                                <Label>Payload</Label>
+                                <Label>{t('task.payload')}</Label>
                                 <FormikFieldWrapper name={'payload'}>
                                     <FormikField as={Select} name={'payload'}>
-                                        <option value={'start'}>Start the server</option>
-                                        <option value={'restart'}>Restart the server</option>
-                                        <option value={'stop'}>Stop the server</option>
-                                        <option value={'kill'}>Terminate the server</option>
+                                        <option value={'start'}>{t('task.start-server')}</option>
+                                        <option value={'restart'}>{t('task.restart-server')}</option>
+                                        <option value={'stop'}>{t('task.stop-server')}</option>
+                                        <option value={'kill'}>{t('task.kill-server')}</option>
                                     </FormikField>
                                 </FormikFieldWrapper>
                             </div>
                         ) : (
                             <div>
-                                <Label>Ignored Files</Label>
+                                <Label>{t('task.ignored-files')}</Label>
                                 <FormikFieldWrapper
                                     name={'payload'}
-                                    description={
-                                        'Optional. Include the files and folders to be excluded in this backup. By default, the contents of your .pteroignore file will be used. If you have reached your backup limit, the oldest backup will be rotated.'
-                                    }
+                                    description={t('task.ignored-files-description')}
                                 >
                                     <FormikField as={Textarea} name={'payload'} rows={6} />
                                 </FormikFieldWrapper>
@@ -179,13 +177,13 @@ const TaskDetailsModal = ({ schedule, task }: Props) => {
                     <div css={tw`mt-6 bg-neutral-700 border border-neutral-800 shadow-inner p-4 rounded`}>
                         <FormikSwitch
                             name={'continueOnFailure'}
-                            description={'Future tasks will be run when this task fails.'}
-                            label={'Continue on Failure'}
+                            description={t('task.continue-on-failure-description')}
+                            label={t('task.continue-on-failure')}
                         />
                     </div>
                     <div css={tw`flex justify-end mt-6`}>
                         <Button type={'submit'} disabled={isSubmitting}>
-                            {task ? 'Save Changes' : 'Create Task'}
+                            {task ? t('task.save-changes') : t('task.create-task')}
                         </Button>
                     </div>
                 </Form>

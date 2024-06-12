@@ -22,12 +22,15 @@ import Input from '@/components/elements/Input';
 import { restoreServerBackup } from '@/api/server/backups';
 import http, { httpErrorToHuman } from '@/api/http';
 import { Dialog } from '@/components/elements/dialog';
+import { LuDownloadCloud, LuArchiveRestore, LuLock, LuUnlock, LuTrash2 } from "react-icons/lu";
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     backup: ServerBackup;
 }
 
 export default ({ backup }: Props) => {
+    const { t } = useTranslation('arix/server/backups');
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const setServerFromState = ServerContext.useStoreActions((actions) => actions.server.setServerFromState);
     const [modal, setModal] = useState('');
@@ -122,21 +125,20 @@ export default ({ backup }: Props) => {
             <Dialog.Confirm
                 open={modal === 'unlock'}
                 onClose={() => setModal('')}
-                title={`Unlock "${backup.name}"`}
+                title={`${t('unlock')} "${backup.name}"`}
                 onConfirmed={onLockToggle}
             >
-                This backup will no longer be protected from automated or accidental deletions.
+                {t('no-longer-protected')}
             </Dialog.Confirm>
             <Dialog.Confirm
                 open={modal === 'restore'}
                 onClose={() => setModal('')}
-                confirm={'Restore'}
+                confirm={t('Restore')}
                 title={`Restore "${backup.name}"`}
                 onConfirmed={() => doRestorationAction()}
             >
                 <p>
-                    Your server will be stopped. You will not be able to control the power state, access the file
-                    manager, or create additional backups until completed.
+                    {t('your-server-will-be-stopped')}
                 </p>
                 <p css={tw`mt-4 -mb-2 bg-gray-700 p-3 rounded`}>
                     <label htmlFor={'restore_truncate'} css={tw`text-base flex items-center cursor-pointer`}>
@@ -148,18 +150,18 @@ export default ({ backup }: Props) => {
                             checked={truncate}
                             onChange={() => setTruncate((s) => !s)}
                         />
-                        Delete all files before restoring backup.
+                        {t('delete-all-files')}
                     </label>
                 </p>
             </Dialog.Confirm>
             <Dialog.Confirm
                 title={`Delete "${backup.name}"`}
-                confirm={'Continue'}
+                confirm={t('continue')}
                 open={modal === 'delete'}
                 onClose={() => setModal('')}
                 onConfirmed={doDeletion}
             >
-                This is a permanent operation. The backup cannot be recovered once deleted.
+                {t('permanent operation')}
             </Dialog.Confirm>
             <SpinnerOverlay visible={loading} fixed />
             {backup.isSuccessful ? (
@@ -176,30 +178,26 @@ export default ({ backup }: Props) => {
                     <div css={tw`text-sm`}>
                         <Can action={'backup.download'}>
                             <DropdownButtonRow onClick={doDownload}>
-                                <FontAwesomeIcon fixedWidth icon={faCloudDownloadAlt} css={tw`text-xs`} />
-                                <span css={tw`ml-2`}>Download</span>
+                                <LuDownloadCloud />
+                                <span css={tw`ml-2`}>{t('download')}</span>
                             </DropdownButtonRow>
                         </Can>
                         <Can action={'backup.restore'}>
                             <DropdownButtonRow onClick={() => setModal('restore')}>
-                                <FontAwesomeIcon fixedWidth icon={faBoxOpen} css={tw`text-xs`} />
-                                <span css={tw`ml-2`}>Restore</span>
+                                <LuArchiveRestore />
+                                <span css={tw`ml-2`}>{t('restore')}</span>
                             </DropdownButtonRow>
                         </Can>
                         <Can action={'backup.delete'}>
                             <>
                                 <DropdownButtonRow onClick={onLockToggle}>
-                                    <FontAwesomeIcon
-                                        fixedWidth
-                                        icon={backup.isLocked ? faUnlock : faLock}
-                                        css={tw`text-xs mr-2`}
-                                    />
-                                    {backup.isLocked ? 'Unlock' : 'Lock'}
+                                    {backup.isLocked ? <LuUnlock /> : <LuLock />}
+                                    <span css={tw`ml-2`}>{backup.isLocked ? t('unlock') : t('lock')}</span>
                                 </DropdownButtonRow>
                                 {!backup.isLocked && (
                                     <DropdownButtonRow danger onClick={() => setModal('delete')}>
-                                        <FontAwesomeIcon fixedWidth icon={faTrashAlt} css={tw`text-xs`} />
-                                        <span css={tw`ml-2`}>Delete</span>
+                                        <LuTrash2 />
+                                        <span css={tw`ml-2`}>{t('delete')}</span>
                                     </DropdownButtonRow>
                                 )}
                             </>
@@ -211,7 +209,7 @@ export default ({ backup }: Props) => {
                     onClick={() => setModal('delete')}
                     css={tw`text-gray-200 transition-colors duration-150 hover:text-gray-100 p-2`}
                 >
-                    <FontAwesomeIcon icon={faTrashAlt} />
+                    <LuTrash2 />
                 </button>
             )}
         </>

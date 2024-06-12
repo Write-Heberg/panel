@@ -67,6 +67,11 @@
                                 <p class="text-muted small">A simple, human-readable name to use as an identifier for this Egg.</p>
                             </div>
                             <div class="form-group">
+                                <label for="pImage" class="control-label">Egg image <b style="background-color:#17078D;font-size:1rem;padding:2px 7px;border-radius:100px;font-weight:600;">ARIX</b></label>
+                                <input type="text" id="pImage" name="image" value="{{ $egg->image }}" class="form-control" />
+                                <p class="text-muted small">This is the image url of this specific egg which is shown on the theme.</p>
+                            </div>
+                            <div class="form-group">
                                 <label for="pUuid" class="control-label">UUID</label>
                                 <input type="text" id="pUuid" readonly value="{{ $egg->uuid }}" class="form-control" />
                                 <p class="text-muted small">This is the globally unique identifier for this Egg which the Daemon uses as an identifier.</p>
