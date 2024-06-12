@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import tw from 'twin.macro';
-import Icon from '@/components/elements/Icon';
+import { TrashIcon } from '@heroicons/react/outline';
 import { ServerContext } from '@/state/server';
 import deleteServerAllocation from '@/api/server/network/deleteServerAllocation';
 import getServerAllocations from '@/api/swr/getServerAllocations';
 import { useFlashKey } from '@/plugins/useFlash';
 import { Dialog } from '@/components/elements/dialog';
 import { Button } from '@/components/elements/button/index';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     allocation: number;
 }
 
 const DeleteAllocationButton = ({ allocation }: Props) => {
+    const { t } = useTranslation('arix/server/network');
     const [confirm, setConfirm] = useState(false);
 
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
@@ -39,20 +39,17 @@ const DeleteAllocationButton = ({ allocation }: Props) => {
             <Dialog.Confirm
                 open={confirm}
                 onClose={() => setConfirm(false)}
-                title={'Remove Allocation'}
-                confirm={'Delete'}
+                title={t('remove-allocation')}
+                confirm={t('delete')}
                 onConfirmed={deleteAllocation}
             >
-                This allocation will be immediately removed from your server.
+                {t('remove-allocation-description')}.
             </Dialog.Confirm>
             <Button.Danger
-                variant={Button.Variants.Secondary}
-                size={Button.Sizes.Small}
-                shape={Button.Shapes.IconSquare}
                 type={'button'}
                 onClick={() => setConfirm(true)}
             >
-                <Icon icon={faTrashAlt} css={tw`w-3 h-auto`} />
+                <TrashIcon className={'w-5'} />
             </Button.Danger>
         </>
     );

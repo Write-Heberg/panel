@@ -10,6 +10,7 @@ class EggFormRequest extends AdminFormRequest
     {
         $rules = [
             'name' => 'required|string|max:191',
+            'image' => 'nullable|url',
             'description' => 'nullable|string',
             'docker_images' => ['required', 'string', 'regex:/^[\w#\.\/\- ]*\|*[\w\.\/\-:@ ]*$/im'],
             'force_outgoing_ip' => 'sometimes|boolean',

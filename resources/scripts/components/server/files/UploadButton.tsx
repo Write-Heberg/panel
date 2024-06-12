@@ -13,6 +13,9 @@ import { WithClassname } from '@/components/types';
 import Portal from '@/components/elements/Portal';
 import { CloudUploadIcon } from '@heroicons/react/outline';
 import { useSignal } from '@preact/signals-react';
+import Tooltip from '@/components/elements/tooltip/Tooltip';
+import { LuUpload } from "react-icons/lu";
+import { useTranslation } from 'react-i18next';
 
 function isFileOrDirectory(event: DragEvent): boolean {
     if (!event.dataTransfer?.types) {
@@ -23,6 +26,7 @@ function isFileOrDirectory(event: DragEvent): boolean {
 }
 
 export default ({ className }: WithClassname) => {
+    const { t } = useTranslation('arix/server/files');
     const fileUploadInput = useRef<HTMLInputElement>(null);
 
     const visible = useSignal(false);
@@ -125,7 +129,7 @@ export default ({ className }: WithClassname) => {
                             >
                                 <CloudUploadIcon className={'w-10 h-10 flex-shrink-0'} />
                                 <p className={'font-header flex-1 text-lg text-neutral-100 text-center'}>
-                                    Drag and drop files to upload.
+                                    {t('drag-and-drop')}
                                 </p>
                             </div>
                         </div>
@@ -146,9 +150,11 @@ export default ({ className }: WithClassname) => {
                 }}
                 multiple
             />
-            <Button className={className} onClick={() => fileUploadInput.current && fileUploadInput.current.click()}>
-                Upload
-            </Button>
+            <Tooltip content={`${t('upload')}`}>
+                <Button className={className} onClick={() => fileUploadInput.current && fileUploadInput.current.click()}>
+                    <LuUpload />
+                </Button>
+            </Tooltip>
         </>
     );
 };

@@ -8,8 +8,9 @@ import { ServerContext } from '@/state/server';
 import { httpErrorToHuman } from '@/api/http';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import useFlash from '@/plugins/useFlash';
-import Button from '@/components/elements/Button';
+import { Button } from '@/components/elements/button/index';
 import tw from 'twin.macro';
+import { useTranslation } from 'react-i18next';
 
 interface Values {
     databaseName: string;
@@ -29,6 +30,7 @@ const schema = object().shape({
 });
 
 export default () => {
+    const { t } = useTranslation('arix/server/databases');
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const { addError, clearFlashes } = useFlash();
     const [visible, setVisible] = useState(false);
@@ -69,37 +71,37 @@ export default () => {
                         }}
                     >
                         <FlashMessageRender byKey={'database:create'} css={tw`mb-6`} />
-                        <h2 css={tw`text-2xl mb-6`}>Create new database</h2>
+                        <h2 css={tw`font-header text-xl font-medium mb-2 text-gray-50`}>{t('create.title')}</h2>
                         <Form css={tw`m-0`}>
                             <Field
                                 type={'string'}
                                 id={'database_name'}
                                 name={'databaseName'}
-                                label={'Database Name'}
-                                description={'A descriptive name for your database instance.'}
+                                label={t('create.name')}
+                                description={t('create.name-description')}
                             />
                             <div css={tw`mt-6`}>
                                 <Field
                                     type={'string'}
                                     id={'connections_from'}
                                     name={'connectionsFrom'}
-                                    label={'Connections From'}
+                                    label={t('create.connection-from')}
                                     description={
-                                        'Where connections should be allowed from. Leave blank to allow connections from anywhere.'
+                                        t('create.connection-from-description')
                                     }
                                 />
                             </div>
                             <div css={tw`flex flex-wrap justify-end mt-6`}>
                                 <Button
+                                    variant={Button.Variants.Secondary}
                                     type={'button'}
-                                    isSecondary
                                     css={tw`w-full sm:w-auto sm:mr-2`}
                                     onClick={() => setVisible(false)}
                                 >
-                                    Cancel
+                                    {t('create.cancel')}
                                 </Button>
                                 <Button css={tw`w-full mt-4 sm:w-auto sm:mt-0`} type={'submit'}>
-                                    Create Database
+                                    {t('create.create-database')}
                                 </Button>
                             </div>
                         </Form>
