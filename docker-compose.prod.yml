@@ -1,30 +1,9 @@
-x-common:
-  database:
-    &db-environment
-    MYSQL_PASSWORD: &db-password "${DB_PASSWORD-:CHANGE_ME}"
-    MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-root}"
-  panel:
-    &panel-environment
-    APP_URL: "http://panel.write-heberg.fr"
-    APP_TIMEZONE: "Europe/Paris"
-    APP_SERVICE_AUTHOR: "contact@write-heberg.fr"
-  mail:
-    &mail-environment
-    MAIL_FROM: "noreply@write-heberg.fr"
-    MAIL_FROM_NAME: "Write Heberg' | Panel"
-    MAIL_DRIVER: "smtp"
-    MAIL_HOST: "writeheberg-fr01c.mail.protection.outlook.com"
-    MAIL_PORT: "25"
-    MAIL_USERNAME: ""
-    MAIL_PASSWORD: ""
-    MAIL_ENCRYPTION: "ssl"
-
 services:
   panel:
     build:
       context: "."
       dockerfile: "./Dockerfile"
-    container_name: ptero-PANEL-WRTHBG
+    container_name: ${CONTAINER_NAME_PANEL:-ptero-PANEL-WRTHBG}
     pull_policy: build # Portainer need it for rebuild when updating
     restart: always
     links:
@@ -37,23 +16,33 @@ services:
       - "/data/volumes/pterodactyl/prod/www/logs/:/app/storage/logs"
     env_file: stack.env
     environment:
-      <<: [*panel-environment, *mail-environment]
-      DB_PASSWORD: *db-password
-      APP_ENV: production
-      APP_ENVIRONMENT_ONLY: false
-      CACHE_DRIVER: redis
-      SESSION_DRIVER: redis
-      QUEUE_DRIVER: redis
-      REDIS_HOST: cache
-      DB_HOST: databases
-      DB_PORT: 3306
+      APP_URL: "${APP_URL:-panel.write-heberg.fr}"
+      APP_TIMEZONE: "${APP_TIMEZONE:-Europe/Paris}"
+      APP_SERVICE_AUTHOR: "contact@write-heberg.fr"
+      MAIL_FROM: "${MAIL_FROM:-noreply@write-heberg.fr}"
+      MAIL_FROM_NAME: "${MAIL_FROM_NAME:-Panel Pterodactyl Exemple}"
+      MAIL_DRIVER: "${MAIL_DRIVER:-smtp}"
+      MAIL_HOST: "${MAIL_HOST:-writeheberg-fr01c.mail.protection.outlook.com}"
+      MAIL_PORT: "${MAIL_PORT:-25}"
+      MAIL_USERNAME: "${MAIL_USERNAME}"
+      MAIL_PASSWORD: "${MAIL_PASSWORD}"
+      MAIL_ENCRYPTION: "${MAIL_ENCRYPTION:-ssl}"
+      DB_PASSWORD: "${DB_PASSWORD:-CHANGE_ME}"
+      APP_ENV: "${APP_ENV:-production}"
+      APP_ENVIRONMENT_ONLY: "${APP_ENVIRONMENT_ONLY:-false}"
+      CACHE_DRIVER: "${CACHE_DRIVER:-redis}"
+      SESSION_DRIVER: "${SESSION_DRIVER:-redis}"
+      QUEUE_DRIVER: "${QUEUE_DRIVER:-redis}"
+      REDIS_HOST: "${REDIS_HOST:-cache}"
+      DB_HOST: "${DB_HOST:-databases}"
+      DB_PORT: "${DB_PORT:-3306}"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.panel.rule=Host(`panel.write-heberg.fr`)"
+      - "traefik.http.routers.panel.rule=Host(`${TRAEFIK_URL_PANEL:-panel.write-heberg.fr}`)"
       - "traefik.http.routers.panel.entrypoints=websecure"
       - "traefik.http.routers.panel.tls=true"
       - "traefik.http.routers.panel.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.panelhttp.rule=Host(`panel.write-heberg.fr`)"
+      - "traefik.http.routers.panelhttp.rule=Host(`${TRAEFIK_URL_PANEL:-panel.write-heberg.fr}`)"
       - "traefik.http.routers.panelhttp.entrypoints=web"
       - "traefik.http.routers.panelhttp.middlewares=redirecttohttpspanel@docker"
       - "traefik.http.middlewares.redirecttohttpspanel.redirectscheme.scheme=https"
@@ -64,7 +53,7 @@ services:
 
   phpMyAdmin:
     image: phpmyadmin:latest
-    container_name: ptero-PMA-WRTHBG
+    container_name: ${CONTAINER_NAME_PMA:-ptero-PMA-WRTHBG}
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -75,19 +64,19 @@ services:
       - panel
     restart: always
     environment:
-      PMA_HOSTS: NODE01-FR.WRITE-HEBERG.FR, DATABASES
-      PMA_ABSOLUTE_URI: https://phpmyadmin.write-heberg.fr
-      UPLOAD_LIMIT: 512M
-      HIDE_PHP_VERSION: true
-      MAX_EXECUTION_TIME: 600
-      MEMORY_LIMIT: 256M
+      PMA_HOSTS: ${PMA_HOSTS:-NODE01-FR.WRITE-HEBERG.FR, DATABASES}
+      PMA_ABSOLUTE_URI: ${PMA_ABSOLUTE_URI:-https://pma.write-heberg.fr}
+      UPLOAD_LIMIT: ${UPLOAD_LIMIT:-512M}
+      HIDE_PHP_VERSION: ${HIDE_PHP_VERSION:-true}
+      MAX_EXECUTION_TIME: ${MAX_EXECUTION_TIME:-600}
+      MEMORY_LIMIT: ${MEMORY_LIMIT:-256M}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.phpmyadminpanel.rule=Host(`phpmyadmin.write-heberg.fr`)"
+      - "traefik.http.routers.phpmyadminpanel.rule=Host(`${TRAEFIK_URL_PMA:-pma.write-heberg.fr}`)"
       - "traefik.http.routers.phpmyadminpanel.entrypoints=websecure"
       - "traefik.http.routers.phpmyadminpanel.tls=true"
       - "traefik.http.routers.phpmyadminpanel.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.phpmyadminpanelhttp.rule=Host(`phpmyadmin.write-heberg.fr`)"
+      - "traefik.http.routers.phpmyadminpanelhttp.rule=Host(`${TRAEFIK_URL_PMA:-pma.write-heberg.fr}`)"
       - "traefik.http.routers.phpmyadminpanelhttp.entrypoints=web"
       - "traefik.http.routers.phpmyadminpanelhttp.middlewares=redirecttohttpsphpmyadminpanel@docker"
       - "traefik.http.middlewares.redirecttohttpsphpmyadminpanel.redirectscheme.scheme=https"
@@ -98,26 +87,27 @@ services:
 
   databases:
     image: mariadb:10.5
-    container_name: ptero-DB-WRTHBG
+    container_name: ${CONTAINER_NAME_DB:-ptero-DB-WRTHBG}
     restart: always
     command: --default-authentication-plugin=mysql_native_password
     volumes:
       - "/data/volumes/pterodactyl/prod/database:/var/lib/mysql"
     environment:
-      <<: *db-environment
-      MYSQL_DATABASE: "panel"
-      MYSQL_USER: "pterodactyl"
+      MYSQL_PASSWORD: "${DB_PASSWORD:-CHANGE_ME}"
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-root}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE:-panel}"
+      MYSQL_USER: "${MYSQL_USER:-pterodactyl}"
     networks:
       - panel
 
   cache:
     image: redis:alpine
-    container_name: ptero-CACHE-WRTHBG
+    container_name: ${CONTAINER_NAME_CACHE:-ptero-CACHE-WRTHBG}
     restart: always
     networks:
       - panel
 
 networks:
   panel:
-    name: public_wan
+    name: ${NAME_NETWORK:-public_wan}
     external: true
