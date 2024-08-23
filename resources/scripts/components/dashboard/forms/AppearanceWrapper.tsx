@@ -24,6 +24,23 @@ const AppearanceWrapper = () => {
 
     const languages = [
         { key: 'en', value: 'English' },
+        { key: 'cs', value: 'Czech' },
+        { key: 'da', value: 'Danish' },
+        { key: 'fr', value: 'French' },
+        { key: 'de', value: 'German' },
+        { key: 'hi', value: 'Hindi' },
+        { key: 'id', value: 'Indonesian' },
+        { key: 'it', value: 'Italian' },
+        { key: 'ko', value: 'Korean' },
+        { key: 'pt', value: 'Portuguese' },
+        { key: 'pt-BR', value: 'Portuguese (Brazil)' },
+        { key: 'pa', value: 'Punjabi' },
+        { key: 'ro', value: 'Romanian' },
+        { key: 'ru', value: 'Russian' },
+        { key: 'es', value: 'Spanish' },
+        { key: 'sv', value: 'Swedish' },
+        { key: 'tr', value: 'Turkish' },
+        { key: 'uk', value: 'Ukrainian' },
     ];
 
     const handleLanguageChange = (event: ChangeEvent<HTMLSelectElement>) => {
