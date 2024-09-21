@@ -71,8 +71,8 @@ services:
       HIDE_PHP_VERSION: ${HIDE_PHP_VERSION:-true}
       MAX_EXECUTION_TIME: ${MAX_EXECUTION_TIME:-600}
       MEMORY_LIMIT: ${MEMORY_LIMIT:-1024M}
-      PMA_SSL: 1
-      PMA_SSLS: 1
+      PMA_SSL: true
+    
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.phpmyadmin.rule=Host(`${TRAEFIK_URL_PMA:-phpmyadmin.cerbonix.net}`)"
@@ -106,7 +106,7 @@ services:
 
   cache:
     image: redis:alpine
-    container_name: ${CONTAINER_NAME_CACHE:-ptero-CACHE-WRTHBG}
+    container_name: ${CONTAINER_NAME_CACHE:-ptero-CACHE-CBX}
     restart: always
     networks:
       - panel
