@@ -59,6 +59,7 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - /data/volumes/pterodactyl/prod/phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+      - /data/volumes/pterodactyl/prod/phpmyadmin/origin_ca_rsa_root_cloudflare.pem:/etc/mysql/origin_ca_rsa_root_cloudflare.pem
     depends_on:
       - panel
     links:
