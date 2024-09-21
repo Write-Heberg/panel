@@ -73,12 +73,12 @@ services:
       MEMORY_LIMIT: ${MEMORY_LIMIT:-1024M}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.phpmyadmin.rule=Host(`${TRAEFIK_URL_PANEL:-phpmyadmin.cerbonix.net}`)"
+      - "traefik.http.routers.phpmyadmin.rule=Host(`${TRAEFIK_URL_PMA:-phpmyadmin.cerbonix.net}`)"
       - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
       - "traefik.http.routers.phpmyadmin.tls=true"
       - "traefik.http.routers.phpmyadmin.tls.domains[0].main=cerbonix.net"
       - "traefik.http.routers.phpmyadmin.tls.domains[0].sans=*.cerbonix.net"
-      - "traefik.http.routers.phpmyadminhttp.rule=Host(`${TRAEFIK_URL_PANEL:-phpmyadmin.cerbonix.net}`)"
+      - "traefik.http.routers.phpmyadminhttp.rule=Host(`${TRAEFIK_URL_PMA:-phpmyadmin.cerbonix.net}`)"
       - "traefik.http.routers.phpmyadminhttp.entrypoints=web"
       - "traefik.http.routers.phpmyadminhttp.middlewares=redirecttohttpsphpmyadmin@docker"
       - "traefik.http.middlewares.redirecttohttpsphpmyadmin.redirectscheme.scheme=https"
