@@ -3,7 +3,7 @@ services:
     build:
       context: "."
       dockerfile: "./Dockerfile"
-    container_name: ${CONTAINER_NAME_PANEL:-ptero-PANEL-WRTHBG}
+    container_name: ${CONTAINER_NAME_PANEL:-ptero-PANEL-CBX}
     pull_policy: build # Portainer need it for rebuild when updating
     restart: always
     links:
@@ -16,13 +16,13 @@ services:
       - "/data/volumes/pterodactyl/prod/www/logs/:/app/storage/logs"
     env_file: stack.env
     environment:
-      APP_URL: "${APP_URL:-panel.write-heberg.fr}"
+      APP_URL: "${APP_URL:-panel.cerbonix.net}"
       APP_TIMEZONE: "${APP_TIMEZONE:-Europe/Paris}"
-      APP_SERVICE_AUTHOR: "contact@write-heberg.fr"
-      MAIL_FROM: "${MAIL_FROM:-noreply@write-heberg.fr}"
-      MAIL_FROM_NAME: "${MAIL_FROM_NAME:-Panel Pterodactyl Exemple}"
+      APP_SERVICE_AUTHOR: "support@cerbonix.net"
+      MAIL_FROM: "${MAIL_FROM:-noreply@cerbonix.net}"
+      MAIL_FROM_NAME: "${MAIL_FROM_NAME:-ASS Cerbonix}"
       MAIL_DRIVER: "${MAIL_DRIVER:-smtp}"
-      MAIL_HOST: "${MAIL_HOST:-writeheberg-fr01c.mail.protection.outlook.com}"
+      MAIL_HOST: "${MAIL_HOST:-cerbonix-net.mail.protection.outlook.com}"
       MAIL_PORT: "${MAIL_PORT:-25}"
       MAIL_USERNAME: "${MAIL_USERNAME}"
       MAIL_PASSWORD: "${MAIL_PASSWORD}"
@@ -38,11 +38,12 @@ services:
       DB_PORT: "${DB_PORT:-3306}"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.panel.rule=Host(`${TRAEFIK_URL_PANEL:-panel.write-heberg.fr}`)"
+      - "traefik.http.routers.panel.rule=Host(`${TRAEFIK_URL_PANEL:-panel.cerbonix.net}`)"
       - "traefik.http.routers.panel.entrypoints=websecure"
       - "traefik.http.routers.panel.tls=true"
-      - "traefik.http.routers.panel.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.panelhttp.rule=Host(`${TRAEFIK_URL_PANEL:-panel.write-heberg.fr}`)"
+      - "traefik.http.routers.panel.tls.domains[0].main=cerbonix.net"
+      - "traefik.http.routers.panel.tls.domains[0].sans=*.cerbonix.net"
+      - "traefik.http.routers.panelhttp.rule=Host(`${TRAEFIK_URL_PANEL:-panel.cerbonix.net}`)"
       - "traefik.http.routers.panelhttp.entrypoints=web"
       - "traefik.http.routers.panelhttp.middlewares=redirecttohttpspanel@docker"
       - "traefik.http.middlewares.redirecttohttpspanel.redirectscheme.scheme=https"
@@ -53,7 +54,7 @@ services:
 
   phpMyAdmin:
     image: phpmyadmin:latest
-    container_name: ${CONTAINER_NAME_PMA:-ptero-PMA-WRTHBG}
+    container_name: ${CONTAINER_NAME_PMA:-ptero-PMA-CBX}
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -64,30 +65,31 @@ services:
       - panel
     restart: always
     environment:
-      PMA_HOSTS: ${PMA_HOSTS:-NODE01-FR.WRITE-HEBERG.FR, DATABASES}
-      PMA_ABSOLUTE_URI: ${PMA_ABSOLUTE_URI:-https://pma.write-heberg.fr}
-      UPLOAD_LIMIT: ${UPLOAD_LIMIT:-512M}
+      PMA_HOSTS: ${PMA_HOSTS:-NODE01-FR.CERBONIX.NET, DATABASES}
+      PMA_ABSOLUTE_URI: ${PMA_ABSOLUTE_URI:-https://phpmyadmin.cerbonix.net}
+      UPLOAD_LIMIT: ${UPLOAD_LIMIT:-1024M}
       HIDE_PHP_VERSION: ${HIDE_PHP_VERSION:-true}
       MAX_EXECUTION_TIME: ${MAX_EXECUTION_TIME:-600}
-      MEMORY_LIMIT: ${MEMORY_LIMIT:-256M}
+      MEMORY_LIMIT: ${MEMORY_LIMIT:-1024M}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.phpmyadminpanel.rule=Host(`${TRAEFIK_URL_PMA:-pma.write-heberg.fr}`)"
-      - "traefik.http.routers.phpmyadminpanel.entrypoints=websecure"
-      - "traefik.http.routers.phpmyadminpanel.tls=true"
-      - "traefik.http.routers.phpmyadminpanel.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.phpmyadminpanelhttp.rule=Host(`${TRAEFIK_URL_PMA:-pma.write-heberg.fr}`)"
-      - "traefik.http.routers.phpmyadminpanelhttp.entrypoints=web"
-      - "traefik.http.routers.phpmyadminpanelhttp.middlewares=redirecttohttpsphpmyadminpanel@docker"
-      - "traefik.http.middlewares.redirecttohttpsphpmyadminpanel.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.redirecttohttpsphpmyadminpanel.redirectscheme.permanent=true"
-      - "traefik.http.services.redirecttohttpsphpmyadminpanel.loadbalancer.server.port=80"
+      - "traefik.http.routers.phpmyadmin.rule=Host(`${TRAEFIK_URL_PANEL:-phpmyadmin.cerbonix.net}`)"
+      - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
+      - "traefik.http.routers.phpmyadmin.tls=true"
+      - "traefik.http.routers.phpmyadmin.tls.domains[0].main=cerbonix.net"
+      - "traefik.http.routers.phpmyadmin.tls.domains[0].sans=*.cerbonix.net"
+      - "traefik.http.routers.phpmyadminhttp.rule=Host(`${TRAEFIK_URL_PANEL:-phpmyadmin.cerbonix.net}`)"
+      - "traefik.http.routers.phpmyadminhttp.entrypoints=web"
+      - "traefik.http.routers.phpmyadminhttp.middlewares=redirecttohttpsphpmyadmin@docker"
+      - "traefik.http.middlewares.redirecttohttpsphpmyadmin.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.redirecttohttpsphpmyadmin.redirectscheme.permanent=true"
+      - "traefik.http.services.redirecttohttpsphpmyadmin.loadbalancer.server.port=80"
     networks:
       - panel
 
   databases:
     image: mariadb:10.5
-    container_name: ${CONTAINER_NAME_DB:-ptero-DB-WRTHBG}
+    container_name: ${CONTAINER_NAME_DB:-ptero-DB-CBX}
     restart: always
     command: --default-authentication-plugin=mysql_native_password
     volumes:
