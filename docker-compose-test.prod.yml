@@ -7,7 +7,7 @@ services:
     pull_policy: build # Portainer need it for rebuild when updating
     restart: always
     links:
-      - databases
+      - database
       - cache
     volumes:
       - "/data/volumes/pterodactyl/test/www/var/:/app/var/"
