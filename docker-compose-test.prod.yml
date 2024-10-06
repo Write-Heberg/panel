@@ -4,16 +4,16 @@ services:
       context: "."
       dockerfile: "./Dockerfile"
     container_name: ${CONTAINER_NAME_PANEL:-pterodactyl-test-panel}
-    pull_policy: build # Portainer need it for rebuild when updating
+    pull_policy: build
     restart: always
     links:
       - database
       - cache
     volumes:
-      - "/data/volumes/pterodactyl/test/www/var/:/app/var/"
-      - "/data/volumes/pterodactyl/test/www/nginx/:/etc/nginx/http.d/"
-      - "/data/volumes/pterodactyl/test/www/certs/:/etc/letsencrypt/"
-      - "/data/volumes/pterodactyl/test/www/logs/:/app/storage/logs"
+      - "./volumes/pterodactyl/test/www/var/:/app/var/"
+      - "./volumes/pterodactyl/test/www/nginx/:/etc/nginx/http.d/"
+      - "./volumes/pterodactyl/test/www/certs/:/etc/letsencrypt/"
+      - "./volumes/pterodactyl/test/www/logs/:/app/storage/logs"
     env_file: stack.env
     environment:
       APP_URL: "${APP_URL:-panel-test.cerbonix.net}"
@@ -56,10 +56,8 @@ services:
     image: phpmyadmin:latest
     container_name: ${CONTAINER_NAME_PMA:-pterodactyl-test-phpmyadmin}
     volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - /data/volumes/pterodactyl/test/phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
-      - /data/volumes/pterodactyl/test/phpmyadmin/origin_ca_rsa_root_cloudflare.pem:/etc/mysql/origin_ca_rsa_root_cloudflare.pem
+      - "./volumes/pterodactyl/test/phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php"
+      - "./volumes/pterodactyl/test/phpmyadmin/origin_ca_rsa_root_cloudflare.pem:/etc/mysql/origin_ca_rsa_root_cloudflare.pem"
     depends_on:
       - panel
     links:
@@ -96,7 +94,7 @@ services:
     restart: always
     command: --default-authentication-plugin=mysql_native_password
     volumes:
-      - "/data/volumes/pterodactyl/test/database:/var/lib/mysql"
+      - "./volumes/pterodactyl/test/database:/var/lib/mysql"
     environment:
       MYSQL_PASSWORD: "${DB_PASSWORD:-CHANGE_ME}"
       MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-root}"
