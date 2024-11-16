@@ -6,8 +6,9 @@ ENV NODE_OPTIONS="--dns-result-order=ipv4first"
 
 WORKDIR /app
 COPY . ./
-RUN yarn install --network-concurrency 1 --network-timeout 100000 \
-    && yarn run build:production
+# Ajouter l'option pour OpenSSL
+RUN export NODE_OPTIONS=--openssl-legacy-provider && yarn install --network-concurrency 1 --network-timeout 100000 && yarn run build:production
+
 
 # Stage 1: Build the PHP container
 FROM --platform=$TARGETOS/$TARGETARCH php:8.2-fpm-alpine
