@@ -1,5 +1,5 @@
 # Stage 0: Build the frontend assets
-FROM --platform=$TARGETOS/$TARGETARCH mhart/alpine-node:18
+FROM node:18-alpine
 
 # Désactiver IPv6 au niveau de Node.js
 ENV NODE_OPTIONS="--dns-result-order=ipv4first"
