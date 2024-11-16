@@ -49,6 +49,8 @@ services:
       - "traefik.http.middlewares.redirecttohttpspanel.redirectscheme.scheme=https"
       - "traefik.http.middlewares.redirecttohttpspanel.redirectscheme.permanent=true"
       - "traefik.http.services.redirecttohttpspanel.loadbalancer.server.port=80"
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
     networks:
       - panel
 
