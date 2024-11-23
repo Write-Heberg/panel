@@ -24,7 +24,13 @@ const AppearanceWrapper = () => {
 
     const languages = [
         { key: 'en', value: 'English' },
+        
+        // Make sure 'key' is the same as your folder name.
+        // For our example it would be 'nl'.
+        // Value is the name of the translation which will be shown on your panel.
+        { key: 'fr', value: 'Français' },
     ];
+    
 
     const handleLanguageChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const newLanguage = event.target.value;
