@@ -14,6 +14,8 @@ import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import { useDeepMemoize } from '@/plugins/useDeepMemoize';
 import { DatabaseIcon } from '@heroicons/react/outline';
 import { useTranslation } from 'react-i18next';
+import {Button} from "@/components/elements/button";
+import {FaExternalLinkAlt} from "react-icons/fa";
 
 export default () => {
     const { t } = useTranslation('arix/server/databases');
@@ -25,7 +27,7 @@ export default () => {
 
     const databases = useDeepMemoize(ServerContext.useStoreState((state) => state.databases.data));
     const setDatabases = ServerContext.useStoreActions((state) => state.databases.setDatabases);
-
+    const phpmyadminUrl = 'https://phpmyadmin.cerbonix.net';
     useEffect(() => {
         setLoading(!databases.length);
         clearFlashes('databases');
@@ -56,11 +58,17 @@ export default () => {
                                 </p>
                             )}
                         </div>
-                        <Can action={'database.create'}>
-                            {databaseLimit > 0 && databaseLimit !== databases.length && (
-                                <CreateDatabaseButton />
-                            )}
-                        </Can>
+                        <div className="flex justify-end gap-2">
+                            <Button>
+                                <FaExternalLinkAlt/>
+                                <a href={phpmyadminUrl} target="_blank">{t('phpmyadmin')}</a>
+                            </Button>
+                            <Can action={'database.create'}>
+                                {databaseLimit > 0 && databaseLimit !== databases.length && (
+                                    <CreateDatabaseButton/>
+                                )}
+                            </Can>
+                        </div>
                     </div>
                     <TableList>
                         <tr>
@@ -69,8 +77,8 @@ export default () => {
                             <th>{t('endpoint')}</th>
                             <th></th>
                         </tr>
-                            {databases.length > 0 ? (
-                                databases.map((database, index) => (
+                        {databases.length > 0 ? (
+                            databases.map((database, index) => (
                                     <DatabaseRow
                                         key={database.id}
                                         database={database}
