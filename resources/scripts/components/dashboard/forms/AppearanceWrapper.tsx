@@ -23,14 +23,25 @@ const AppearanceWrapper = () => {
     const defaultMode = useStoreState((state: ApplicationStore) => state.settings.data!.arix.defaultMode);
 
     const languages = [
+        { key: 'id', value: 'Bahasa Indonesia' },
+        { key: 'cs', value: 'Čeština' },
+        { key: 'da', value: 'Dansk' },
+        { key: 'de', value: 'Deutsch' },
         { key: 'en', value: 'English' },
-        
-        // Make sure 'key' is the same as your folder name.
-        // For our example it would be 'nl'.
-        // Value is the name of the translation which will be shown on your panel.
+        { key: 'es', value: 'Español' },
         { key: 'fr', value: 'Français' },
+        { key: 'hi', value: 'हिंदी' },
+        { key: 'it', value: 'Italiano' },
+        { key: 'ko', value: '한국어' },
+        { key: 'pa', value: 'ਪੰਜਾਬੀ' },
+        { key: 'pt', value: 'Português' },
+        { key: 'pt-BR', value: 'Português (Brasil)' },
+        { key: 'ro', value: 'Română' },
+        { key: 'ru', value: 'Русский' },
+        { key: 'sv', value: 'Svenska' },
+        { key: 'tr', value: 'Türkçe' },
+        { key: 'uk', value: 'Українська' },
     ];
-    
 
     const handleLanguageChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const newLanguage = event.target.value;
