@@ -60,12 +60,14 @@ export default () => {
                         </div>
                         <div className="flex justify-end gap-2">
                             <Button>
-                                <FaExternalLinkAlt/>
-                                <a href={phpmyadminUrl} target="_blank">{t('phpmyadmin')}</a>
+                                <a href={phpmyadminUrl} target="_blank">
+                                    {t('phpmyadmin')}
+                                    <FaExternalLinkAlt />
+                                </a>
                             </Button>
                             <Can action={'database.create'}>
                                 {databaseLimit > 0 && databaseLimit !== databases.length && (
-                                    <CreateDatabaseButton/>
+            <                       CreateDatabaseButton/>
                                 )}
                             </Can>
                         </div>

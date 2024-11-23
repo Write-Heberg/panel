@@ -109,7 +109,7 @@ export default () => {
                     </Modal>
                 )}
             </Formik>
-            <Button onClick={() => setVisible(true)}>New Database</Button>
+            <Button onClick={() => setVisible(true)}>{t('create.button')}</Button>
         </>
     );
 };
