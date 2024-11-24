@@ -33,6 +33,7 @@ return [
         'connection-from' => 'سے کنکشن',
         'connection-from-description' => 'جہاں سے کنکشن کی اجازت ہونی چاہیے۔ کسی بھی جگہ سے کنکشن کی اجازت دینے کے لیے خالی چھوڑ دیں۔.',
         'cancel' => 'منسوخ کریں۔',
-        'create-database' => 'ڈیٹا بیس بنائیں'
+        'create-database' => 'ڈیٹا بیس بنائیں',
+        'button' => 'नया डेटाबेस'
     ]
 ];

@@ -33,6 +33,7 @@ return [
         'connection-from' => 'Anslutningar från',
         'connection-from-description' => 'Varifrån anslutningar bör tillåtas. Lämna tomt för att tillåta anslutningar från var som helst.',
         'cancel' => 'Avbryt',
-        'create-database' => 'Skapa Databas'
+        'create-database' => 'Skapa Databas',
+        'button' => 'Ny databas'
     ]
 ];

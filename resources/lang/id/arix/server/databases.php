@@ -33,6 +33,7 @@ return [
         'connection-from' => 'Koneksi Dari',
         'connection-from-description' => 'Dari mana koneksi harus diizinkan. Biarkan kosong untuk mengizinkan koneksi dari mana saja.',
         'cancel' => 'Batal',
-        'create-database' => 'Buat Database'
+        'create-database' => 'Buat Database',
+        'button' => 'Database Baru'
     ]
 ];

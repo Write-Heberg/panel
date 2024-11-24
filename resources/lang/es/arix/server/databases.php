@@ -33,6 +33,7 @@ return [
         'connection-from' => 'Conexión desde',
         'connection-from-description' => 'Dónde se deben permitir las conexiones. Deja en blanco para permitir conexiones desde cualquier lugar.',
         'cancel' => 'Cancelar',
-        'create-database' => 'Crear base de datos'
+        'create-database' => 'Crear base de datos',
+        'button' => 'Nueva base de datos'
     ]
 ];

@@ -33,6 +33,7 @@ return [
         'connection-from' => '연결 허용 위치',
         'connection-from-description' => '연결을 허용할 위치입니다. 어디서든 연결을 허용하려면 비워두세요.',
         'cancel' => '취소',
-        'create-database' => '데이터베이스 생성'
+        'create-database' => '데이터베이스 생성',
+        'button' => '새 데이터베이스'
     ]
 ];

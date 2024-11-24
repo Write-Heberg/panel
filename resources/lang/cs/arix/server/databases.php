@@ -34,5 +34,6 @@ return [
         'connection-from-description' => 'Z jakých IP bude možné se připojit k této databázi. Ponechte prázdné pro povolení všech IP adres.',
         'cancel' => 'Zrušit',
         'create-database' => 'Vytvořit databázi',
+        'button' => 'Nová databáze',
     ]
 ];

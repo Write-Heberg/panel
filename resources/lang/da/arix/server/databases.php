@@ -33,6 +33,7 @@ return [
         'connection-from' => 'Forbindelse Fra',
         'connection-from-description' => 'Hvor forbindelser skal tillades fra. Lad være tomt for at tillade forbindelser fra overalt.',
         'cancel' => 'Annuller',
-        'create-dabatase' => 'Opret Database'
+        'create-dabatase' => 'Opret Database',
+        'button' => 'Ny database',
     ]
 ];

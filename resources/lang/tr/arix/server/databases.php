@@ -33,6 +33,7 @@ return [
         'connection-from' => 'Bağlantı Noktası',
         'connection-from-description' => 'Bağlantıların nereden izin verileceği. Herhangi bir yerden bağlantı izin vermek için boş bırakın.',
         'cancel' => 'İptal',
-        'create-database' => 'Veritabanı Oluştur'
+        'create-database' => 'Veritabanı Oluştur',
+        'button' => 'Yeni Veritabanı'
     ]
 ];

@@ -33,6 +33,7 @@ return [
         'connection-from' => 'Conectari de la',
         'connection-from-description' => 'De unde ar trebui permise conexiunile. Lasa necompletat pentru a permite conexiuni de oriunde.',
         'cancel' => 'Anuleaza',
-        'create-database' => 'Creaza Baza de Date'
+        'create-database' => 'Creaza Baza de Date',
+        'button' => 'Bază de date nouă'
     ]
 ];

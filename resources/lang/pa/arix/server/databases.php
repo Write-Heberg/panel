@@ -33,6 +33,7 @@ return [
         'connection-from' => 'ਕੁਨੈਕਸ਼ਨ ਫਰਮ',
         'connection-from-description' => 'ਕਿਥੋਂ ਕੁਨੈਕਸ਼ਨ ਦੀਆਂ ਇਜ਼ਾਜ਼ਤਾਂ ਹੋਣਗੀਆਂ। ਹਰੇਕ ਥੋਕ ਇੰਜਾਮ ਦੇਣ ਲਈ ਖਾਲੀ ਛੋਡੋ।',
         'cancel' => 'ਰੱਦ ਕਰੋ',
-        'create-database' => 'ਡਾਟਾਬੇਸ ਬਣਾਓ'
+        'create-database' => 'ਡਾਟਾਬੇਸ ਬਣਾਓ',
+        'button' => 'ਨਵੀਂ ਡੇਟਾਬੇਸ'
     ]
 ];
