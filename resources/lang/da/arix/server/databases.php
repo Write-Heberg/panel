@@ -25,6 +25,7 @@ return [
     'database-details' => 'Database Detaljer',
     'cancel' => 'Annuller',
     'close' => 'Luk',
+    'phpmyadmin' => 'Åbn PhpMyAdmin',
 
     'create' => [
         'title' => 'Opret ny database',

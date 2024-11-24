@@ -25,6 +25,7 @@ return [
     'database-details' => 'Databasdetaljer',
     'cancel' => 'Avbryt',
     'close' => 'Stäng',
+    'phpmyadmin' => 'Öppna databashanteraren',
 
     'create' => [
         'title' => 'Skapa ny databas',

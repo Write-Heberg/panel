@@ -25,6 +25,7 @@ return [
     'database-details' => 'ਡਾਟਾਬੇਸ ਵੇਰਵੇ',
     'cancel' => 'ਰੱਦ ਕਰੋ',
     'close' => 'ਬੰਦ ਕਰੋ',
+    'phpmyadmin' => 'ਡਾਟਾਬੇਸ ਮੈਨੇਜਰ ਖੋਲ੍ਹੋ',
 
     'create' => [
         'title' => 'ਨਵੀਂ ਡਾਟਾਬੇਸ ਬਣਾਓ',

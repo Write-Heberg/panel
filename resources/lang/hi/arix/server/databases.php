@@ -24,7 +24,8 @@ return [
     'rotate-password' => 'پاس ورڈ گھمائیں۔',
     'database-details' => 'ڈیٹا بیس کی تفصیلات',
     'cancel' => 'منسوخ کریں۔',
-    'close' => 'Close',
+    'close' => 'बंद करें',
+    'phpmyadmin' => 'डेटाबेस प्रबंधक खोलें',
 
     'create' => [
         'title' => 'نیا ڈیٹا بیس بنائیں',

@@ -25,6 +25,7 @@ return [
     'database-details' => 'Détails de la base de données',
     'cancel' => 'Annuler',
     'close' => 'Fermer',
+    'phpmyadmin' => 'Ouvrir PhpMyAdmin',
 
     'create' => [
         'title' => 'Créer une nouvelle base de données',

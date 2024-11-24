@@ -25,6 +25,7 @@ return [
     'database-details' => 'Informace o databázi',
     'cancel' => 'Zrušit',
     'close' => 'Zavřít',
+    'phpmyadmin' => 'Otevřít PhpMyAdmin',
 
     'create' => [
         'title' => 'Vytvořit novou databázi',

@@ -25,6 +25,7 @@ return [
     'database-details' => 'Detail Database',
     'cancel' => 'Batal',
     'close' => 'Tutup',
+    'phpmyadmin' => 'Buka PhpMyAdmin',
 
     'create' => [
         'title' => 'Buat database baru',

@@ -25,6 +25,7 @@ return [
     'database-details' => '데이터베이스 세부 정보',
     'cancel' => '취소',
     'close' => '닫기',
+    'phpmyadmin' => '데이터베이스 관리자 열기',
 
     'create' => [
         'title' => '새로운 데이터베이스 생성',

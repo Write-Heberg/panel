@@ -25,6 +25,7 @@ return [
     'database-details' => 'Veritabanı Detayları',
     'cancel' => 'İptal',
     'close' => 'Kapat',
+    'phpmyadmin' => 'Veritabanı yöneticisini aç',
 
     'create' => [
         'title' => 'Yeni veritabanı oluştur',

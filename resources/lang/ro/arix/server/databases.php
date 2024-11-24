@@ -25,6 +25,7 @@ return [
     'database-details' => 'Detalii Baza de Date',
     'cancel' => 'Anulare',
     'close' => 'Inchide',
+    'phpmyadmin' => 'Deschide PhpMyAdmin',
 
     'create' => [
         'title' => 'Creaza o noua baza de date',
