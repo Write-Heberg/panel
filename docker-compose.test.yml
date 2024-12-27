@@ -1,0 +1,120 @@
+services:
+  panel:
+    build:
+      context: "."
+      dockerfile: "./Dockerfile"
+    container_name: ${CONTAINER_NAME_PANEL:-pterodactyl-test-panel}
+    pull_policy: build # Portainer need it for rebuild when updating
+    restart: always
+    links:
+      - database
+      - cache
+    volumes:
+      - "/data/volumes/pterodactyl/test/www/var/:/app/var/"
+      - "/data/volumes/pterodactyl/test/www/nginx/:/etc/nginx/http.d/"
+      - "/data/volumes/pterodactyl/test/www/certs/:/etc/letsencrypt/"
+      - "/data/volumes/pterodactyl/test/www/logs/:/app/storage/logs"
+    env_file: stack.env
+    environment:
+      APP_ENV: "${APP_ENV:-production}"
+      APP_ENVIRONMENT_ONLY: "${APP_ENVIRONMENT_ONLY:-false}"
+      APP_URL: "${APP_URL:-panel-test.cerbonix.eu}"
+      APP_TIMEZONE: "${APP_TIMEZONE:-Europe/Paris}"
+      APP_SERVICE_AUTHOR: "support@cerbonix.net"
+      DB_HOST: "${DB_HOST:-database}"
+      DB_PORT: "${DB_PORT:-3306}"
+      DB_PASSWORD: "${DB_PASSWORD:-CHANGE_ME}"
+      MAIL_FROM: "${MAIL_FROM:-noreply@cerbonix.net}"
+      MAIL_FROM_NAME: "${MAIL_FROM_NAME:-Cerbonix Test}"
+      MAIL_DRIVER: "${MAIL_DRIVER:-smtp}"
+      MAIL_HOST: "${MAIL_HOST:-smtp.office365.com}"
+      MAIL_PORT: "${MAIL_PORT:-587}"
+      MAIL_USERNAME: "${MAIL_USERNAME}"
+      MAIL_PASSWORD: "${MAIL_PASSWORD}"
+      MAIL_ENCRYPTION: "${MAIL_ENCRYPTION:-ssl}"
+      CACHE_DRIVER: "${CACHE_DRIVER:-redis}"
+      SESSION_DRIVER: "${SESSION_DRIVER:-redis}"
+      QUEUE_DRIVER: "${QUEUE_DRIVER:-redis}"
+      REDIS_HOST: "${REDIS_HOST:-cache}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.panel-test.rule=Host(`${TRAEFIK_URL_PANEL:-panel-test.cerbonix.eu}`)"
+      - "traefik.http.routers.panel-test.entrypoints=websecure"
+      - "traefik.http.routers.panel-test.tls=true"
+      - "traefik.http.routers.panel-test.tls.domains[0].main=cerbonix.eu"
+      - "traefik.http.routers.panel-test.tls.domains[0].sans=*.cerbonix.eu"
+      - "traefik.http.routers.panel-testhttp.rule=Host(`${TRAEFIK_URL_PANEL:-panel-test.cerbonix.eu}`)"
+      - "traefik.http.routers.panel-testhttp.entrypoints=web"
+      - "traefik.http.routers.panel-testhttp.middlewares=redirecttohttpspanel-test@docker"
+      - "traefik.http.middlewares.redirecttohttpspanel-test.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.redirecttohttpspanel-test.redirectscheme.permanent=true"
+      - "traefik.http.services.redirecttohttpspanel-test.loadbalancer.server.port=80"
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+    networks:
+      - panel-test
+
+  phpMyAdmin:
+    image: phpmyadmin:latest
+    container_name: ${CONTAINER_NAME_PMA:-pterodactyl-test-phpmyadmin}
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /data/volumes/pterodactyl/test/phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+      - /data/volumes/pterodactyl/test/phpmyadmin/origin_ca_rsa_root_cloudflare.pem:/etc/mysql/origin_ca_rsa_root_cloudflare.pem
+    depends_on:
+      - panel
+    links:
+      - database
+      - panel
+    restart: always
+    environment:
+      PMA_HOSTS: ${PMA_HOSTS:-NODE01-FR.CERBONIX.NET, DATABASE}
+      PMA_ABSOLUTE_URI: ${PMA_ABSOLUTE_URI:-https://phpmyadmin-test.cerbonix.eu}
+      UPLOAD_LIMIT: ${UPLOAD_LIMIT:-1024M}
+      HIDE_PHP_VERSION: ${HIDE_PHP_VERSION:-true}
+      MAX_EXECUTION_TIME: ${MAX_EXECUTION_TIME:-600}
+      MEMORY_LIMIT: ${MEMORY_LIMIT:-1024M}
+    
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.phpmyadmin-test.rule=Host(`${TRAEFIK_URL_PMA:-phpmyadmin-test.cerbonix.eu}`)"
+      - "traefik.http.routers.phpmyadmin-test.entrypoints=websecure"
+      - "traefik.http.routers.phpmyadmin-test.tls=true"
+      - "traefik.http.routers.phpmyadmin-test.tls.domains[0].main=cerbonix.eu"
+      - "traefik.http.routers.phpmyadmin-test.tls.domains[0].sans=*.cerbonix.eu"
+      - "traefik.http.routers.phpmyadmin-testhttp.rule=Host(`${TRAEFIK_URL_PMA:-phpmyadmin-test.cerbonix.eu}`)"
+      - "traefik.http.routers.phpmyadmin-testhttp.entrypoints=web"
+      - "traefik.http.routers.phpmyadmin-testhttp.middlewares=redirecttohttpsphpmyadmin-test@docker"
+      - "traefik.http.middlewares.redirecttohttpsphpmyadmin-test.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.redirecttohttpsphpmyadmin-test.redirectscheme.permanent=true"
+      - "traefik.http.services.redirecttohttpsphpmyadmin-test.loadbalancer.server.port=80"
+    networks:
+      - panel-test
+
+  database:
+    image: mariadb:10.5
+    container_name: ${CONTAINER_NAME_DB:-pterodactyl-test-database}
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - "/data/volumes/pterodactyl/test/database:/var/lib/mysql"
+    environment:
+      MYSQL_PASSWORD: "${DB_PASSWORD:-CHANGE_ME}"
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-root}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE:-panel}"
+      MYSQL_USER: "${MYSQL_USER:-pterodactyl}"
+    networks:
+      - panel-test
+
+  cache:
+    image: redis:alpine
+    container_name: ${CONTAINER_NAME_CACHE:-pterodactyl-test-cache}
+    restart: always
+    networks:
+      - panel-test
+
+networks:
+  panel-test:
+    name: ${NAME_NETWORK:-public_wan}
+    external: true

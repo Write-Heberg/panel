@@ -3,11 +3,11 @@ services:
     build:
       context: "."
       dockerfile: "./Dockerfile"
-    container_name: ${CONTAINER_NAME_PANEL:-ptero-PANEL-CBX}
+    container_name: ${CONTAINER_NAME_PANEL:-pterodactyl-prod-panel}
     pull_policy: build # Portainer need it for rebuild when updating
     restart: always
     links:
-      - databases
+      - database
       - cache
     volumes:
       - "/data/volumes/pterodactyl/prod/www/var/:/app/var/"
@@ -16,26 +16,26 @@ services:
       - "/data/volumes/pterodactyl/prod/www/logs/:/app/storage/logs"
     env_file: stack.env
     environment:
+      APP_ENV: "${APP_ENV:-production}"
+      APP_ENVIRONMENT_ONLY: "${APP_ENVIRONMENT_ONLY:-false}"
       APP_URL: "${APP_URL:-panel.cerbonix.net}"
       APP_TIMEZONE: "${APP_TIMEZONE:-Europe/Paris}"
       APP_SERVICE_AUTHOR: "support@cerbonix.net"
+      DB_HOST: "${DB_HOST:-database}"
+      DB_PORT: "${DB_PORT:-3306}"
+      DB_PASSWORD: "${DB_PASSWORD:-CHANGE_ME}"
       MAIL_FROM: "${MAIL_FROM:-noreply@cerbonix.net}"
-      MAIL_FROM_NAME: "${MAIL_FROM_NAME:-ASS Cerbonix}"
+      MAIL_FROM_NAME: "${MAIL_FROM_NAME:-Cerbonix}"
       MAIL_DRIVER: "${MAIL_DRIVER:-smtp}"
-      MAIL_HOST: "${MAIL_HOST:-cerbonix-net.mail.protection.outlook.com}"
-      MAIL_PORT: "${MAIL_PORT:-25}"
+      MAIL_HOST: "${MAIL_HOST:-smtp.office365.com}"
+      MAIL_PORT: "${MAIL_PORT:-587}"
       MAIL_USERNAME: "${MAIL_USERNAME}"
       MAIL_PASSWORD: "${MAIL_PASSWORD}"
       MAIL_ENCRYPTION: "${MAIL_ENCRYPTION:-ssl}"
-      DB_PASSWORD: "${DB_PASSWORD:-CHANGE_ME}"
-      APP_ENV: "${APP_ENV:-production}"
-      APP_ENVIRONMENT_ONLY: "${APP_ENVIRONMENT_ONLY:-false}"
       CACHE_DRIVER: "${CACHE_DRIVER:-redis}"
       SESSION_DRIVER: "${SESSION_DRIVER:-redis}"
       QUEUE_DRIVER: "${QUEUE_DRIVER:-redis}"
       REDIS_HOST: "${REDIS_HOST:-cache}"
-      DB_HOST: "${DB_HOST:-databases}"
-      DB_PORT: "${DB_PORT:-3306}"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.panel.rule=Host(`${TRAEFIK_URL_PANEL:-panel.cerbonix.net}`)"
@@ -56,7 +56,7 @@ services:
 
   phpMyAdmin:
     image: phpmyadmin:latest
-    container_name: ${CONTAINER_NAME_PMA:-ptero-PMA-CBX}
+    container_name: ${CONTAINER_NAME_PMA:-pterodactyl-prod-phpmyadmin}
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -65,11 +65,11 @@ services:
     depends_on:
       - panel
     links:
-      - databases
+      - database
       - panel
     restart: always
     environment:
-      PMA_HOSTS: ${PMA_HOSTS:-NODE01-FR.CERBONIX.NET, DATABASES}
+      PMA_HOSTS: ${PMA_HOSTS:-NODE01-FR.CERBONIX.NET, DATABASE}
       PMA_ABSOLUTE_URI: ${PMA_ABSOLUTE_URI:-https://phpmyadmin.cerbonix.net}
       UPLOAD_LIMIT: ${UPLOAD_LIMIT:-1024M}
       HIDE_PHP_VERSION: ${HIDE_PHP_VERSION:-true}
@@ -92,9 +92,9 @@ services:
     networks:
       - panel
 
-  databases:
+  database:
     image: mariadb:10.5
-    container_name: ${CONTAINER_NAME_DB:-ptero-DB-CBX}
+    container_name: ${CONTAINER_NAME_DB:-pterodactyl-prod-database}
     restart: always
     command: --default-authentication-plugin=mysql_native_password
     volumes:
@@ -109,7 +109,7 @@ services:
 
   cache:
     image: redis:alpine
-    container_name: ${CONTAINER_NAME_CACHE:-ptero-CACHE-CBX}
+    container_name: ${CONTAINER_NAME_CACHE:-pterodactyl-prod-cache}
     restart: always
     networks:
       - panel
