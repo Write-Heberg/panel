@@ -25,6 +25,7 @@ import { LuFilePlus } from "react-icons/lu";
 import { FolderOpenIcon, ArrowNarrowDownIcon, SearchIcon } from '@heroicons/react/outline';
 import { Formik } from 'formik';
 import Field from '@/components/elements/Field';
+import Trashcan from '@/components/server/files/Trashcan';
 import { hashToPath } from '@/helpers';
 import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
@@ -191,9 +192,8 @@ export default () => {
                             </div>
                         </div>
 
-                        {!files.length ? (
-                            <p css={tw`text-sm text-neutral-300 text-center`}>{t('is-empty')}</p>
-                        ) : (
+                        <Trashcan />
+                        {files.length > 0 && (
                             <CSSTransition classNames={'fade'} timeout={150} appear in>
                                 <div>
                                     {files.length > 250 && (

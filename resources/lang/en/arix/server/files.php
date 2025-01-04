@@ -16,11 +16,12 @@ return [
     'download' => 'Download',
     'update' => 'Update',
     'file-mode' => 'File Mode',
-    'you-cant-recover' => 'You will not be able to recover the contents of',
-    'once-deleted' => 'once deleted.',
+    'you-cant-recover' => 'Once an item has been deleted, it can be retrieved from the recycle bin for 24 hours, after which it will be deleted',
+    'once-deleted' => 'will be permanently deleted.',
     'delete-files' => 'Delete Files',
-    'are-you-sure' => 'Are you sure you want to delete',
-    'this-is-permanent-action' => 'This is a permanent action and the files cannot be recovered.',
+    'are-you-sure' => 'Once an item has been deleted, it can be retrieved from the recycle bin for 24 hours, after which it will be deleted.',
+    'this-is-permanent-action' => 'will be permanently deleted.',
+    'delete-confirm-message' => 'Are you sure you want to remove these elements? After deleting an item, it can be retrieved from the recycle bin for 24 hours, after which the items below will be permanently deleted.',
     'name' => 'name',
     'size' => 'size',
     'date' => 'date',
@@ -39,7 +40,7 @@ return [
     'rename-description' => 'Enter the new name and directory of this file or folder, relative to the current directory.',
     'new-location' => 'New location',
     'drag-and-drop' => 'Drag and drop files to upload.',
-
+    
     'edit' => [
         'youre-editing' => 'You\'re editing a',
         'will-be-exluded' => 'file. Any files or directories listed in here will be excluded from backups. Wildcards are supported by using an asterisk',

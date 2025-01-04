@@ -78,6 +78,9 @@ class ServerDeletionService
             }
 
             $server->delete();
+            foreach(DeletedFile::where('server_id', $server->id)->get() as $deleted_file) {
+                $deleted_file->delete();
+            }
         });
     }
 }

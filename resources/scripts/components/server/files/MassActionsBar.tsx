@@ -51,7 +51,7 @@ const MassActionsBar = () => {
         clearFlashes('files');
         setLoadingMessage('Deleting files...');
 
-        deleteFiles(uuid, directory, selectedFiles)
+        deleteFiles(uuid, directory, selectedFiles, false)
             .then(() => {
                 mutate((files) => files.filter((f) => selectedFiles.indexOf(f.name) < 0), false);
                 setSelectedFiles([]);
@@ -76,10 +76,9 @@ const MassActionsBar = () => {
                     onClose={() => setShowConfirm(false)}
                     onConfirmed={onClickConfirmDeletion}
                 >
-                    <p className={'mb-2'}>
-                        {t('are-you-sure')}&nbsp;
-                        <span className={'font-semibold text-gray-50'}>{selectedFiles.length} files</span>? {t('this-is-permanent-action')}
-                    </p>
+                <p className={'mb-2'}>
+                    {t('delete-confirm-message', { count: selectedFiles.length })}
+                </p>
                     {selectedFiles.slice(0, 15).map((file) => (
                         <li key={file}>{file}</li>
                     ))}

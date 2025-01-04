@@ -73,7 +73,7 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
         // If the delete actually fails, we'll fetch the current directory contents again automatically.
         mutate((files) => files.filter((f) => f.key !== file.key), false);
 
-        deleteFiles(uuid, directory, [file.name]).catch((error) => {
+        deleteFiles(uuid, directory, [file.name], false).catch((error) => {
             mutate();
             clearAndAddHttpError({ key: 'files', error });
         });
@@ -132,7 +132,7 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
                 onConfirmed={doDeletion}
             >
                 {t('you-cant-recover')}&nbsp;
-                <span className={'font-semibold text-gray-50'}>{file.name}</span> {t('once-deleted')}
+                <span className={'font-semibold text-gray-50'}>"{file.name}"</span> {t('once-deleted')}
             </Dialog.Confirm>
             <DropdownMenu
                 ref={onClickRef}

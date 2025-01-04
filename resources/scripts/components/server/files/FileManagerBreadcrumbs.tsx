@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ServerContext } from '@/state/server';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useRouteMatch } from 'react-router-dom';
 import { encodePathSegments, hashToPath } from '@/helpers';
 import tw from 'twin.macro';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +16,8 @@ export default ({ renderLeft, withinFileEditor, isNewFile }: Props) => {
     const [file, setFile] = useState<string | null>(null);
     const id = ServerContext.useStoreState((state) => state.server.data!.id);
     const directory = ServerContext.useStoreState((state) => state.files.directory);
+    const match = useRouteMatch();
+    const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const { hash } = useLocation();
 
     useEffect(() => {
@@ -46,23 +48,29 @@ export default ({ renderLeft, withinFileEditor, isNewFile }: Props) => {
                 {t('container')}
             </NavLink>
             /
-            {breadcrumbs().map((crumb, index) =>
-                crumb.path ? (
-                    <React.Fragment key={index}>
-                        <NavLink
-                            to={`/server/${id}/files#${encodePathSegments(crumb.path)}`}
-                            css={tw`px-1 text-neutral-200 no-underline hover:text-neutral-100`}
-                        >
-                            {crumb.name}
-                        </NavLink>
-                        /
-                    </React.Fragment>
-                ) : (
-                    <span key={index} css={tw`px-1 text-neutral-300`}>
-                        {crumb.name}
-                    </span>
-                )
-            )}
+            {!breadcrumbs().some((item) => item.name === uuid) &&
+    breadcrumbs().map((crumb, index) =>
+        crumb.path ? (
+            <React.Fragment key={index}>
+                <NavLink
+                    to={`/server/${id}/files#${encodePathSegments(crumb.path)}`}
+                    css={tw`px-1 text-neutral-200 no-underline hover:text-neutral-100`}
+                >
+                    {crumb.name}
+                </NavLink>
+                /
+            </React.Fragment>
+        ) : (
+            <span key={index} css={tw`px-1 text-neutral-300`}>
+                {crumb.name}
+            </span>
+        )
+    )}
+{(match.url.endsWith('/files/trashcan') || breadcrumbs().some((item) => item.name === uuid)) && (
+    <a css={tw`px-1 text-neutral-300`} href={`/server/${uuid}/files/trashcan`}>
+        Recycle Bin {breadcrumbs().some((item) => item.name === uuid) && '/'}
+    </a>
+)}
             {file && (
                 <React.Fragment>
                     <span css={tw`px-1 text-neutral-300`}>{file}</span>

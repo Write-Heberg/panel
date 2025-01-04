@@ -77,6 +77,8 @@ Route::group([
     Route::group(['prefix' => '/files'], function () {
         Route::get('/list', [Client\Servers\FileController::class, 'directory']);
         Route::get('/contents', [Client\Servers\FileController::class, 'contents']);
+        Route::get('/trashsize', [Client\Servers\TrashcanController::class, 'size']);
+        Route::post('/restore', [Client\Servers\TrashcanController::class, 'restore']);
         Route::get('/download', [Client\Servers\FileController::class, 'download']);
         Route::put('/rename', [Client\Servers\FileController::class, 'rename']);
         Route::post('/copy', [Client\Servers\FileController::class, 'copy']);
