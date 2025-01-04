@@ -14,6 +14,7 @@ import AccountOverviewContainer from '@/components/dashboard/AccountOverviewCont
 import ActivityLogContainer from '@/components/dashboard/activity/ActivityLogContainer';
 import ServerActivityLogContainer from '@/components/server/ServerActivityLogContainer';
 import { UserIcon, EyeIcon, ViewGridIcon, TerminalIcon, FolderOpenIcon, DatabaseIcon, CalendarIcon, UserGroupIcon, ArchiveIcon, GlobeIcon, AdjustmentsIcon, CogIcon } from '@heroicons/react/outline'
+import TrashcanContainer from '@/components/server/files/TrashcanContainer';
 
 const FileEditContainer = lazy(() => import('@/components/server/files/FileEditContainer'));
 const ScheduleEditContainer = lazy(() => import('@/components/server/schedules/ScheduleEditContainer'));
@@ -159,6 +160,12 @@ export default {
                 name: 'files',
                 icon: FolderOpenIcon,
                 component: FileManagerContainer,
+            },
+            {
+                path: '/files/trashcan',
+                permission: 'file.*',
+                name: 'Corbeille',
+                component: TrashcanContainer,
             },
             {
                 path: '/files/:action(edit|new)',

@@ -22,6 +22,9 @@ use Pterodactyl\Http\Requests\Api\Client\Servers\Files\CompressFilesRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Files\DecompressFilesRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Files\GetFileContentsRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Files\WriteFileContentRequest;
+use Throwable;
+use Carbon\Carbon;
+use Pterodactyl\Models\DeletedFile;
 
 class FileController extends ClientApiController
 {
@@ -214,16 +217,79 @@ class FileController extends ClientApiController
      */
     public function delete(DeleteFileRequest $request, Server $server): JsonResponse
     {
-        $this->fileRepository->setServer($server)->deleteFiles(
-            $request->input('root'),
-            $request->input('files')
-        );
-
-        Activity::event('server:file.delete')
-            ->property('directory', $request->input('root'))
-            ->property('files', $request->input('files'))
-            ->log();
-
+        // Détermine si la suppression est permanente ou non
+        $perm = $request->input('perm');
+    
+        // Récupère la liste des fichiers dans le répertoire actuel
+        $files = $this->fileRepository
+            ->setServer($server)
+            ->getDirectory($request->get('root') ?? '/');
+    
+        // Vérifie et crée le dossier de corbeille si nécessaire
+        try {
+            $deleted_files = $this->fileRepository->setServer($server)->getDirectory('/' . $server->uuid);
+        } catch (Throwable $e) {
+            $this->fileRepository
+                ->setServer($server)
+                ->createDirectory($server->uuid, '/');
+        }
+    
+        // Traite chaque fichier à supprimer
+        foreach($request->input('files') as $deletion_file) {
+            if(!$perm) {
+                // Récupère les informations du fichier
+                foreach($files as $file) {
+                    if($file['name'] == $deletion_file) {
+                        $size = $file['size'];
+                        $is_file = $file['file'];
+                    }
+                }
+    
+                // Gère les fichiers en doublon dans la corbeille
+                if(DeletedFile::where('file_name', $deletion_file)->first() && $deleted_files) {
+                    $exist = 0;
+                    foreach($deleted_files as $deleted_file) {
+                        if(preg_match("@{$deletion_file} \\((?<fileID>\\d+)\\)@", $deleted_file['name']) || $deletion_file === $deleted_file['name']) {
+                            $exist = $exist + 1;
+                        }
+                    }
+                    if($exist > 0) {
+                        $this->fileRepository->setServer($server)->renameFiles($request->input('root'), array(array('from' => $deletion_file, 'to' => $deletion_file . ' (' . (string) $exist . ')')));
+                        $deletion_file = $deletion_file . ' (' . (string) $exist . ')';
+                    }
+                }
+    
+                // Enregistre le fichier dans la base de données
+                DeletedFile::insert([
+                    'server_id' => $server->id,
+                    'directory' => $request->input('root'),
+                    'file_name' => $deletion_file,
+                    'is_file' => $is_file,
+                    'size' => $size,
+                    'deleted_at' => Carbon::now(),
+                ]);
+    
+                // Déplace le fichier vers la corbeille
+                $count = substr_count($request->input('root'), '/');
+                $this->fileRepository
+                    ->setServer($server)
+                    ->renameFiles($request->input('root'), array(array(
+                        'from' => $deletion_file,
+                        'to' => str_repeat('../', $count) . $server->uuid . '/' . $deletion_file
+                    )));
+            } else {
+                // Suppression permanente
+                $deleted_file = DeletedFile::where('server_id', $server->id)->where('file_name', $deletion_file)->first();
+                if($deleted_file) $deleted_file->delete();
+    
+                $this->fileRepository->setServer($server)
+                    ->deleteFiles(
+                        $request->input('root'),
+                        $request->input('files')
+                    );
+            }
+        }
+    
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
 
