@@ -263,3 +263,22 @@ Route::group(['prefix' => 'nests'], function () {
     Route::delete('/egg/{egg:id}', [Admin\Nests\EggController::class, 'destroy']);
     Route::delete('/egg/{egg:id}/variables/{variable:id}', [Admin\Nests\EggVariableController::class, 'destroy']);
 });
+
+/*
+|--------------------------------------------------------------------------
+| Permission Controller Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/permissions
+|
+*/
+Route::group(['prefix' => 'permissions'], function () {
+    Route::get('/', [Admin\PermissionController::class, 'index'])->name('admin.permissions.index');
+    Route::get('/new', [Admin\PermissionController::class, 'new'])->name('admin.permissions.new');
+    Route::get('/edit/{role:id}', [Admin\PermissionController::class, 'edit'])->name('admin.permissions.edit');
+
+    Route::get('/delete/{role:id}', [Admin\PermissionController::class, 'destroy']);
+
+    Route::post('/new', [Admin\PermissionController::class, 'create']);
+    Route::post('/edit/{role:id}', [Admin\PermissionController::class, 'update']);
+});
