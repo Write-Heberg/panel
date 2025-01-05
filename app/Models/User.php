@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Pterodactyl\Models\Traits\HasAccessTokens;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Pterodactyl\Traits\Helpers\AvailableLanguages;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -125,6 +126,7 @@ class User extends Model implements
         'totp_authenticated_at',
         'gravatar',
         'root_admin',
+        'role',
     ];
 
     /**
@@ -134,6 +136,7 @@ class User extends Model implements
         'root_admin' => 'boolean',
         'use_totp' => 'boolean',
         'gravatar' => 'boolean',
+        'role' => 'int',
         'totp_authenticated_at' => 'datetime',
     ];
 
@@ -151,6 +154,7 @@ class User extends Model implements
         'language' => 'en',
         'use_totp' => false,
         'totp_secret' => null,
+        'role' => null,
     ];
 
     /**
@@ -165,6 +169,7 @@ class User extends Model implements
         'name_last' => 'required|string|between:1,191',
         'password' => 'sometimes|nullable|string',
         'root_admin' => 'boolean',
+        'role' => 'nullable|numeric',
         'language' => 'string',
         'use_totp' => 'boolean',
         'totp_secret' => 'nullable|string',
@@ -229,6 +234,14 @@ class User extends Model implements
     public function servers(): HasMany
     {
         return $this->hasMany(Server::class, 'owner_id');
+    }
+
+    /**
+     * Returns the role that a user has.
+     */
+    public function getRole(): HasOne
+    {
+        return $this->hasOne(Role::class, 'id', 'role');
     }
 
     public function apiKeys(): HasMany
