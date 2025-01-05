@@ -3,6 +3,7 @@
 namespace Pterodactyl\Services\Servers;
 
 use Illuminate\Http\Response;
+use Pterodactyl\Models\DeletedFile;
 use Pterodactyl\Models\Server;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\ConnectionInterface;
