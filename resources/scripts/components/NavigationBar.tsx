@@ -6,6 +6,7 @@ import { ApplicationStore } from '@/state';
 import SearchContainer from '@/components/dashboard/search/SearchContainer';
 import tw from 'twin.macro';
 import styled from 'styled-components/macro';
+import getUserRole from '@/api/getUserRole';
 import http from '@/api/http';
 import ServerSelector from '@/components/elements/ServerSelector';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
@@ -70,16 +71,32 @@ const RightNavigation = styled.div`
     }
 `;
 
+// Définition du composant ClientDropdown qui accepte une prop sideBar de type Dropdown
 const ClientDropdown = ({ sideBar }: Dropdown) => {
+    // État pour gérer le processus de déconnexion
     const [isLoggingOut, setIsLoggingOut] = useState(false);
+    // État pour gérer le mode sombre/clair
     const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+    // Référence pour le menu déroulant
     const onClickRef = useRef<DropdownMenu>(null);
-    
+   
+    // Hook de traduction pour l'internationalisation
     const { t } = useTranslation(['arix/navigation']);
-
+    // Récupération de l'état du toggleur de mode depuis le store
     const modeToggler = useStoreState((state: ApplicationStore) => state.settings.data!.arix.modeToggler);
-    const rootAdmin = useStoreState((state: ApplicationStore) => state.user.data!.rootAdmin);
+    // État pour stocker le rôle de l'utilisateur
+    const [userRoleData, setUserRoleData] = React.useState(false);
 
+    // Effect pour récupérer le rôle de l'utilisateur au chargement du composant
+    React.useEffect(() => {
+        async function getUserRoleData () {
+            const user = await getUserRole();
+            setUserRoleData(user.role);
+        }
+        getUserRoleData();
+    }, []);
+
+    // Effect pour initialiser le mode sombre/clair depuis le localStorage
     useEffect(() => {
         const storedMode = localStorage.getItem('darkMode');
         if (storedMode !== null) {
@@ -87,15 +104,18 @@ const ClientDropdown = ({ sideBar }: Dropdown) => {
         }
     }, []);
 
+    // Effect pour sauvegarder le mode sombre/clair dans le localStorage et mettre à jour la classe du body
     useEffect(() => {
         localStorage.setItem('darkMode', String(isDarkMode));
         document.body.classList.toggle('lightmode', isDarkMode);
     }, [isDarkMode]);
 
+    // Fonction pour basculer entre le mode sombre et clair
     const toggleDarkMode = () => {
         setIsDarkMode((prevMode) => !prevMode);
     };
 
+    // Fonction pour gérer la déconnexion
     const onTriggerLogout = () => {
         setIsLoggingOut(true);
         http.post('/auth/logout').finally(() => {
@@ -110,28 +130,45 @@ const ClientDropdown = ({ sideBar }: Dropdown) => {
             sideBar={sideBar ? true : false}
             renderToggle={(onClick) => (
                 <div onClick={onClick} className="cursor-pointer flex gap-x-2 items-center">
-                    <UserAvatar /> 
+                    <UserAvatar />
                     <div>
                         <p>{t`account`}</p>
                     </div>
                 </div>
             )}
         >
+            {/* Overlay de chargement pour la déconnexion */}
             <SpinnerOverlay visible={isLoggingOut} />
+            
+            {/* Lien vers l'aperçu du compte */}
             <DropdownLinkRow href="/account">
                 <UserCircleIcon className="w-5" /> <span className={'whitespace-nowrap'}>{t`account-overview`}</span>
             </DropdownLinkRow>
-            {rootAdmin && <DropdownLinkRow href="/admin">
-                <CogIcon className="w-5" /> {t`admin-area`}
-            </DropdownLinkRow> }
+
+            {/* MODIFICATION PRINCIPALE : Condition modifiée pour afficher le lien d'administration */}
+            {/* Ancien code : {rootAdmin && (...)} */}
+            {/* Nouveau code : Utilise userRoleData comme condition */}
+            {userRoleData === true && (
+                <DropdownLinkRow href="/admin">
+                    <CogIcon className="w-5" /> {t`admin-area`}
+                </DropdownLinkRow>
+            )}
+
+            {/* Lien vers l'activité du compte */}
             <DropdownLinkRow href="/account/activity">
                 <EyeIcon className="w-5" /> {t`account-activity`}
             </DropdownLinkRow>
+
+            {/* Bouton de basculement du mode sombre/clair (conditionnel) */}
             {String(modeToggler) == 'true' &&
             <DropdownButtonRow onClick={toggleDarkMode}>
                 <MoonIcon className="w-5" /> {t`dark-light-mode`}
             </DropdownButtonRow>}
+
+            {/* Séparateur */}
             <hr className={'border-b border-gray-500 my-2'}/>
+
+            {/* Bouton de déconnexion */}
             <DropdownButtonRow danger onClick={onTriggerLogout}>
                 <LogoutIcon className="w-5" /> {t`logout`}
             </DropdownButtonRow>
