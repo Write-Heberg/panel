@@ -5,6 +5,7 @@ namespace Pterodactyl\Http\Controllers\Admin;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Pterodactyl\Models\User;
+use Pterodactyl\Models\Role;
 use Pterodactyl\Models\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Http\RedirectResponse;
@@ -76,6 +77,8 @@ class UserController extends Controller
     public function view(User $user): View
     {
         return $this->view->make('admin.users.view', [
+            'roles' => Role::all(),
+            'u_role' => $user->role,
             'user' => $user,
             'languages' => $this->getAvailableLanguages(true),
         ]);
