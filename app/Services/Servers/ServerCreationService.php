@@ -165,8 +165,8 @@ class ServerCreationService
         ]);
         // can't be included when creating the server due to server id being unknown at
         // that point
-        Server::where('id', $server->id)->update([
-            'position' => Server::where('owner_id', $server->owner_id)->count() + 1,
+        Server::where('id', $model->id)->update([
+            'position' => Server::where('owner_id', $model->owner_id)->count() + 1,
         ]);
         return $model;
     }
