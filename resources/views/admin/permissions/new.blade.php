@@ -14,11 +14,11 @@
 
 @section('content')
     <div class="row">
-        <form method="POST" action="{{ route('admin.permissions.new') }}">
+        <form method="POST" action="{{ route('admin.permissions.new') }}" id="form">
             <div class="col-sm-8 col-xs-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Select Permissions</h3>
+                        <h3 class="box-title">Admin Permissions</h3>
                     </div>
                     <div class="box-body table-responsive no-padding">
                         <table class="table table-hover">
@@ -55,15 +55,15 @@
                             <tr>
                                 <td class="col-sm-3 strong">Permission Managment</td>
                                 <td class="col-sm-3 radio radio-primary text-center">
-                                    <input type="radio" id="r3" name="permissions" value="1">
+                                    <input type="radio" id="r3" name="permission" value="1">
                                     <label for="r3">Read</label>
                                 </td>
                                 <td class="col-sm-3 radio radio-primary text-center">
-                                    <input type="radio" id="rw3" name="permissions" value="2">
+                                    <input type="radio" id="rw3" name="permission" value="2">
                                     <label for="rw3">Read &amp; Write</label>
                                 </td>
                                 <td class="col-sm-3 radio text-center">
-                                    <input type="radio" id="n3" name="permissions" value="0" checked>
+                                    <input type="radio" id="n3" name="permission" value="0" checked>
                                     <label for="n3">None</label>
                                 </td>
                             </tr>
@@ -190,9 +190,42 @@
                     </div>
                     <div class="box-footer">
                         {{ csrf_field() }}
-                        <button type="submit" class="btn btn-success btn-sm pull-right">Create Role</button>
+                        <a id="none" class="btn btn-info btn-sm pull-left">Select None</a>
+                        <a id="all" class="btn btn-info btn-sm pull-left">Select All</a>
+                        <button type="submit" class="btn btn-success btn-sm pull-right">Update Role</button>
                     </div>
                 </div>
+            </div>
+            <div class="col-sm-12">
+                @foreach($permissions as $permission => $perms)
+                    @if($permission !== 'websocket')
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">{{ $permission }}</h3>
+                            </div>
+                            <div class="box-body perm-box-body">
+                                <p class="description">{{ $perms['description'] }}</p>
+                                @foreach($perms['keys'] as $key => $desc)
+                                    <?php
+                                        $id = bin2hex(random_bytes(5));
+                                    ?>
+                                    <div class="form-group">
+                                        <div class="checkbox checkbox-primary no-margin-bottom">
+                                            <input id="{{ $id }}" name="permissions[]" type="checkbox" value="{{ $permission . '.' . $key }}"/>
+                                            <label for="{{ $id }}" class="strong">
+                                                {{ $key }}
+                                            </label>
+                                        </div>
+                                        <p class="text-muted small">{{ $desc }}</p>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+                    @if ($loop->iteration % 2 === 0)
+                        <div class="clearfix visible-lg-block visible-md-block visible-sm-block"></div>
+                    @endif
+                @endforeach
             </div>
         </form>
     </div>
@@ -201,5 +234,33 @@
 @section('footer-scripts')
     @parent
     <script>
+        document.getElementById('all').onclick = function() {
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            for (var checkbox of checkboxes) {
+                checkbox.checked = true;
+            }
+            radios = document.querySelector('#form').elements;
+            for( i = 0; i < radios.length; i++ ) {
+                if( radios[i].type == "radio" ) {
+                    if (radios[i].value == 2 ) {
+                        radios[i].checked = true;
+                    }
+                }
+            }
+        }
+        document.getElementById('none').onclick = function() {
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            for (var checkbox of checkboxes) {
+                checkbox.checked = false;
+            }
+            radios = document.querySelector('#form').elements;
+            for( i = 0; i < radios.length; i++ ) {
+                if( radios[i].type == "radio" ) {
+                    if (radios[i].value == 0 ) {
+                        radios[i].checked = true;
+                    }
+                }
+            }
+        }
     </script>
 @endsection

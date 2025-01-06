@@ -25,6 +25,7 @@ class Role extends Model
         'p_users',
         'p_mounts',
         'p_nests',
+        'permissions',
     ];
 
     public static array $validationRules = [

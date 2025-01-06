@@ -37,6 +37,7 @@ export interface Subuser {
     image: string;
     twoFactorEnabled: boolean;
     createdAt: Date;
+    visible: boolean;
     permissions: SubuserPermission[];
 
     can(permission: SubuserPermission): boolean;
