@@ -52,7 +52,7 @@ class ClientController extends ClientApiController
             ? ($user->role ? $builder : $builder->whereRaw('1 = 2'))
             : $builder->whereIn('servers.id', $user->subuserServers()->pluck('id')->all());
         } else {
-            $builder = $builder->where('servers.owner_id', $user->id);
+            $builder = $builder->whereIn('servers.id', $user->accessibleServers()->pluck('id')->all())->orderBy('position', 'asc');
         }
     
 

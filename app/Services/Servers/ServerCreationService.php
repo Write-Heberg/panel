@@ -163,7 +163,11 @@ class ServerCreationService
             'allocation_limit' => Arr::get($data, 'allocation_limit') ?? 0,
             'backup_limit' => Arr::get($data, 'backup_limit') ?? 0,
         ]);
-
+        // can't be included when creating the server due to server id being unknown at
+        // that point
+        Server::where('id', $server->id)->update([
+            'position' => Server::where('owner_id', $server->owner_id)->count() + 1,
+        ]);
         return $model;
     }
 

@@ -283,4 +283,14 @@ class User extends Model implements
             })
             ->groupBy('servers.id');
     }
+
+    /**
+     * Returns all the servers that a user can access by way of being the owner of the
+     * server, or because they are assigned as a subuser for that server.
+     */
+    public function accessibleServers()
+    {
+        return $this->hasMany(Server::class, 'owner_id')
+            ->orWhereIn('id', $this->subuserServers()->pluck('id'));
+    }
 }
