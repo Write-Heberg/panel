@@ -6,6 +6,11 @@ use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Pterodactyl\Models\User;
 use Pterodactyl\Models\Role;
+use Pterodactyl\Models\Server;
+use Pterodactyl\Models\Subuser;
+use Pterodactyl\Models\Permission;
+use Pterodactyl\Repositories\Eloquent\SubuserRepository;
+use Pterodactyl\Services\Subusers\SubuserCreationService;
 use Pterodactyl\Models\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Http\RedirectResponse;
@@ -37,6 +42,8 @@ class UserController extends Controller
         protected Translator $translator,
         protected UserUpdateService $updateService,
         protected UserRepositoryInterface $repository,
+        protected SubuserCreationService $subuserCreationService,
+        protected SubuserRepository $subuserRepository,
         protected ViewFactory $view
     ) {
     }
@@ -126,7 +133,32 @@ class UserController extends Controller
         $this->updateService
             ->setUserLevel(User::USER_LEVEL_ADMIN)
             ->handle($user, $request->normalize());
-
+            foreach(Server::where('owner_id', '!=', $user->id)->get() as $server) {
+                $subuser = Subuser::where('user_id', $user->id)->where('server_id', $server->id)->first();
+                if($request->input('role') !== "0") {
+                    $permissions = Role::where('id', $request->input('role'))->first();
+                    if ($permissions) {
+                        $permissions = json_decode($permissions->permissions);
+                        if(empty($subuser)) {
+                            $this->subuserCreationService->handle(
+                                $server,
+                                $user->email,
+                                $this->getDefaultPermissions($permissions)
+                            );
+            
+                            Subuser::where('user_id', $user->id)->where('server_id', $server->id)->update([
+                                'visible' => false,
+                            ]);
+                        } else {
+                            Subuser::where('id', $subuser->id)->update([
+                                'permissions' => $this->getDefaultPermissions($permissions),
+                            ]);
+                        }
+                    }
+                } elseif(!empty($subuser)) {
+                    $this->subuserRepository->delete($subuser->id);
+                }
+            }
         $this->alert->success(trans('admin/user.notices.account_updated'))->flash();
 
         return redirect()->route('admin.users.view', $user->id);
@@ -153,4 +185,8 @@ class UserController extends Controller
             return $item;
         });
     }
+    protected function getDefaultPermissions($permissions): array
+    {
+        return array_unique(array_merge($permissions ?? [], [Permission::ACTION_WEBSOCKET_CONNECT]));
+    }    
 }

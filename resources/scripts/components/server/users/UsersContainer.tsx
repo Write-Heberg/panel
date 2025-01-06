@@ -76,7 +76,9 @@ export default () => {
                             </td>
                         </tr>
                     ) : (
-                        subusers.map((subuser) => <UserRow key={subuser.uuid} subuser={subuser} />)
+                        subusers
+                            .filter(s => s.visible)
+                            .map(subuser => <UserRow key={subuser.uuid} subuser={subuser}/>)
                     )}
                 </TableList>
                 

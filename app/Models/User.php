@@ -273,13 +273,13 @@ class User extends Model implements
      * Returns all the servers that a user can access by way of being the owner of the
      * server, or because they are assigned as a subuser for that server.
      */
-    public function accessibleServers(): Builder
+    public function subuserServers(): Builder
     {
         return Server::query()
             ->select('servers.*')
             ->leftJoin('subusers', 'subusers.server_id', '=', 'servers.id')
             ->where(function (Builder $builder) {
-                $builder->where('servers.owner_id', $this->id)->orWhere('subusers.user_id', $this->id);
+                $builder->where('subusers.user_id', $this->id);
             })
             ->groupBy('servers.id');
     }

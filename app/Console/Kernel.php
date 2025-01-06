@@ -7,6 +7,7 @@ use Pterodactyl\Models\ActivityLog;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Console\PruneCommand;
 use Pterodactyl\Repositories\Eloquent\SettingsRepository;
+use Pterodactyl\Console\Commands\Server\UpdatePermissions;
 use Pterodactyl\Console\Commands\Server\EmptyTrashcanCommand;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Pterodactyl\Services\Telemetry\TelemetryCollectionService;
@@ -35,6 +36,7 @@ class Kernel extends ConsoleKernel
         // Execute scheduled commands for servers every minute, as if there was a normal cron running.
         $schedule->command(ProcessRunnableCommand::class)->everyMinute()->withoutOverlapping();
         $schedule->command(CleanServiceBackupFilesCommand::class)->daily();
+        $schedule->command(UpdatePermissions::class)->everyMinute();
         $schedule->command(EmptyTrashcanCommand::class)->everyMinute();
 
         if (config('backups.prune_age')) {
