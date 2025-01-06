@@ -30,7 +30,6 @@ export default () => {
     const [page, setPage] = useState(!isNaN(defaultPage) && defaultPage > 0 ? defaultPage : 1);
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const uuid = useStoreState((state) => state.user.data!.uuid);
-    const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
     const [showOnlyAdmin, setShowOnlyAdmin] = usePersistedState(`${uuid}:show_all_servers`, false);
     const discordBox = useStoreState((state: ApplicationStore) => state.settings.data!.arix.discordBox);
     const discord = useStoreState((state: ApplicationStore) => state.settings.data!.arix.discord);
@@ -41,8 +40,8 @@ export default () => {
     const serverRow = useStoreState((state: ApplicationStore) => state.settings.data!.arix.serverRow);
 
     const { data: servers, error } = useSWR<PaginatedResult<Server>>(
-        ['/api/client/servers', showOnlyAdmin && rootAdmin, page],
-        () => getServers({ page, type: showOnlyAdmin && rootAdmin ? 'admin' : undefined })
+        ['/api/client/servers', showOnlyAdmin, page],
+        () => getServers({ page, type: showOnlyAdmin ? 'admin' : undefined })
     );
 
     useEffect(() => {
@@ -142,18 +141,16 @@ export default () => {
                         <p className={'text-gray-50'}>{t('welcome-back')}</p>
                         <p className={'font-light'}>{t('all-servers-you-have-access-to')}</p>
                     </div>
-                    {rootAdmin && (
-                        <div css={tw`flex justify-end items-center`}>
-                            <p css={tw`uppercase text-xs text-neutral-400 mr-2`}>
-                                {showOnlyAdmin ? t('others-servers') : t('your-servers')}
-                            </p>
-                            <Switch
-                                name={'show_all_servers'}
-                                defaultChecked={showOnlyAdmin}
-                                onChange={() => setShowOnlyAdmin((s) => !s)}
-                            />
-                        </div>
-                    )}
+                    <div css={tw`mb-2 flex justify-end items-center`}>
+                        <p css={tw`uppercase text-xs text-neutral-400 mr-2`}>
+                            {showOnlyAdmin ? "Showing others' servers" : 'Showing your servers'}
+                        </p>
+                        <Switch
+                            name={'show_all_servers'}
+                            defaultChecked={showOnlyAdmin}
+                            onChange={() => setShowOnlyAdmin((s) => !s)}
+                        />
+                    </div>
                 </div>
                 {String(discordBox) == 'true' &&
                 <a href={guildData ? guildData.instant_invite : ''} target="_blank" className={'group lg:max-w-[275px] w-full border border-[#6374AC] hover:border-[#97A8E0] rounded-box flex items-center justify-between px-6 py-5 duration-300'} css={'background-image:radial-gradient(circle, rgba(27,43,104,1) 0%, rgba(9,39,78,1) 100%);'}>
