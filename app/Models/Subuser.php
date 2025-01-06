@@ -43,6 +43,7 @@ class Subuser extends Model
         'user_id' => 'int',
         'server_id' => 'int',
         'permissions' => 'array',
+        'visible' => 'boolean',
     ];
 
     public static array $validationRules = [
@@ -50,6 +51,7 @@ class Subuser extends Model
         'server_id' => 'required|numeric|exists:servers,id',
         'permissions' => 'nullable|array',
         'permissions.*' => 'string',
+        'visible' => 'nullable|boolean',
     ];
 
     /**
