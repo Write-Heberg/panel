@@ -25,6 +25,7 @@ export default () => {
     const [page, setPage] = useState(!isNaN(defaultPage) && defaultPage > 0 ? defaultPage : 1);
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const uuid = useStoreState((state) => state.user.data!.uuid);
+    const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
     const [showOnlyAdmin, setShowOnlyAdmin] = usePersistedState(`${uuid}:show_all_servers`, false);
     const serverRow = useStoreState((state: ApplicationStore) => state.settings.data!.arix.serverRow);
 
@@ -64,7 +65,7 @@ export default () => {
                         const uuid = evt.item.getAttribute('data-uuid');
                         if (uuid) {
                             sortServer(uuid, evt.oldIndex, evt.newIndex).then(() => {
-                                mutate(); // Rafraîchit les données après le tri
+                                mutate();
                             });
                         } else {
                             console.error('Missing data-uuid on sortable item.');
@@ -104,6 +105,24 @@ export default () => {
 
     return (
         <PageContentBlock title={t('Dashboard')} showFlashKey={'dashboard'}>
+            <div className={'mb-6 bg-gray-700 backdrop rounded-box px-6 py-5 w-full flex items-center justify-between'}>
+                <div>
+                    <p className={'text-gray-50'}>{t('welcome-back')}</p>
+                    <p className={'font-light'}>{t('all-servers-you-have-access-to')}</p>
+                </div>
+                {rootAdmin && (
+                    <div css={tw`flex justify-end items-center`}>
+                        <p css={tw`uppercase text-xs text-neutral-400 mr-2`}>
+                            {showOnlyAdmin ? t('others-servers') : t('your-servers')}
+                        </p>
+                        <Switch
+                            name={'show_all_servers'}
+                            defaultChecked={showOnlyAdmin}
+                            onChange={() => setShowOnlyAdmin((s) => !s)}
+                        />
+                    </div>
+                )}
+            </div>
             {!servers ? (
                 <Spinner centered size={'large'} />
             ) : (
