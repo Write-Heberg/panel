@@ -90,9 +90,10 @@
                                 <i data-lucide="webhook"></i> <span>Application API</span>
                             </a>
                         </li>
+                        <li class="header">ADDONS</li> <!-- Nouveau menu ADDONS afin de pouvoir distinguer les choses -->
                         <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.permissions') ?: 'active' }}">
-                            <a href="{{ route('admin.permissions.index')}}">
-                                <i class="fa fa-times"></i> <span>Permission Management</span>
+                            <a href="{{ route('admin.permissions.index') }}">
+                                <i class="fa fa-key"></i> <span>Permission Management</span>
                             </a>
                         </li>
                         <li class="header">MANAGEMENT</li>
