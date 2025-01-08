@@ -17,6 +17,7 @@ import useTrashcanSwr from '@/plugins/useTrashcanSwr';
 import MessageBox from '@/components/MessageBox';
 import { ServerError } from '@/components/elements/ScreenBlock';
 import { httpErrorToHuman } from '@/api/http';
+import { useTranslation } from 'react-i18next';
 
 const sortFiles = (files: FileObject[]): FileObject[] => {
     const sortedFiles: FileObject[] = files
@@ -26,6 +27,7 @@ const sortFiles = (files: FileObject[]): FileObject[] => {
 };
 
 export default () => {
+    const { t } = useTranslation('arix/server/files');
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const { hash } = useLocation();
     const clearFlashes = useStoreActions((actions) => actions.flashes.clearFlashes);
@@ -52,10 +54,10 @@ export default () => {
     };
 
     return (
-        <ServerContentBlock title={'File Manager'} showFlashKey={'files'}>
+        <ServerContentBlock title={t('file-manager')} showFlashKey={'files'}>
             <div css={tw`mb-5`}>
-    <MessageBox type={'info'}>The files and folders in your recycle bin will be removed after 24 hours, after that you will not be able to recover them.</MessageBox>
-</div>
+                <MessageBox type={'info'}>{t('info-trashcan')}</MessageBox>
+                </div>
             <div css={tw`flex flex-wrap-reverse md:flex-nowrap justify-start mb-4`}>
                 <ErrorBoundary>
                     <FileManagerBreadcrumbs
@@ -71,21 +73,20 @@ export default () => {
                 </ErrorBoundary>
             </div>
             {error ? (
-                <p css={tw`text-sm text-neutral-400 text-center`}>There is nothing in your recycle bin.</p>
+                <p css={tw`text-sm text-neutral-400 text-center`}>{t('nothing-trashcan')}</p>
             ) : !files ? (
                 <Spinner size={'large'} centered />
             ) : (
                 <>
                     {!files.length ? (
-                        <p css={tw`text-sm text-neutral-400 text-center`}>There is nothing in your recycle bin.</p>
+                        <p css={tw`text-sm text-neutral-400 text-center`}>{t('nothing-trashcan')}</p>
                     ) : (
                         <CSSTransition classNames={'fade'} timeout={150} appear in>
                             <div>
                                 {files.length > 250 && (
                                     <div css={tw`rounded bg-yellow-400 mb-px p-3`}>
                                         <p css={tw`text-yellow-900 text-sm text-center`}>
-                                            This directory is too large to display in the browser, limiting the output
-                                            to the first 250 files.
+                                            {t('directory-to-large-trashcan')}
                                         </p>
                                     </div>
                                 )}

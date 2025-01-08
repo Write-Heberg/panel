@@ -9,6 +9,7 @@ import getSize from '@/api/server/files/getTrashSize';
 import { ServerContext } from '@/state/server';
 import { bytesToString } from '@/lib/formatters';
 import { differenceInHours, format, formatDistanceToNow } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 
 const Row = styled.div`
     ${tw`flex bg-neutral-700 rounded-sm mb-px text-sm hover:text-neutral-100 cursor-pointer items-center no-underline hover:bg-neutral-600`};
@@ -21,7 +22,7 @@ export interface TrashSizeResponse {
 
 const RowContents = () => {
     const match = useRouteMatch();
-
+    const { t } = useTranslation('arix/server/files');
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
 
     const { data } = useSWR<TrashSizeResponse>([uuid, '/files/trashsize'], (key) => getSize(key), {
@@ -36,7 +37,7 @@ const RowContents = () => {
             <div css={tw`flex-none self-center text-neutral-400 ml-6 mr-4 text-lg pl-3`}>
                 <FontAwesomeIcon icon={faTrash} />
             </div>
-            <div css={tw`self-center flex-1 truncate`}>Recycle Bin</div>
+            <div css={tw`self-center flex-1 truncate`}>{t('display-name-trashcan')}</div>
             {data && data.size && data.last_deletion && (
                 <>
                     <div css={tw`w-1/6 self-center text-right mr-4 hidden sm:block`}>{bytesToString(data.size)}</div>
