@@ -11,10 +11,11 @@ import ConfirmationModal from '@/components/elements/ConfirmationModal';
 import deleteFiles from '@/api/server/files/deleteFiles';
 import restoreFile from '@/api/server/files/restoreFile';
 import useTrashcanSwr from '@/plugins/useTrashcanSwr';
+import { useTranslation } from 'react-i18next';
 
 const TrashcanMassActionsBar = ({ directory }: { directory: string }) => {
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
-
+    const { t } = useTranslation('arix/server/files');
     const { mutate } = useTrashcanSwr();
 
     const { clearFlashes, clearAndAddHttpError } = useFlash();
@@ -69,31 +70,36 @@ const TrashcanMassActionsBar = ({ directory }: { directory: string }) => {
                 </SpinnerOverlay>
                 <ConfirmationModal
                     visible={showConfirm}
-                    title={'Delete these files?'}
-                    buttonText={'Yes, Delete Files'}
+                    title={t('recycle-questions-delete-file')}
+                    buttonText={t('recycle-validation-delete-file')}
                     onConfirmed={onClickConfirmDeletion}
                     onModalDismissed={() => setShowConfirm(false)}
                 >
-                    Are you sure you want to permanently delete {selectedFiles.length} file(s)?
-                    <br />
-                    Deleting the file(s) listed below is a permanent operation, you cannot undo this action.
-                    <br />
-                    <code>
-                        {selectedFiles.slice(0, 15).map((file) => (
-                            <li key={file}>
-                                {file}
-                                <br />
-                            </li>
-                        ))}
-                        {selectedFiles.length > 15 && <li> + {selectedFiles.length - 15} other(s) </li>}
-                    </code>
+                    <div>
+                        {t('delete-confirmation-message', { count: selectedFiles.length })}
+                        <br />
+                        {t('delete-warning')}
+                    </div>
+                    <div css={tw`mt-4`}>
+                        <code>
+                            {selectedFiles.slice(0, 15).map((file) => (
+                                <li key={file}>
+                                    {file}
+                                    <br />
+                                </li>
+                            ))}
+                            {selectedFiles.length > 15 && (
+                                <li>{t('additional-files', { count: selectedFiles.length - 15 })}</li>
+                            )}
+                        </code>
+                    </div>
                 </ConfirmationModal>
                 <div css={tw`pointer-events-auto rounded p-4 mb-6`} style={{ background: 'rgba(0, 0, 0, 0.35)' }}>
                     <Button size={'xsmall'} css={tw`mr-4`} onClick={onClickRestore}>
-                        <FontAwesomeIcon icon={faTrashRestore} css={tw`mr-2`} /> Restore
+                        <FontAwesomeIcon icon={faTrashRestore} css={tw`mr-2`} /> {t('display-restore-trashcan')}
                     </Button>
                     <Button size={'xsmall'} color={'red'} isSecondary onClick={() => setShowConfirm(true)}>
-                        <FontAwesomeIcon icon={faTrashAlt} css={tw`mr-2`} /> Delete
+                        <FontAwesomeIcon icon={faTrashAlt} css={tw`mr-2`} /> {t('display-delete-trashcan')}
                     </Button>
                 </div>
             </div>

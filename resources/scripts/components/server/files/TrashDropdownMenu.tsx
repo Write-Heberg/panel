@@ -13,6 +13,7 @@ import isEqual from 'react-fast-compare';
 import ConfirmationModal from '@/components/elements/ConfirmationModal';
 import { FileObject } from '@/api/server/files/loadDirectory';
 import useTrashcanSwr from '@/plugins/useTrashcanSwr';
+import { useTranslation } from 'react-i18next';
 
 const StyledRow = styled.div<{ $danger?: boolean }>`
     ${tw`p-2 flex items-center rounded`};
@@ -36,7 +37,7 @@ const Row = ({ icon, title, ...props }: RowProps) => (
 const FileDropdownMenu = ({ file }: { file: FileObject }) => {
     const onClickRef = useRef<DropdownMenu>(null);
     const [showConfirmation, setShowConfirmation] = useState(false);
-
+    const { t } = useTranslation('arix/server/files');
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const { clearAndAddHttpError, clearFlashes } = useFlash();
     const { mutate } = useTrashcanSwr();
@@ -68,26 +69,26 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
         <>
             <ConfirmationModal
                 visible={showConfirmation}
-                title={`Delete this ${file.isFile ? 'File' : 'Directory'}?`}
-                buttonText={`Yes, Delete ${file.isFile ? 'File' : 'Directory'}`}
+                title={file.isFile ? t('display-dropdown-delete-file') : t('display-dropdown-delete-directory')}
+                buttonText={file.isFile ? t('display-confirm-delete-file-trashcan') : t('display-confirm-delete-directory-trashcan')}
                 onConfirmed={doDeletion}
                 onModalDismissed={() => setShowConfirmation(false)}
             >
-                Deleting files from the recycle bin is a permanent operation, you cannot undo this action.
+                {t('display-permanent-delete-warning-trashcan')}
             </ConfirmationModal>
             <DropdownMenu
                 ref={onClickRef}
                 renderToggle={(onClick) => (
-                    <div css={tw`px-4 py-2 hover:text-white`} onClick={onClick}>
+                    <div css={tw`px-4 py-2 hover:text-white cursor-pointer`} onClick={onClick}>
                         <FontAwesomeIcon icon={faEllipsisH} />
                     </div>
                 )}
             >
                 <Can action={'file.update'}>
-                    <Row onClick={doRestore} icon={faTrashRestore} title={'Restore'} />
+                    <Row onClick={doRestore} icon={faTrashRestore} title={t('display-dropdown-restore-trashcan')} />
                 </Can>
                 <Can action={'file.delete'}>
-                    <Row onClick={() => setShowConfirmation(true)} icon={faTrashAlt} title={'Delete'} $danger />
+                    <Row onClick={() => setShowConfirmation(true)} icon={faTrashAlt} title={t('display-dropdown-delete-trashcan')} $danger />
                 </Can>
             </DropdownMenu>
         </>

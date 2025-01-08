@@ -72,7 +72,7 @@ const MassActionsBar = () => {
                 <Dialog.Confirm
                     title={t('delete-files')}
                     open={showConfirm}
-                    confirm={'Delete'}
+                    confirm={t('delete-files-confirm')}
                     onClose={() => setShowConfirm(false)}
                     onConfirmed={onClickConfirmDeletion}
                 >
