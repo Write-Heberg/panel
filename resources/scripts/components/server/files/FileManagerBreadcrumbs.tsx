@@ -68,7 +68,7 @@ export default ({ renderLeft, withinFileEditor, isNewFile }: Props) => {
     )}
 {(match.url.endsWith('/files/trashcan') || breadcrumbs().some((item) => item.name === uuid)) && (
     <a css={tw`px-1 text-neutral-300`} href={`/server/${uuid}/files/trashcan`}>
-        Recycle Bin {breadcrumbs().some((item) => item.name === uuid) && '/'}
+        {t('display-name-trashcan')} {breadcrumbs().some((item) => item.name === uuid) && '/'}
     </a>
 )}
             {file && (
