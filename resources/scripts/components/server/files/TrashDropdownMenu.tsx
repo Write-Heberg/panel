@@ -69,12 +69,12 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
         <>
             <ConfirmationModal
                 visible={showConfirmation}
-                title={file.isFile ? t('display-dropdown-delete-file') : t('display-dropdown-delete-directory')}
-                buttonText={file.isFile ? t('display-confirm-delete-file-trashcan') : t('display-confirm-delete-directory-trashcan')}
+                title={file.isFile ? t('display-card-dropdown-delete-file') : t('display-card-dropdown-delete-directory')}
+                buttonText={file.isFile ? t('display-card-confirm-delete-file-trashcan') : t('display-card-confirm-delete-directory-trashcan')}
                 onConfirmed={doDeletion}
                 onModalDismissed={() => setShowConfirmation(false)}
             >
-                {t('display-permanent-delete-warning-trashcan')}
+                {t('display-permanent-delete-warning-into-trashcan')}
             </ConfirmationModal>
             <DropdownMenu
                 ref={onClickRef}

@@ -73,13 +73,13 @@ export default () => {
                 </ErrorBoundary>
             </div>
             {error ? (
-                <p css={tw`text-sm text-neutral-400 text-center`}>{t('nothing-trashcan')}</p>
+                <p css={tw`text-sm text-neutral-400 text-center`}>{t('nothing-into-trashcan')}</p>
             ) : !files ? (
                 <Spinner size={'large'} centered />
             ) : (
                 <>
                     {!files.length ? (
-                        <p css={tw`text-sm text-neutral-400 text-center`}>{t('nothing-trashcan')}</p>
+                        <p css={tw`text-sm text-neutral-400 text-center`}>{t('nothing-into-trashcan')}</p>
                     ) : (
                         <CSSTransition classNames={'fade'} timeout={150} appear in>
                             <div>
