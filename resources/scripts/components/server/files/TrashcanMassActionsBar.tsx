@@ -70,15 +70,15 @@ const TrashcanMassActionsBar = ({ directory }: { directory: string }) => {
                 </SpinnerOverlay>
                 <ConfirmationModal
                     visible={showConfirm}
-                    title={t('recycle-questions-delete-file')}
-                    buttonText={t('recycle-validation-delete-file')}
+                    title={t('display-are-you-sure-delete-this-into-trashcan')}
+                    buttonText={t('display-are-you-sure-delete-this-validation-into-trashcan')}
                     onConfirmed={onClickConfirmDeletion}
                     onModalDismissed={() => setShowConfirm(false)}
                 >
                     <div>
-                        {t('delete-confirmation-message', { count: selectedFiles.length })}
+                        {t('display-delete-confirmation-message-into-trashcan', { count: selectedFiles.length })}
                         <br />
-                        {t('delete-warning')}
+                        {t('display-permanent-delete-warning-into-trashcan')}
                     </div>
                     <div css={tw`mt-4`}>
                         <code>
@@ -89,7 +89,7 @@ const TrashcanMassActionsBar = ({ directory }: { directory: string }) => {
                                 </li>
                             ))}
                             {selectedFiles.length > 15 && (
-                                <li>{t('additional-files', { count: selectedFiles.length - 15 })}</li>
+                                <li>{t('display-delete-additional-files-into-trashcan', { count: selectedFiles.length - 15 })}</li>
                             )}
                         </code>
                     </div>
